@@ -10,14 +10,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="345.0" prefWidth="556.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="345.0" prefWidth="556.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simao.tarea3AD2024base.controller.InvitadoController">
     <center>
         <VBox spacing="15">
             <padding>
                 <Insets bottom="20" left="20" right="20" top="20" />
             </padding>
             <Label styleClass="subtitulo" text="Espectáculos Programados:" />
-            <VBox fx:id="espectaculos" spacing="10" />
+            <VBox fx:id="espectaculosContainer" spacing="10" />
         </VBox>
     </center>
    <top>
@@ -48,7 +48,7 @@
                   </padding>
                   <Label styleClass="titulo" text="Invitado" />
                   <HBox HBox.hgrow="ALWAYS" />
-                  <Button styleClass="btn-login" text="Iniciar Sesión" />
+                  <Button fx:id="btnInicioSesion" onAction="#login" styleClass="btn-login" text="Iniciar Sesión" />
               </HBox>
          </children>
       </VBox>

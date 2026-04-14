@@ -9,20 +9,25 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
+import com.simao.tarea3AD2024base.modelo.Espectaculo;
 import com.simao.tarea3AD2024base.services.EspectaculoService;
+import com.simao.tarea3AD2024base.view.FxmlView;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import modelo.Espectaculo;
 
 @Controller
 public class InvitadoController implements Initializable {
 
 	@FXML
 	private VBox espectaculosContainer;
+	
+	@FXML
+	private Button btnInicioSesion;
 	
 	@Lazy
 	@Autowired
@@ -66,8 +71,8 @@ public class InvitadoController implements Initializable {
 	    return caja;
 	}
 
-	public void logout(ActionEvent event) {
-		System.out.println("Logout");
+	public void login() {
+		stageManager.switchScene(FxmlView.LOGIN);
 	}
 
 	public void exit(ActionEvent event) {

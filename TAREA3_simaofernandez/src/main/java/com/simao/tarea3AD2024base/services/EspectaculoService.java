@@ -5,9 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.simao.tarea3AD2024base.modelo.Espectaculo;
 import com.simao.tarea3AD2024base.repositorios.EspectaculoRepository;
-
-import modelo.Espectaculo;
 
 @Service
 public class EspectaculoService {

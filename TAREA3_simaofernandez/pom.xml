@@ -16,12 +16,12 @@
 	<description>Proyecto base para TAREA3 AD</description>
 	<url/>
 
-	<properties>
+<!--	<properties> -->
 <!--	 <mainClass>com.codetreatise.MainApp</mainClass> -->
 <!--		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
-<!--		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
-		<java.version>23</java.version>
-	</properties>
+<!--		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> -->
+<!--		<java.version>21</java.version> -->
+<!--	</properties>-->
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -49,11 +49,6 @@
     <artifactId>javafx-fxml</artifactId>
     <version>23</version>
 </dependency>
-		<dependency>
-			<groupId>com.simaofernandez</groupId>
-			<artifactId>com.simaofernandez</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<build>

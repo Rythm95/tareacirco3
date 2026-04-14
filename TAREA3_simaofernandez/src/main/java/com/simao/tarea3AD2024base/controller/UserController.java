@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.User;
+import com.simao.tarea3AD2024base.services.CredsService;
 import com.simao.tarea3AD2024base.services.UserService;
 import com.simao.tarea3AD2024base.view.FxmlView;
 
@@ -128,7 +129,7 @@ public class UserController implements Initializable {
 	private StageManager stageManager;
 
 	@Autowired
-	private UserService userService;
+	private CredsService userService;
 
 	private ObservableList<User> userList = FXCollections.observableArrayList();
 	private ObservableList<String> roles = FXCollections.observableArrayList("Admin", "User");

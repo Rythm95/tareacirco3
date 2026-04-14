@@ -27,7 +27,7 @@
          <effect>
             <DropShadow blurType="ONE_PASS_BOX" />
          </effect></Button>
-      <Button fx:id="btnLogin1" layoutX="101.0" layoutY="226.0" mnemonicParsing="false" onAction="#login" prefHeight="31.0" prefWidth="198.0" styleClass="btnGreen" text="Continuar como Invitado" textFill="WHITE">
+      <Button fx:id="btnLogin1" layoutX="101.0" layoutY="226.0" mnemonicParsing="false" onAction="#invitado" prefHeight="31.0" prefWidth="198.0" styleClass="btnGreen" text="Continuar como Invitado" textFill="WHITE">
          <font>
             <Font size="15.0" />
          </font>

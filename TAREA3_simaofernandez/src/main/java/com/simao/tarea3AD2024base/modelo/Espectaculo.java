@@ -27,6 +27,8 @@ public class Espectaculo implements Comparable<Espectaculo> {
 	
 	private LocalDate fechafin;
 
+	public Espectaculo() {}
+	
 	public Espectaculo(Long id, Long idCoordinacion, String nombre, LocalDate fechaini, LocalDate fechafin) {
 		super();
 		this.id = id;
