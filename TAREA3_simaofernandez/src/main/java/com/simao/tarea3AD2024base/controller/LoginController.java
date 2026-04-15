@@ -1,10 +1,12 @@
 package com.simao.tarea3AD2024base.controller;
 
-
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -12,9 +14,7 @@ import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.Credenciales;
-import com.simao.tarea3AD2024base.modelo.User;
 import com.simao.tarea3AD2024base.services.CredsService;
-import com.simao.tarea3AD2024base.services.UserService;
 import com.simao.tarea3AD2024base.view.FxmlView;
 
 import javafx.event.ActionEvent;
@@ -31,61 +31,72 @@ import javafx.scene.control.TextField;
  */
 
 @Controller
-public class LoginController implements Initializable{
+public class LoginController implements Initializable {
+
+	private static final Logger logger = Logger.getLogger(LoginController.class.getName());
 
 	@FXML
-    private Button btnLogin;
+	private Button btnLogin;
 
-    @FXML
-    private PasswordField password;
-
-    @FXML
-    private TextField username;
-
-    @FXML
-    private Label lblLogin;
-    
-    @Autowired // Auto-conectar
-    private UserService userService;
-    
-    @Lazy
-    @Autowired
-    private StageManager stageManager;
-        
 	@FXML
-    private void login(ActionEvent event) throws IOException{
-    	if(CredsService.authenticate(getUsername(), getPassword())){
-    		    		
-    		List<Credenciales> users = userService.findAll();
+	private PasswordField password;
+
+	@FXML
+	private TextField username;
+
+	@FXML
+	private Label lblLogin;
+
+	@Autowired // Auto-conectar
+	private CredsService credService;
+
+	@Lazy
+	@Autowired
+	private StageManager stageManager;
+
+	@FXML
+	private void login(ActionEvent event) throws IOException {
+
+		Properties properties = new Properties();
+		try (FileInputStream fis = new FileInputStream("src/main/resources/application.properties")) {
+			properties.load(fis);
+		} catch (IOException e) {
+			logger.warning("Error al leer el fichero de propiedades: " + e.getMessage());
+		}
+		String user = properties.getProperty("usuarioAdmin");
+		String pass = properties.getProperty("passwordAdmin");
+
+		if (user.equals(getUsername()) && pass.equals(getPassword())) {
+			stageManager.switchScene(FxmlView.ADMINISTRADOR);
+		} else if (credService.authenticate(getUsername(), getPassword())) {
+
+			List<Credenciales> creds = credService.findAll();
 			String rol = "";
-			for (User u : users) {
+			for (Credenciales cr : creds) {
 
-				if (u.getEmail().equals(getUsername())) {
-					rol = u.getRole();
+				if (cr.getUsername().equals(getUsername())) {
+
+					rol = cr.getPerfil().toString();
 					break;
 				}
 			}
 
 			switch (rol) {
-			case "Admin":
-				stageManager.switchScene(FxmlView.ADMINISTRADOR);
-				break;
-				
-			case "Artista":
+			case "ARTISTA":
 				stageManager.switchScene(FxmlView.ARTISTA);
 				break;
-				
-			case "Coordinador":
+
+			case "COORDINADOR":
 				stageManager.switchScene(FxmlView.COORDINADOR);
 				break;
 
 			}
-    		
-    	}else{
-    		lblLogin.setText("Error al iniciar sesión.");
-    	}
-    }
-	
+
+		} else {
+			lblLogin.setText("Error al iniciar sesión.");
+		}
+	}
+
 	public String getPassword() {
 		return password.getText();
 	}
@@ -96,9 +107,9 @@ public class LoginController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 	}
-	
+
 	public void invitado() {
 		stageManager.switchScene(FxmlView.INVITADO);
 	}

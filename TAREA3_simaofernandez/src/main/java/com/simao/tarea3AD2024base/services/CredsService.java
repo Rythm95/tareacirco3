@@ -1,6 +1,9 @@
 package com.simao.tarea3AD2024base.services;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,12 +42,12 @@ public class CredsService {
 	}
 
 	public boolean authenticate(String username, String password) {
-		
-		Credenciales user = this.findByUsername(username);
-		if (user == null) {
+				
+		Credenciales creds = this.findByUsername(username);
+		if (creds == null) {
 			return false;
 		} else {
-			if (password.equals(user.getPassword()))
+			if (password.equals(creds.getPassword()))
 				return true;
 			else
 				return false;

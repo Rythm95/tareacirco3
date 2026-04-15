@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.User;
 import com.simao.tarea3AD2024base.services.CredsService;
-import com.simao.tarea3AD2024base.services.UserService;
 import com.simao.tarea3AD2024base.view.FxmlView;
 
 import javafx.application.Platform;
@@ -172,20 +171,20 @@ public class UserController implements Initializable {
 					user.setEmail(getEmail());
 					user.setPassword(getPassword());
 
-					User newUser = userService.save(user);
+					//User newUser = userService.save(user);
 
-					saveAlert(newUser);
+					//saveAlert(newUser);
 				}
 
 			} else {
-				User user = userService.find(Long.parseLong(userId.getText()));
+				/*User user = userService.find(Long.parseLong(userId.getText()));
 				user.setFirstName(getFirstName());
 				user.setLastName(getLastName());
 				user.setDob(getDob());
 				user.setGender(getGender());
 				user.setRole(getRole());
 				User updatedUser = userService.update(user);
-				updateAlert(updatedUser);
+				updateAlert(updatedUser);*/
 			}
 
 			clearFields();
@@ -205,7 +204,7 @@ public class UserController implements Initializable {
 		Optional<ButtonType> action = alert.showAndWait();
 
 		if (action.get() == ButtonType.OK)
-			userService.deleteInBatch(users);
+			//userService.deleteInBatch(users);
 
 		loadUserDetails();
 	}
@@ -368,7 +367,7 @@ public class UserController implements Initializable {
 	 */
 	private void loadUserDetails() {
 		userList.clear();
-		userList.addAll(userService.findAll());
+		//userList.addAll(userService.findAll());
 
 		userTable.setItems(userList);
 	}

@@ -19,7 +19,7 @@ public class Credenciales implements Comparable<Credenciales> {
 	private Long id;
 	
 	@Column(unique=true)
-	private String user;
+	private String username;
 	
 	private String password;
 	
@@ -29,7 +29,7 @@ public class Credenciales implements Comparable<Credenciales> {
 	public Credenciales(Long id, String user, String password, Perfil perfil) {
 		super();
 		this.id = id;
-		this.user = user;
+		this.username = user;
 		this.password = password;
 		this.perfil = perfil;
 	}
@@ -42,12 +42,12 @@ public class Credenciales implements Comparable<Credenciales> {
 		this.id = id;
 	}
 
-	public String getUser() {
-		return user;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUser(String nombre) {
-		this.user = nombre;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {

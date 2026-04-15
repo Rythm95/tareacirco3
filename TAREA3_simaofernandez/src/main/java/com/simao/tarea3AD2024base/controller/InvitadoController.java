@@ -63,7 +63,7 @@ public class InvitadoController implements Initializable {
 	    Label fechas = new Label(
 	        "Del " + e.getFechaini() + " al " + e.getFechafin()
 	    );
-	    fechas.getStyleClass().add("fechas");
+	    fechas.getStyleClass().add("fecha");
 
 	    VBox caja = new VBox(nombre, fechas);
 	    caja.getStyleClass().add("card");

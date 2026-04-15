@@ -8,3 +8,32 @@
 	-fx-background-color: DODGERBLUE;
 }
 
+.header {
+    -fx-background-color: #eee;
+}
+
+.titulo {
+    -fx-font-size: 28.0px;
+    -fx-font-weight: bold;
+}
+
+.subtitulo {
+    -fx-font-size: 15.0px;
+    -fx-font-weight: bold;
+}
+
+.card {
+    -fx-background-color: #eeeeee;
+    -fx-background-radius: 5.0;
+    -fx-padding: 12.0;
+    -fx-effect: dropshadow(gaussian, rgba(0.0,0.0,0.0,0.1), 5.0, 0.0, 0.0, 2.0);
+}
+
+.titulo-espectaculo {
+    -fx-font-size: 12.0px;
+    -fx-font-weight: bold;
+}
+
+.fecha {
+    -fx-text-fill: #555;
+}
