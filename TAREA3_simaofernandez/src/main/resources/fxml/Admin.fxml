@@ -51,7 +51,7 @@
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
         <tabs>
-          <Tab text="Espectaculos">
+          <Tab text="Espectáculos">
             <content>
                     <VBox spacing="15">
                         <padding>
@@ -84,16 +84,90 @@
                         <Insets bottom="20" left="20" right="20" top="20" />
                      </padding>
                      <children>
-                        <Button mnemonicParsing="false" text="Gestionar Personas" />
-                        <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="516.0">
+                        <VBox fx:id="espectaculosContainer1" spacing="10">
                            <children>
-                              <Label styleClass="subtitulo" text="Espectáculos Registrados:" />
-                              <HBox maxWidth="60.0" HBox.hgrow="ALWAYS" />
-                              <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Nuevo Espectáculo" />
-                           </children>
-                        </HBox>
-                        <Separator prefWidth="200.0" />
-                        <VBox fx:id="espectaculosContainer1" spacing="10" />
+                              <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                                 <tabs>
+                                    <Tab text="Espectáculos">
+                                       <content>
+                                          <VBox spacing="15">
+                                             <padding>
+                                                <Insets bottom="20" left="20" right="20" top="20" />
+                                             </padding>
+                                             <children>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="516.0">
+                                                   <children>
+                                                      <Label styleClass="subtitulo" text="Espectáculos Registrados:" />
+                                                      <HBox maxWidth="60.0" HBox.hgrow="ALWAYS" />
+                                                      <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Nuevo Espectáculo" />
+                                                   </children>
+                                                </HBox>
+                                                <Separator prefWidth="200.0" />
+                                                <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="180.0" prefWidth="526.0" VBox.vgrow="ALWAYS">
+                                                   <content>
+                                                      <VBox fx:id="espectaculosContainer1" spacing="10">
+                                                         <padding>
+                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                   </content>
+                                                </ScrollPane>
+                                             </children>
+                                          </VBox>
+                                       </content>
+                                    </Tab>
+                                    <Tab text="Números">
+                                       <content>
+                                          <VBox spacing="15">
+                                             <padding>
+                                                <Insets bottom="20" left="20" right="20" top="20" />
+                                             </padding>
+                                             <children>
+                                                <Button mnemonicParsing="false" text="Gestionar Personas" />
+                                                <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="516.0">
+                                                   <children>
+                                                      <Label styleClass="subtitulo" text="Espectáculos Registrados:" />
+                                                      <HBox maxWidth="60.0" HBox.hgrow="ALWAYS" />
+                                                      <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Nuevo Espectáculo" />
+                                                   </children>
+                                                </HBox>
+                                                <Separator prefWidth="200.0" />
+                                                <VBox fx:id="espectaculosContainer11" spacing="10" />
+                                             </children>
+                                          </VBox>
+                                       </content>
+                                    </Tab>
+                                    <Tab text="Personas">
+                                       <content>
+                                          <VBox spacing="15">
+                                             <padding>
+                                                <Insets bottom="20" left="20" right="20" top="20" />
+                                             </padding>
+                                             <children>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="516.0">
+                                                   <children>
+                                                      <Label styleClass="subtitulo" text="Espectáculos Registrados:" />
+                                                      <HBox maxWidth="60.0" HBox.hgrow="ALWAYS" />
+                                                      <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Nuevo Espectáculo" />
+                                                   </children>
+                                                </HBox>
+                                                <Separator prefWidth="200.0" />
+                                                <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="180.0" prefWidth="526.0" VBox.vgrow="ALWAYS">
+                                                   <content>
+                                                      <VBox fx:id="espectaculosContainer12" spacing="10">
+                                                         <padding>
+                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                   </content>
+                                                </ScrollPane>
+                                             </children>
+                                          </VBox>
+                                       </content>
+                                    </Tab>
+                                 </tabs>
+                              </TabPane>
+                           </children></VBox>
                      </children>
                   </VBox>
             </content>

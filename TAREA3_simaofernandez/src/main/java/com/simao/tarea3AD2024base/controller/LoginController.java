@@ -63,10 +63,10 @@ public class LoginController implements Initializable {
 		String user = properties.getProperty("usuarioAdmin");
 		String pass = properties.getProperty("passwordAdmin");
 
-		if (properties.getProperty("usuarioAdmin").isEmpty() || properties.getProperty("passwordAdmin").isEmpty()) {
-			if (user.isEmpty())
+		if (getPassword().isEmpty() || getUsername().isEmpty()) {
+			if (getUsername().isEmpty())
 				usernameField.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), true);
-			if (pass.isEmpty())
+			if (getPassword().isEmpty())
 				passwordField.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), true);
 		}
 		else if (user.equals(getUsername()) && pass.equals(getPassword())) {
