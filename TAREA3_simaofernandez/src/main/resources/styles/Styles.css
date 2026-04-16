@@ -1,9 +1,5 @@
 /* CSS for app */
 
-.btnGreen{
-	-fx-background-color:  #3cbc53;
-}
-
 .background{
 	-fx-background-color: DODGERBLUE;
 }
@@ -12,18 +8,13 @@
     -fx-background-color: #eee;
 }
 
-.titulo {
-    -fx-font-size: 28.0px;
-    -fx-font-weight: bold;
-}
-
 .subtitulo {
     -fx-font-size: 15.0px;
     -fx-font-weight: bold;
 }
 
 .card {
-    -fx-background-color: #eeeeee;
+    -fx-background-color: #eee;
     -fx-background-radius: 5.0;
     -fx-padding: 12.0;
     -fx-effect: dropshadow(gaussian, rgba(0.0,0.0,0.0,0.1), 5.0, 0.0, 0.0, 2.0);
@@ -36,4 +27,64 @@
 
 .fecha {
     -fx-text-fill: #555;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.login-background {
+    -fx-background-color: linear-gradient(to bottom, #ff851f, #ffb347);
+}
+
+.login-box {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);
+}
+
+.title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.text-field, .password-field {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #ccc;
+    -fx-padding: 5 10 5 10;
+}
+
+.btn-primary {
+    -fx-background-color: #ff851f;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #e67300;
+}
+
+.btn-secondary {
+    -fx-background-color: #dddddd;
+    -fx-background-radius: 8;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #cccccc;
+}
+
+/* Errores: */
+.text-field:error, .password-field:error {
+    -fx-border-color: red;
+}
+
+.error-label {
+    -fx-text-fill: red;
+    -fx-font-size: 12px;
 }

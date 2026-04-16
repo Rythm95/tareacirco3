@@ -17,10 +17,10 @@ import com.simao.tarea3AD2024base.modelo.Credenciales;
 import com.simao.tarea3AD2024base.services.CredsService;
 import com.simao.tarea3AD2024base.view.FxmlView;
 
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -36,16 +36,13 @@ public class LoginController implements Initializable {
 	private static final Logger logger = Logger.getLogger(LoginController.class.getName());
 
 	@FXML
-	private Button btnLogin;
+	private PasswordField passwordField;
 
 	@FXML
-	private PasswordField password;
+	private TextField usernameField;
 
 	@FXML
-	private TextField username;
-
-	@FXML
-	private Label lblLogin;
+	private Label lblError;
 
 	@Autowired // Auto-conectar
 	private CredsService credService;
@@ -66,7 +63,13 @@ public class LoginController implements Initializable {
 		String user = properties.getProperty("usuarioAdmin");
 		String pass = properties.getProperty("passwordAdmin");
 
-		if (user.equals(getUsername()) && pass.equals(getPassword())) {
+		if (properties.getProperty("usuarioAdmin").isEmpty() || properties.getProperty("passwordAdmin").isEmpty()) {
+			if (user.isEmpty())
+				usernameField.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), true);
+			if (pass.isEmpty())
+				passwordField.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), true);
+		}
+		else if (user.equals(getUsername()) && pass.equals(getPassword())) {
 			stageManager.switchScene(FxmlView.ADMINISTRADOR);
 		} else if (credService.authenticate(getUsername(), getPassword())) {
 
@@ -93,16 +96,16 @@ public class LoginController implements Initializable {
 			}
 
 		} else {
-			lblLogin.setText("Error al iniciar sesión.");
+			lblError.setVisible(true);
 		}
 	}
 
 	public String getPassword() {
-		return password.getText();
+		return passwordField.getText();
 	}
 
 	public String getUsername() {
-		return username.getText();
+		return usernameField.getText();
 	}
 
 	@Override
