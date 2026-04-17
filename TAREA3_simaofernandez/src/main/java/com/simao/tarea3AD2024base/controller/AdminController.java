@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
+import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.services.EspectaculoService;
 import com.simao.tarea3AD2024base.view.FxmlView;
 
@@ -57,7 +58,7 @@ public class AdminController implements Initializable {
 	
 	private VBox espectaculoCard(Espectaculo e) {
 
-	    Label nombre = new Label(e.getNombre());
+	    Label nombre = new Label(e.getNombre() + "(id " + e.getId() + " )");
 	    nombre.getStyleClass().add("titulo-espectaculo");
 
 	    Label fechas = new Label(
@@ -65,10 +66,20 @@ public class AdminController implements Initializable {
 	    );
 	    fechas.getStyleClass().add("fecha");
 
-	    VBox caja = new VBox(nombre, fechas);
-	    caja.getStyleClass().add("card");
+	    VBox card = new VBox(nombre, fechas);
+	    card.getStyleClass().add("card");
 
-	    return caja;
+	    return card;
+	}
+	
+	private VBox numeroCard(Numero n) {
+		Label nombre = new Label(n.getNombre());
+		nombre.getStyleClass().add("titulo-espectaculo");
+		
+		VBox card = new VBox(nombre);
+		card.getStyleClass().add("card");
+		
+		return card;
 	}
 
 	public void login() {
