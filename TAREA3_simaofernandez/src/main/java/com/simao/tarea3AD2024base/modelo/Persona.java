@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,6 +23,9 @@ public class Persona {
 
 	@Column(unique = true)
 	private String email;
+	
+	@OneToOne(mappedBy = "persona")
+    private Credenciales credenciales;
 
 	public long getId() {
 		return id;

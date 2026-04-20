@@ -20,7 +20,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0.0,0.0,0.0,0.1), 5.0, 0.0, 0.0, 2.0);
 }
 
-.titulo-espectaculo {
+.titulo-card {
     -fx-font-size: 12.0px;
     -fx-font-weight: bold;
 }
@@ -87,4 +87,13 @@
 .error-label {
     -fx-text-fill: red;
     -fx-font-size: 12px;
+}
+
+/* Formulario: */
+.formulario {
+    -fx-background-color: #eee;
+    -fx-padding: 10;
+    -fx-background-radius: 5;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5;
 }

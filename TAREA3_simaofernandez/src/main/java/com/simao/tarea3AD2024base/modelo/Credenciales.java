@@ -7,6 +7,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,6 +27,10 @@ public class Credenciales implements Comparable<Credenciales> {
 	
 	@Enumerated(EnumType.STRING)
 	private Perfil perfil;
+	
+	@OneToOne
+    @JoinColumn(name = "idPersona")
+    private Persona persona;
 
 	public Credenciales(Long id, String user, String password, Perfil perfil) {
 		super();

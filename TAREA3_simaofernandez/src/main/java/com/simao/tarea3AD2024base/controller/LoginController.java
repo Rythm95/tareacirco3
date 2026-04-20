@@ -63,11 +63,11 @@ public class LoginController implements Initializable {
 		String user = properties.getProperty("usuarioAdmin");
 		String pass = properties.getProperty("passwordAdmin");
 
+		usernameField.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), getUsername().isEmpty());
+		passwordField.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), getPassword().isEmpty());
+		
 		if (getPassword().isEmpty() || getUsername().isEmpty()) {
-			if (getUsername().isEmpty())
-				usernameField.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), true);
-			if (getPassword().isEmpty())
-				passwordField.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), true);
+			return;
 		}
 		else if (user.equals(getUsername()) && pass.equals(getPassword())) {
 			stageManager.switchScene(FxmlView.ADMINISTRADOR);
