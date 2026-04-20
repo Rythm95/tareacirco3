@@ -25,15 +25,19 @@
 				<Button fx:id="btnForm" mnemonicParsing="false" onAction="#showForm" prefHeight="25.0" prefWidth="125.0" styleClass="btn-secondary" text="Nuevo Número" />
 			</children>
 		</HBox>
-		<VBox fx:id="formularioBox" managed="false" spacing="10" styleClass="formulario" visible="false">
-		<TextField fx:id = "txtNombre" promptText="Nombre del Número" />
-		<ComboBox fx:id="cbArtista" promptText="Selecciona Artista" />
-		<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
-		<HBox spacing="10">
-			<Button fx:id="save" text="Guardar" />
-			<Button onAction="#limpiarForm" text="Limpiar" />
-		</HBox>
-		</VBox>
+      <ScrollPane fx:id="formularioBox" fitToWidth="true" hbarPolicy="NEVER" managed="false" prefWidth="526.0" visible="false" VBox.vgrow="ALWAYS">
+         <content>
+      		<VBox spacing="10" styleClass="formulario">
+      		<TextField fx:id="txtNombre" promptText="Nombre del Número" />
+      		<ComboBox fx:id="cbArtista" promptText="Selecciona Artista" />
+      		<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
+      		<HBox spacing="10">
+      			<Button fx:id="save" text="Guardar" />
+      			<Button onAction="#limpiarForm" text="Limpiar" />
+      		</HBox>
+      		</VBox>
+         </content>
+      </ScrollPane>
 		<Separator prefWidth="200.0" />
 		<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="180.0" prefWidth="526.0">
 			<content>

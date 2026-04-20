@@ -25,19 +25,23 @@
 			<Button fx:id="btnForm" mnemonicParsing="false" onAction="#showForm" prefHeight="25.0" prefWidth="125.0" styleClass="btn-secondary" text="Nuevo Espectáculo" />
 		</children>
 	</HBox>
-	<VBox fx:id="formularioBox" managed="false" spacing="10" styleClass="formulario" visible="false">
-		<TextField fx:id="txtNombre" promptText="Nombre del Espectáculo" />
-		<DatePicker fx:id="dpInicio" promptText="Fecha de Inicio" />
-		<DatePicker fx:id="dpFin" promptText="Fecha de Fin" />
-		<ComboBox fx:id="cbCoordinador" promptText="Selecciona coordinador" />
-		<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
-		<HBox spacing="10">
-			<Button fx:id="save" text="Guardar" />
-			<Button onAction="#limpiarForm" text="Limpiar" />
-		</HBox>
-	</VBox>
+   <ScrollPane fx:id="formularioBox" fitToWidth="true" hbarPolicy="NEVER" managed="false" prefHeight="180.0" prefWidth="526.0" visible="false" VBox.vgrow="ALWAYS">
+      <content>
+      	<VBox spacing="10" styleClass="formulario">
+         		<TextField fx:id="txtNombre" promptText="Nombre del Espectáculo" />
+         		<DatePicker fx:id="dpInicio" promptText="Fecha de Inicio" />
+         		<DatePicker fx:id="dpFin" promptText="Fecha de Fin" />
+         		<ComboBox fx:id="cbCoordinador" promptText="Selecciona coordinador" />
+         		<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
+         		<HBox spacing="10">
+         			<Button fx:id="save" text="Guardar" />
+         			<Button onAction="#limpiarForm" text="Limpiar" />
+         		</HBox>
+      	</VBox>
+      </content>
+   </ScrollPane>
 	<Separator prefWidth="200.0" />
-	<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="180.0" prefWidth="526.0" VBox.vgrow="ALWAYS">
+	<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefWidth="526.0" VBox.vgrow="ALWAYS">
 		<content>
 			<VBox fx:id="container" spacing="10">
 				<padding>

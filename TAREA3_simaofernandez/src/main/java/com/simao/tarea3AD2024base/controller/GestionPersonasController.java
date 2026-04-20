@@ -21,7 +21,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 
 @Controller
@@ -31,47 +34,49 @@ public class GestionPersonasController implements Initializable {
 	private VBox container;
 
 	@FXML
-	private VBox formularioBox;
+	private ScrollPane formularioBox;
 
 	@FXML
 	private TextField txtNombre;
-	
+
 	@FXML
 	private TextField txtEmail;
-	
+
 	@FXML
 	private ComboBox<String> cbNacionalidad;
 
 	@FXML
 	private RadioButton rbCoord;
-	
+
 	@FXML
 	private RadioButton rbArt;
-	
+
+	ToggleGroup rdGroup = new ToggleGroup();
+
 	@FXML
 	private VBox coordContainer;
-	
+
 	@FXML
 	private CheckBox checkSenior;
-	
+
 	@FXML
 	private DatePicker dpSenior;
-	
+
 	@FXML
 	private VBox artContainer;
-	
+
 	@FXML
 	private CheckBox checkApodo;
-	
+
 	@FXML
 	private TextField txtApodo;
-	
+
 	@FXML
 	private VBox especialidadesContainer;
-	
+
 	@FXML
 	private TextField txtUser;
-	
+
 	@FXML
 	private TextField txtPass;
 
@@ -95,6 +100,11 @@ public class GestionPersonasController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		List<Persona> listaPersonas = peService.findAll();
+
+		rbCoord.setToggleGroup(rdGroup);
+		rbArt.setToggleGroup(rdGroup);
+
+		rdGroup.selectedToggleProperty().addListener((observable, oldVal, newVal) -> personaTipoForm(newVal));
 
 		if (listaPersonas.isEmpty()) {
 			Label vacio = new Label("No hay personas registradas.");
@@ -132,15 +142,36 @@ public class GestionPersonasController implements Initializable {
 		}
 	}
 
+	@FXML
 	public void limpiarForm() {
 		txtNombre.clear();
 	}
-	
+
+	@FXML
+	public void personaTipoForm(Toggle toggle) {
+		coordContainer.setVisible(true);
+		coordContainer.setManaged(true);
+
+		artContainer.setVisible(false);
+		artContainer.setManaged(false);
+	}
+
+	@FXML
+	public void senior() {
+		if (checkSenior.isSelected()) {
+			dpSenior.setVisible(false);
+			dpSenior.setManaged(false);
+		} else {
+			dpSenior.setVisible(true);
+			dpSenior.setManaged(true);
+		}
+	}
+
 	@FXML
 	public void save() {
 		txtNombre.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), getNombre().isEmpty());
 	}
-	
+
 	public String getNombre() {
 		return txtNombre.getText();
 	}

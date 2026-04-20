@@ -27,38 +27,42 @@
 			<Button fx:id="btnForm" mnemonicParsing="false" onAction="#showForm" prefHeight="25.0" prefWidth="125.0" styleClass="btn-secondary" text="Nueva Persona" />
 		</children>
 	</HBox>
-	<VBox fx:id="formularioBox" managed="false" spacing="10" styleClass="formulario" visible="false">
-		<TextField fx:id="txtNombre" promptText="Nombre Real" />
-      <TextField fx:id="txtEmail" promptText="Email" />
-      <ComboBox fx:id="cbNacionalidad" prefWidth="150.0" promptText="Nacionalidad" />
-      <HBox prefHeight="0.0" prefWidth="526.0" spacing="30.0">
-         <children>
-            <RadioButton fx:id="rbCoord" mnemonicParsing="false" selected="true" text="Coordinador/a" />
-            <RadioButton fx:id="rbArt" mnemonicParsing="false" prefWidth="63.0" text="Artista" />
-         </children>
-      </HBox>
-      <VBox fx:id="coordContainer" managed="true" visible="true" prefHeight="0.0" prefWidth="526.0" spacing="10.0">
-         <children>
-            <CheckBox fx:id="checkSenior" mnemonicParsing="false" text="Coordinador/a Senior" />
-            <DatePicker fx:id="dpSenior" managed="false" visible="false" promptText="Desde..." />
-         </children>
-      </VBox>
-      <VBox fx:id="artContainer" managed="false" visible="false" prefHeight="0.0" prefWidth="526.0" spacing="10.0">
-         <children>
-            <CheckBox fx:id="checkApodo" mnemonicParsing="false" text="Tiene Apodo" />
-            <TextField fx:id="txtApodo" promptText="Apodo" />
-            <Label text="Especialidades:" />
-            <VBox fx:id="especialidadesContainer" prefHeight="200.0" prefWidth="100.0" />
-         </children>
-      </VBox>
-      <TextField fx:id="txtUser" promptText="Nombre de usuario" />
-      <TextField fx:id="txtPass" promptText="Contraseña" />
-		<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
-		<HBox spacing="10">
-			<Button fx:id="save" onAction="#save" text="Guardar" />
-			<Button onAction="#limpiarForm" text="Limpiar" />
-		</HBox>
-		</VBox>
+   <ScrollPane fx:id="formularioBox" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" managed="false" prefWidth="526.0" visible="false" VBox.vgrow="ALWAYS">
+      <content>
+      	<VBox spacing="10" styleClass="formulario">
+      		<TextField fx:id="txtNombre" promptText="Nombre Real" />
+            <TextField fx:id="txtEmail" promptText="Email" />
+            <ComboBox fx:id="cbNacionalidad" prefWidth="150.0" promptText="Nacionalidad" />
+            <HBox prefHeight="0.0" prefWidth="526.0" spacing="30.0">
+               <children>
+                  <RadioButton fx:id="rbCoord" mnemonicParsing="false" selected="true" text="Coordinador/a" />
+                  <RadioButton fx:id="rbArt" mnemonicParsing="false" prefWidth="63.0" text="Artista" />
+               </children>
+            </HBox>
+            <VBox fx:id="coordContainer" managed="true" prefHeight="0.0" prefWidth="526.0" spacing="10.0" visible="true">
+               <children>
+                  <CheckBox fx:id="checkSenior" mnemonicParsing="false" text="Coordinador/a Senior" />
+                  <DatePicker fx:id="dpSenior" managed="false" promptText="Desde..." visible="false" />
+               </children>
+            </VBox>
+            <VBox fx:id="artContainer" managed="false" prefHeight="0.0" prefWidth="526.0" spacing="10.0" visible="false">
+               <children>
+                  <CheckBox fx:id="checkApodo" mnemonicParsing="false" text="Tiene Apodo" />
+                  <TextField fx:id="txtApodo" promptText="Apodo" />
+                  <Label text="Especialidades:" />
+                  <VBox fx:id="especialidadesContainer" prefHeight="200.0" prefWidth="100.0" />
+               </children>
+            </VBox>
+            <TextField fx:id="txtUser" promptText="Nombre de usuario" />
+            <TextField fx:id="txtPass" promptText="Contraseña" />
+      		<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
+      		<HBox spacing="10">
+      			<Button fx:id="save" onAction="#save" text="Guardar" />
+      			<Button onAction="#limpiarForm" text="Limpiar" />
+      		</HBox>
+      		</VBox>
+      </content>
+   </ScrollPane>
 	<Separator prefWidth="200.0" />
 	<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="180.0" prefWidth="526.0" VBox.vgrow="ALWAYS">
 		<content>

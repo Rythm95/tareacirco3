@@ -25,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -35,23 +36,23 @@ public class GestionEspectaculosController implements Initializable {
 	private VBox container;
 
 	@FXML
-	private VBox formularioBox;
-	
+	private ScrollPane formularioBox;
+
 	@FXML
 	private TextField txtNombre;
-	
+
 	@FXML
 	private DatePicker dpInicio;
-	
+
 	@FXML
 	private DatePicker dpFin;
-	
+
 	@FXML
 	private Label lblError;
 
 	@FXML
 	private Button btnForm;
-	
+
 	@FXML
 	private Button save;
 
@@ -83,20 +84,26 @@ public class GestionEspectaculosController implements Initializable {
 			save.setDisable(true);
 			lblError.setText("Registra un coordinador antes de crear un espectáculo.");
 			lblError.setVisible(true);
+		} else {
+			for (Persona p : listaCoordinacion) {
+				cbCoordinador.getItems().add(p.getNombre());
+			}
 		}
 		
-		for (Persona p : listaCoordinacion) {
-			cbCoordinador.getItems().add(p.getNombre());	
+		if (listaNumeros.size()<3 && !lblError.isVisible()) {
+			save.setDisable(true);
+			lblError.setText("Registra al menos 3 números circenses antes de crear un espectáculo.");
+			lblError.setVisible(true);
 		}
 
 		if (listaEspectaculos.isEmpty()) {
 			Label vacio = new Label("No hay espectáculos programados.");
 			container.getChildren().add(vacio);
-		}
-
-		for (Espectaculo es : listaEspectaculos) {
-			VBox card = espectaculoCard(es);
-			container.getChildren().add(card);
+		} else {
+			for (Espectaculo es : listaEspectaculos) {
+				VBox card = espectaculoCard(es);
+				container.getChildren().add(card);
+			}
 		}
 
 	}
@@ -127,14 +134,14 @@ public class GestionEspectaculosController implements Initializable {
 			btnForm.setText("Ocultar Formulario");
 		}
 	}
-	
+
 	@FXML
 	public void limpiarForm() {
 		txtNombre.clear();
 		dpInicio.setValue(null);
 		dpFin.setValue(null);
 		cbCoordinador.setValue(null);
-		
+
 	}
 
 	public void login() {

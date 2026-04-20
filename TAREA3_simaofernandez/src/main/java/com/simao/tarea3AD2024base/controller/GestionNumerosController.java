@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -37,7 +38,7 @@ public class GestionNumerosController implements Initializable {
 	private Button btnForm;
 
 	@FXML
-	private VBox formularioBox;
+	private ScrollPane formularioBox;
 
 	@FXML
 	private TextField txtNombre;
