@@ -25,7 +25,7 @@
 				<Button fx:id="btnForm" mnemonicParsing="false" onAction="#showForm" prefHeight="25.0" prefWidth="125.0" styleClass="btn-secondary" text="Nuevo Número" />
 			</children>
 		</HBox>
-      <ScrollPane fx:id="formularioBox" fitToWidth="true" hbarPolicy="NEVER" managed="false" prefWidth="526.0" visible="false" VBox.vgrow="ALWAYS">
+      <ScrollPane fx:id="formularioBox" fitToWidth="true" hbarPolicy="NEVER" managed="false" prefWidth="526.0" vbarPolicy="AS_NEEDED" visible="false">
          <content>
       		<VBox spacing="10" styleClass="formulario">
       		<TextField fx:id="txtNombre" promptText="Nombre del Número" />
@@ -39,7 +39,7 @@
          </content>
       </ScrollPane>
 		<Separator prefWidth="200.0" />
-		<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="180.0" prefWidth="526.0">
+		<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefWidth="526.0">
 			<content>
 				<VBox fx:id="container" spacing="10">
 					<padding>
