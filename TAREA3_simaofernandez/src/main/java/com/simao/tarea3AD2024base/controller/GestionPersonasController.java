@@ -1,7 +1,9 @@
 package com.simao.tarea3AD2024base.controller;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
+import com.simao.tarea3AD2024base.modelo.Especialidad;
 import com.simao.tarea3AD2024base.modelo.Persona;
+import com.simao.tarea3AD2024base.services.AccesoPaises;
 import com.simao.tarea3AD2024base.services.PersonaService;
 
 import javafx.css.PseudoClass;
@@ -74,6 +78,8 @@ public class GestionPersonasController implements Initializable {
 	@FXML
 	private VBox especialidadesContainer;
 
+	private Map<Especialidad, CheckBox> checkEspecialidades = new HashMap<>();
+
 	@FXML
 	private TextField txtUser;
 
@@ -101,10 +107,32 @@ public class GestionPersonasController implements Initializable {
 
 		List<Persona> listaPersonas = peService.findAll();
 
+		Map<String, String> nacionalidades = AccesoPaises.loadPaises();
+
 		rbCoord.setToggleGroup(rdGroup);
 		rbArt.setToggleGroup(rdGroup);
 
 		rdGroup.selectedToggleProperty().addListener((observable, oldVal, newVal) -> personaTipoForm(newVal));
+
+		checkSenior.selectedProperty().addListener((observable, oldVal, newVal) -> showSenior(newVal));
+
+		checkApodo.selectedProperty().addListener((observable, oldVal, newVal) -> showApodo(newVal));
+
+		if (nacionalidades.isEmpty()) {
+			save.setDisable(true);
+			lblError.setText("Registra un artista antes de crear un número.");
+			lblError.setVisible(true);
+		} else {
+			for (Map.Entry<String, String> na : nacionalidades.entrySet()) {
+				cbNacionalidad.getItems().add(na.getValue());
+			}
+		}
+
+		for (Especialidad esp : Especialidad.values()) {
+			CheckBox cb = new CheckBox(esp.name());
+			checkEspecialidades.put(esp, cb);
+			especialidadesContainer.getChildren().add(cb);
+		}
 
 		if (listaPersonas.isEmpty()) {
 			Label vacio = new Label("No hay personas registradas.");
@@ -145,34 +173,55 @@ public class GestionPersonasController implements Initializable {
 	@FXML
 	public void limpiarForm() {
 		txtNombre.clear();
+		txtEmail.clear();
+		txtApodo.clear();
+		txtUser.clear();
+		txtPass.clear();
+		cbNacionalidad.getSelectionModel().clearSelection();
+		cbNacionalidad.setValue(null);
+		dpSenior.setValue(null);
+		checkApodo.setSelected(false);
+		checkEspecialidades.values().forEach(check -> check.setSelected(false));
+		checkSenior.setSelected(false);
 	}
 
 	@FXML
 	public void personaTipoForm(Toggle toggle) {
-		coordContainer.setVisible(true);
-		coordContainer.setManaged(true);
+		boolean isCoord = (toggle == rbCoord);
 
-		artContainer.setVisible(false);
-		artContainer.setManaged(false);
+		coordContainer.setVisible(isCoord);
+		coordContainer.setManaged(isCoord);
+
+		artContainer.setVisible(!isCoord);
+		artContainer.setManaged(!isCoord);
 	}
 
 	@FXML
-	public void senior() {
-		if (checkSenior.isSelected()) {
-			dpSenior.setVisible(false);
-			dpSenior.setManaged(false);
-		} else {
-			dpSenior.setVisible(true);
-			dpSenior.setManaged(true);
-		}
+	public void showSenior(boolean select) {
+		dpSenior.setVisible(select);
+		dpSenior.setManaged(select);
+
+	}
+
+	@FXML
+	public void showApodo(boolean select) {
+		txtApodo.setVisible(select);
+		txtApodo.setManaged(select);
+
 	}
 
 	@FXML
 	public void save() {
 		txtNombre.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), getNombre().isEmpty());
+		txtEmail.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), getEmail().isEmpty());
+
 	}
 
 	public String getNombre() {
 		return txtNombre.getText();
+	}
+
+	public String getEmail() {
+		return txtEmail.getText();
 	}
 }

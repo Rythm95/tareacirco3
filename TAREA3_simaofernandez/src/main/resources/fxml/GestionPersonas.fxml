@@ -48,9 +48,9 @@
             <VBox fx:id="artContainer" managed="false" prefHeight="0.0" prefWidth="526.0" spacing="10.0" visible="false">
                <children>
                   <CheckBox fx:id="checkApodo" mnemonicParsing="false" text="Tiene Apodo" />
-                  <TextField fx:id="txtApodo" promptText="Apodo" />
+                  <TextField fx:id="txtApodo" managed="false" visible="false" promptText="Apodo" />
                   <Label text="Especialidades:" />
-                  <VBox fx:id="especialidadesContainer" prefHeight="200.0" prefWidth="100.0" />
+                  <VBox fx:id="especialidadesContainer" spacing="2" prefHeight="200.0" prefWidth="100.0" />
                </children>
             </VBox>
             <TextField fx:id="txtUser" promptText="Nombre de usuario" />
