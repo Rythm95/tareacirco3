@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -91,6 +92,15 @@ public class GestionPersonasController implements Initializable {
 
 	@FXML
 	private Label lblError;
+
+	@FXML
+	private Label lblErrorEmail;
+
+	@FXML
+	private Label lblErrorUser;
+
+	@FXML
+	private Label lblErrorPass;
 
 	@FXML
 	private Button btnForm;
@@ -267,41 +277,52 @@ public class GestionPersonasController implements Initializable {
 
 	private boolean validarForm() {
 
-		boolean nombreEmpty = getNombre().isEmpty();
-		txtNombre.pseudoClassStateChanged(EMPTY, nombreEmpty);
+		boolean nombre = getNombre().isEmpty();
+		txtNombre.pseudoClassStateChanged(EMPTY, nombre);
+		if (!nombre) {
+			if (!Pattern.matches("^[a-z]+$", getNombre())) {
+				String u = "El nombre de usuario no debe contener números ni letras con tíldes o dieresis";
 
-		boolean emailEmpty = getEmail().isEmpty();
-		txtEmail.pseudoClassStateChanged(EMPTY, emailEmpty);
+			}
 
-		boolean nacionalidadEmpty = getNacionalidad() == null;
-		cbNacionalidad.pseudoClassStateChanged(EMPTY, nacionalidadEmpty);
+		}
 
-		boolean fechaSeniorEmpty = false;
+		boolean email = getEmail().isEmpty();
+		txtEmail.pseudoClassStateChanged(EMPTY, email);
+		if (!email) {
+			if (!Pattern.matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$", getEmail())) {
+				System.out.println("El email no es válido.");
+			}
+		}
+
+		boolean nacionalidad = getNacionalidad() == null;
+		cbNacionalidad.pseudoClassStateChanged(EMPTY, nacionalidad);
+
+		boolean fechaSenior = false;
 		if (isSenior()) {
-			fechaSeniorEmpty = getFechaSenior() == null;
-			dpSenior.pseudoClassStateChanged(EMPTY, fechaSeniorEmpty);
+			fechaSenior = getFechaSenior() == null;
+			dpSenior.pseudoClassStateChanged(EMPTY, fechaSenior);
 		}
 
-		boolean apodoEmpty = false;
+		boolean apodo = false;
 		if (hasApodo()) {
-			apodoEmpty = getApodo().isEmpty();
-			txtApodo.pseudoClassStateChanged(EMPTY, apodoEmpty);
+			apodo = getApodo().isEmpty();
+			txtApodo.pseudoClassStateChanged(EMPTY, apodo);
 		}
 
-		boolean especialidadesEmpty = false;
+		boolean especialidades = false;
 		if (getTipo() == rbArt) {
-			especialidadesEmpty = getEspecialidades().isEmpty();
+			especialidades = getEspecialidades().isEmpty();
 		}
 
-		lblError.setVisible(especialidadesEmpty);
+		lblError.setVisible(especialidades);
 
-		boolean userEmpty = getUsername().isEmpty();
-		txtUser.pseudoClassStateChanged(EMPTY, userEmpty);
+		boolean username = getUsername().isEmpty();
+		txtUser.pseudoClassStateChanged(EMPTY, username);
 
-		boolean passEmpty = getPassword().isEmpty();
-		txtPass.pseudoClassStateChanged(EMPTY, passEmpty);
+		boolean password = getPassword().isEmpty();
+		txtPass.pseudoClassStateChanged(EMPTY, password);
 
-		return nombreEmpty || emailEmpty || nacionalidadEmpty || fechaSeniorEmpty || apodoEmpty || especialidadesEmpty
-				|| userEmpty || passEmpty;
+		return nombre || email || nacionalidad || fechaSenior || apodo || especialidades || username || password;
 	}
 }
