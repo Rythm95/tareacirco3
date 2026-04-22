@@ -1,6 +1,7 @@
 package com.simao.tarea3AD2024base.controller;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,8 @@ import javafx.scene.layout.VBox;
 @Controller
 public class GestionPersonasController implements Initializable {
 
+	private PseudoClass EMPTY = PseudoClass.getPseudoClass("error");
+
 	@FXML
 	private VBox container;
 
@@ -55,7 +58,7 @@ public class GestionPersonasController implements Initializable {
 	@FXML
 	private RadioButton rbArt;
 
-	ToggleGroup rdGroup = new ToggleGroup();
+	private ToggleGroup rdGroup = new ToggleGroup();
 
 	@FXML
 	private VBox coordContainer;
@@ -102,6 +105,51 @@ public class GestionPersonasController implements Initializable {
 	@Autowired
 	private PersonaService peService;
 
+	private String getNombre() {
+		return txtNombre.getText();
+	}
+
+	private String getEmail() {
+		return txtEmail.getText();
+	}
+
+	private String getNacionalidad() {
+		return cbNacionalidad.getValue();
+	}
+
+	private Toggle getTipo() {
+		return rdGroup.getSelectedToggle();
+	}
+
+	private boolean isSenior() {
+		return checkSenior.isSelected();
+	}
+
+	private LocalDate getFechaSenior() {
+		return dpSenior.getValue();
+	}
+
+	private boolean hasApodo() {
+		return checkApodo.isSelected();
+	}
+
+	private String getApodo() {
+		return txtApodo.getText();
+	}
+
+	private List<Especialidad> getEspecialidades() {
+		return checkEspecialidades.entrySet().stream().filter(es -> es.getValue().isSelected()).map(Map.Entry::getKey)
+				.toList();
+	}
+
+	private String getUsername() {
+		return txtUser.getText();
+	}
+
+	private String getPassword() {
+		return txtPass.getText();
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -120,9 +168,10 @@ public class GestionPersonasController implements Initializable {
 
 		if (nacionalidades.isEmpty()) {
 			save.setDisable(true);
-			lblError.setText("Registra un artista antes de crear un número.");
+			lblError.setText("Error al cargar las nacionalidades.");
 			lblError.setVisible(true);
 		} else {
+			lblError.setText("Debe seleccionar al menos una especialidad para registrar un artista.");
 			for (Map.Entry<String, String> na : nacionalidades.entrySet()) {
 				cbNacionalidad.getItems().add(na.getValue());
 			}
@@ -162,7 +211,7 @@ public class GestionPersonasController implements Initializable {
 		if (formularioBox.isVisible()) {
 			formularioBox.setVisible(false);
 			formularioBox.setManaged(false);
-			btnForm.setText("Nuevo Espectáculo");
+			btnForm.setText("Nueva Persona");
 		} else {
 			formularioBox.setVisible(true);
 			formularioBox.setManaged(true);
@@ -171,7 +220,7 @@ public class GestionPersonasController implements Initializable {
 	}
 
 	@FXML
-	public void limpiarForm() {
+	private void limpiarForm() {
 		txtNombre.clear();
 		txtEmail.clear();
 		txtApodo.clear();
@@ -185,8 +234,7 @@ public class GestionPersonasController implements Initializable {
 		checkSenior.setSelected(false);
 	}
 
-	@FXML
-	public void personaTipoForm(Toggle toggle) {
+	private void personaTipoForm(Toggle toggle) {
 		boolean isCoord = (toggle == rbCoord);
 
 		coordContainer.setVisible(isCoord);
@@ -196,32 +244,64 @@ public class GestionPersonasController implements Initializable {
 		artContainer.setManaged(!isCoord);
 	}
 
-	@FXML
-	public void showSenior(boolean select) {
+	private void showSenior(boolean select) {
 		dpSenior.setVisible(select);
 		dpSenior.setManaged(select);
-
 	}
 
-	@FXML
-	public void showApodo(boolean select) {
+	private void showApodo(boolean select) {
 		txtApodo.setVisible(select);
 		txtApodo.setManaged(select);
-
 	}
 
 	@FXML
-	public void save() {
-		txtNombre.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), getNombre().isEmpty());
-		txtEmail.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), getEmail().isEmpty());
-
+	private void save() {
+		if (validarForm()) {
+			// don't save
+			System.out.println("Uhh...");
+			return;
+		}
+		System.out.println("Yeah, that's fine");
+		// save
 	}
 
-	public String getNombre() {
-		return txtNombre.getText();
-	}
+	private boolean validarForm() {
 
-	public String getEmail() {
-		return txtEmail.getText();
+		boolean nombreEmpty = getNombre().isEmpty();
+		txtNombre.pseudoClassStateChanged(EMPTY, nombreEmpty);
+
+		boolean emailEmpty = getEmail().isEmpty();
+		txtEmail.pseudoClassStateChanged(EMPTY, emailEmpty);
+
+		boolean nacionalidadEmpty = getNacionalidad() == null;
+		cbNacionalidad.pseudoClassStateChanged(EMPTY, nacionalidadEmpty);
+
+		boolean fechaSeniorEmpty = false;
+		if (isSenior()) {
+			fechaSeniorEmpty = getFechaSenior() == null;
+			dpSenior.pseudoClassStateChanged(EMPTY, fechaSeniorEmpty);
+		}
+
+		boolean apodoEmpty = false;
+		if (hasApodo()) {
+			apodoEmpty = getApodo().isEmpty();
+			txtApodo.pseudoClassStateChanged(EMPTY, apodoEmpty);
+		}
+
+		boolean especialidadesEmpty = false;
+		if (getTipo() == rbArt) {
+			especialidadesEmpty = getEspecialidades().isEmpty();
+		}
+
+		lblError.setVisible(especialidadesEmpty);
+
+		boolean userEmpty = getUsername().isEmpty();
+		txtUser.pseudoClassStateChanged(EMPTY, userEmpty);
+
+		boolean passEmpty = getPassword().isEmpty();
+		txtPass.pseudoClassStateChanged(EMPTY, passEmpty);
+
+		return nombreEmpty || emailEmpty || nacionalidadEmpty || fechaSeniorEmpty || apodoEmpty || especialidadesEmpty
+				|| userEmpty || passEmpty;
 	}
 }

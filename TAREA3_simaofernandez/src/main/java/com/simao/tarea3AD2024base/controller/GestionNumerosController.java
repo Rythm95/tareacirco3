@@ -95,10 +95,10 @@ public class GestionNumerosController implements Initializable {
 	@FXML
 	private void showForm() {
 
-		if (btnForm.getText().equals("Ocultar Formulario")) {
+		if (formularioBox.isVisible()) {
 			formularioBox.setVisible(false);
 			formularioBox.setManaged(false);
-			btnForm.setText("Nuevo Espectáculo");
+			btnForm.setText("Nuevo Número");
 		} else {
 			formularioBox.setVisible(true);
 			formularioBox.setManaged(true);
