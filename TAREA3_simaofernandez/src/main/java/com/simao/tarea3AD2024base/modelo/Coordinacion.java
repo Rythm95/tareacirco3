@@ -2,12 +2,7 @@ package com.simao.tarea3AD2024base.modelo;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 /**
  * @author Ram Alapure
@@ -15,25 +10,12 @@ import jakarta.persistence.Table;
  */
 
 @Entity
-@Table(name = "Coordinacion")
-public class Coordinacion {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", updatable = false, nullable = false)
-	private long id;
+public class Coordinacion extends Persona {
 
 	private boolean senior;
 
 	private LocalDate fechaSenior;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public boolean isSenior() {
 		return senior;

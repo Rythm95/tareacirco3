@@ -46,5 +46,9 @@ public class PersonaService {
 	public List<Persona> findByPerfil(Perfil perfil) {
 		return repo.findByPerfil(perfil);
 	}
+	
+	public Persona findByEmail (String email) {
+		return repo.findByEmail(email);
+	}
 
 }

@@ -16,4 +16,5 @@ public interface PersonaRepository extends JpaRepository<Persona, Long> {
 	@Query("SELECT p FROM Persona p WHERE p.credenciales.perfil = :perfil")
 	List<Persona> findByPerfil(@Param("perfil") Perfil perfil);
 
+	Persona findByEmail(String email);
 }

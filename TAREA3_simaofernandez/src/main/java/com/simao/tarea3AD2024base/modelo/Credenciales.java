@@ -29,9 +29,11 @@ public class Credenciales implements Comparable<Credenciales> {
 	private Perfil perfil;
 	
 	@OneToOne
-    @JoinColumn(name = "idPersona")
+    @JoinColumn(name = "persona_id")
     private Persona persona;
 
+	public Credenciales() {}
+	
 	public Credenciales(Long id, String user, String password, Perfil perfil) {
 		super();
 		this.id = id;
@@ -39,6 +41,8 @@ public class Credenciales implements Comparable<Credenciales> {
 		this.password = password;
 		this.perfil = perfil;
 	}
+
+	
 
 	public Long getId() {
 		return id;
@@ -70,6 +74,14 @@ public class Credenciales implements Comparable<Credenciales> {
 
 	public void setPerfil(Perfil perfil) {
 		this.perfil = perfil;
+	}
+
+	public Persona getPersona() {
+		return persona;
+	}
+
+	public void setPersona(Persona persona) {
+		this.persona = persona;
 	}
 
 	@Override

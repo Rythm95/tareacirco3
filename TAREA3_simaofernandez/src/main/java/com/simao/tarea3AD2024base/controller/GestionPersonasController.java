@@ -13,9 +13,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
+import com.simao.tarea3AD2024base.modelo.Artista;
+import com.simao.tarea3AD2024base.modelo.Coordinacion;
+import com.simao.tarea3AD2024base.modelo.Credenciales;
 import com.simao.tarea3AD2024base.modelo.Especialidad;
+import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
 import com.simao.tarea3AD2024base.services.AccesoPaises;
+import com.simao.tarea3AD2024base.services.CredsService;
 import com.simao.tarea3AD2024base.services.PersonaService;
 
 import javafx.css.PseudoClass;
@@ -94,7 +99,13 @@ public class GestionPersonasController implements Initializable {
 	private Label lblError;
 
 	@FXML
+	private Label lblErrorNombre;
+
+	@FXML
 	private Label lblErrorEmail;
+
+	@FXML
+	private Label lblErrorEspecialidades;
 
 	@FXML
 	private Label lblErrorUser;
@@ -114,6 +125,9 @@ public class GestionPersonasController implements Initializable {
 
 	@Autowired
 	private PersonaService peService;
+
+	@Autowired
+	private CredsService crService;
 
 	private String getNombre() {
 		return txtNombre.getText();
@@ -163,8 +177,6 @@ public class GestionPersonasController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		List<Persona> listaPersonas = peService.findAll();
-
 		Map<String, String> nacionalidades = AccesoPaises.loadPaises();
 
 		rbCoord.setToggleGroup(rdGroup);
@@ -181,7 +193,6 @@ public class GestionPersonasController implements Initializable {
 			lblError.setText("Error al cargar las nacionalidades.");
 			lblError.setVisible(true);
 		} else {
-			lblError.setText("Debe seleccionar al menos una especialidad para registrar un artista.");
 			for (Map.Entry<String, String> na : nacionalidades.entrySet()) {
 				cbNacionalidad.getItems().add(na.getValue());
 			}
@@ -192,17 +203,27 @@ public class GestionPersonasController implements Initializable {
 			checkEspecialidades.put(esp, cb);
 			especialidadesContainer.getChildren().add(cb);
 		}
-
+		
+		cargarPersonas();
+		
+	}
+	
+	private void cargarPersonas() {
+		
+		List<Persona> listaPersonas = peService.findAll();
+		
+		container.getChildren().clear();
+		
 		if (listaPersonas.isEmpty()) {
 			Label vacio = new Label("No hay personas registradas.");
 			container.getChildren().add(vacio);
+		} else {
+			for (Persona p : listaPersonas) {
+				VBox card = personaCard(p);
+				container.getChildren().add(card);
+			}
 		}
-
-		for (Persona p : listaPersonas) {
-			VBox card = personaCard(p);
-			container.getChildren().add(card);
-		}
-
+		
 	}
 
 	private VBox personaCard(Persona p) {
@@ -268,11 +289,42 @@ public class GestionPersonasController implements Initializable {
 	private void save() {
 		if (validarForm()) {
 			// don't save
-			System.out.println("Uhh...");
+			System.out.println("Uhh... Maybe don't do that...");
 			return;
 		}
-		System.out.println("Yeah, that's fine");
-		// save
+
+		Persona persona;
+		Credenciales creds = new Credenciales();
+
+		if (getTipo() == rbCoord) {
+			Coordinacion cord = new Coordinacion();
+			cord.setSenior(isSenior());
+			cord.setFechaSenior(getFechaSenior());
+			persona = cord;
+		} else {
+			Artista art = new Artista();
+			art.setApodo(getApodo());
+			art.setEspecialidades(getEspecialidades());
+			persona = art;
+		}
+
+		persona.setNombre(getNombre());
+		persona.setEmail(getEmail());
+		persona.setNacionalidad(getNacionalidad());
+
+		creds.setUsername(getUsername());
+		creds.setPassword(getPassword());
+		creds.setPerfil(getTipo() == rbCoord ? Perfil.COORDINACION : Perfil.ARTISTA);
+
+		creds.setPersona(persona);
+		persona.setCredenciales(creds);
+
+		peService.save(persona);
+
+		System.out.println("That should do");
+		limpiarForm();
+		cargarPersonas();
+
 	}
 
 	private boolean validarForm() {
@@ -280,19 +332,33 @@ public class GestionPersonasController implements Initializable {
 		boolean nombre = getNombre().isEmpty();
 		txtNombre.pseudoClassStateChanged(EMPTY, nombre);
 		if (!nombre) {
-			if (!Pattern.matches("^[a-z]+$", getNombre())) {
-				String u = "El nombre de usuario no debe contener números ni letras con tíldes o dieresis";
-
+			if (!Pattern.matches("^[\\p{L}]+( [\\p{L}]+)*$", getNombre())) {
+				nombre = true;
+				lblErrorNombre.setText("El nombre solo puede contener caracteres unicode y espacios.");
 			}
-
+			lblErrorNombre.setManaged(nombre);
+			lblErrorNombre.setVisible(nombre);
+		} else {
+			lblErrorNombre.setManaged(false);
+			lblErrorNombre.setVisible(false);
 		}
 
 		boolean email = getEmail().isEmpty();
 		txtEmail.pseudoClassStateChanged(EMPTY, email);
 		if (!email) {
 			if (!Pattern.matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$", getEmail())) {
-				System.out.println("El email no es válido.");
+				email = true;
+				lblErrorEmail.setText("El email no es válido.");
+			} else if (peService.findByEmail(getEmail()) != null) {
+				email = true;
+				lblErrorEmail.setText("Este correo ya está registrado en la base de datos.");
 			}
+
+			lblErrorEmail.setManaged(email);
+			lblErrorEmail.setVisible(email);
+		} else {
+			lblErrorEmail.setManaged(false);
+			lblErrorEmail.setVisible(false);
 		}
 
 		boolean nacionalidad = getNacionalidad() == null;
@@ -313,15 +379,52 @@ public class GestionPersonasController implements Initializable {
 		boolean especialidades = false;
 		if (getTipo() == rbArt) {
 			especialidades = getEspecialidades().isEmpty();
+			lblErrorEspecialidades.setText("Debe seleccionar al menos una especialidad para registrar un artista.");
 		}
-
-		lblError.setVisible(especialidades);
+		lblErrorEspecialidades.setManaged(especialidades);
+		lblErrorEspecialidades.setVisible(especialidades);
 
 		boolean username = getUsername().isEmpty();
 		txtUser.pseudoClassStateChanged(EMPTY, username);
+		if (!username) {
+			if (getUsername().length() <= 2) {
+				username = true;
+				lblErrorUser.setText("El nombre de usuario debe contener más de 2 caracteres.");
+			} else if (getUsername().contains(" ")) {
+				username = true;
+				lblErrorUser.setText("El nombre de usuario no debe contener espacios.");
+			} else if (!Pattern.matches("^[a-z]+$", getUsername())) {
+				username = true;
+				lblErrorUser.setText(
+						"El nombre de usuario no debe contener números ni letras mayúsculas o con tíldes o dieresis.");
+			} else if (crService.findByUsername(getUsername()) != null) {
+				username = true;
+				lblErrorUser.setText("Este nombre de usuario ya está registrado en la base de datos.");
+			}
+
+			lblErrorUser.setManaged(username);
+			lblErrorUser.setVisible(username);
+		} else {
+			lblErrorUser.setManaged(false);
+			lblErrorUser.setVisible(false);
+		}
 
 		boolean password = getPassword().isEmpty();
 		txtPass.pseudoClassStateChanged(EMPTY, password);
+		if (!password) {
+			if (getPassword().length() <= 2) {
+				password = true;
+				lblErrorPass.setText("La contraseña debe contener más de 2 caracteres.");
+			} else if (getPassword().contains(" ")) {
+				password = true;
+				lblErrorPass.setText("La contraseña no debe contener espacios.");
+			}
+			lblErrorPass.setManaged(password);
+			lblErrorPass.setVisible(password);
+		} else {
+			lblErrorPass.setManaged(false);
+			lblErrorPass.setVisible(false);
+		}
 
 		return nombre || email || nacionalidad || fechaSenior || apodo || especialidades || username || password;
 	}

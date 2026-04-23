@@ -31,8 +31,9 @@
       <content>
       	<VBox spacing="10" styleClass="formulario">
       		<TextField fx:id="txtNombre" promptText="Nombre Real" />
+      		<Label fx:id="lblErrorNombre" managed="false" styleClass="error-label" text="Error" visible="false" wrapText="true" />
             <TextField fx:id="txtEmail" promptText="Email" />
-            <Label fx:id="lblErrorEmail" styleClass="error-label" text="Error" visible="false" managed="false" />
+            <Label fx:id="lblErrorEmail" managed="false" styleClass="error-label" text="Error" visible="false" wrapText="true" />
             <ComboBox fx:id="cbNacionalidad" prefWidth="150.0" promptText="Nacionalidad" />
             <HBox prefHeight="0.0" prefWidth="526.0" spacing="30.0">
                <children>
@@ -49,16 +50,17 @@
             <VBox fx:id="artContainer" managed="false" prefHeight="0.0" prefWidth="526.0" spacing="10.0" visible="false">
                <children>
                   <CheckBox fx:id="checkApodo" mnemonicParsing="false" text="Tiene Apodo" />
-                  <TextField fx:id="txtApodo" managed="false" visible="false" promptText="Apodo" />
+                  <TextField fx:id="txtApodo" managed="false" promptText="Apodo" visible="false" />
                   <Label text="Especialidades:" />
-                  <VBox fx:id="especialidadesContainer" spacing="2" prefHeight="200.0" prefWidth="100.0" />
+                  <VBox fx:id="especialidadesContainer" prefHeight="200.0" prefWidth="100.0" spacing="2" />
+                  <Label fx:id="lblErrorEspecialidades" managed="false" styleClass="error-label" text="Error" visible="false" wrapText="true" />
                </children>
             </VBox>
             <TextField fx:id="txtUser" promptText="Nombre de usuario" />
-            <Label fx:id="lblErrorUser" styleClass="error-label" text="Error" visible="false" managed="false" />
+            <Label fx:id="lblErrorUser" managed="false" styleClass="error-label" text="Error" visible="false" wrapText="true" />
             <TextField fx:id="txtPass" promptText="Contraseña" />
-            <Label fx:id="lblErrorPass" styleClass="error-label" text="Error" visible="false" managed="false" />
-      		<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
+            <Label fx:id="lblErrorPass" managed="false" styleClass="error-label" text="Error" visible="false" wrapText="true" />
+      		<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" wrapText="true" />
       		<HBox spacing="10">
       			<Button fx:id="save" onAction="#save" text="Guardar" />
       			<Button onAction="#limpiarForm" text="Limpiar" />

@@ -2,12 +2,10 @@ package com.simao.tarea3AD2024base.modelo;
 
 import java.util.List;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 /**
  * @author Ram Alapure
@@ -15,25 +13,13 @@ import jakarta.persistence.Table;
  */
 
 @Entity
-@Table(name = "Artista")
-public class Artista {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", updatable = false, nullable = false)
-	private long id;
+public class Artista extends Persona {
 
 	private String apodo;
 
+	@ElementCollection
+    @Enumerated(EnumType.STRING)
 	private List<Especialidad> especialidades;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getApodo() {
 		return apodo;
