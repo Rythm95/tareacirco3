@@ -111,10 +111,10 @@ public class GestionEspectaculosController implements Initializable {
 	private VBox espectaculoCard(Espectaculo e) {
 
 		Label nombre = new Label("[id " + e.getId() + "] - " + e.getNombre());
-		nombre.getStyleClass().add("titulo-card");
+		nombre.getStyleClass().add("card-titulo");
 
 		Label fechas = new Label("Del " + e.getFechaini() + " al " + e.getFechafin());
-		fechas.getStyleClass().add("fecha");
+		fechas.getStyleClass().add("card-subtitulo");
 
 		VBox card = new VBox(nombre, fechas);
 		card.getStyleClass().add("card");

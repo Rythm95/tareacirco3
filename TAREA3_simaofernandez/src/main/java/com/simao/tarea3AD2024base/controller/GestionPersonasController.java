@@ -203,17 +203,17 @@ public class GestionPersonasController implements Initializable {
 			checkEspecialidades.put(esp, cb);
 			especialidadesContainer.getChildren().add(cb);
 		}
-		
+
 		cargarPersonas();
-		
+
 	}
-	
+
 	private void cargarPersonas() {
-		
+
 		List<Persona> listaPersonas = peService.findAll();
-		
+
 		container.getChildren().clear();
-		
+
 		if (listaPersonas.isEmpty()) {
 			Label vacio = new Label("No hay personas registradas.");
 			container.getChildren().add(vacio);
@@ -223,15 +223,33 @@ public class GestionPersonasController implements Initializable {
 				container.getChildren().add(card);
 			}
 		}
-		
+
 	}
 
 	private VBox personaCard(Persona p) {
 
+		String subText = "";
+		if (p instanceof Artista a) {
+			subText = "Artista";
+
+			if (!a.getApodo().isEmpty())
+				subText = subText.concat(" - " + a.getApodo());
+		}
+
+		if (p instanceof Coordinacion c) {
+			subText = "Coordinador/a";
+
+			if (c.isSenior())
+				subText = subText.concat(" Senior");
+		}
+
 		Label nombre = new Label("[id " + p.getId() + "] - " + p.getNombre());
 		nombre.getStyleClass().add("titulo-card");
 
-		VBox card = new VBox(nombre);
+		Label subtitulo = new Label(subText);
+		subtitulo.getStyleClass().add("subtitulo-card");
+
+		VBox card = new VBox(nombre, subtitulo);
 		card.getStyleClass().add("card");
 
 		return card;

@@ -20,12 +20,12 @@
     -fx-effect: dropshadow(gaussian, rgba(0.0,0.0,0.0,0.1), 5.0, 0.0, 0.0, 2.0);
 }
 
-.titulo-card {
+.card-titulo {
     -fx-font-size: 12.0px;
     -fx-font-weight: bold;
 }
 
-.fecha {
+.card-subtitulo {
     -fx-text-fill: #555;
 }
 
