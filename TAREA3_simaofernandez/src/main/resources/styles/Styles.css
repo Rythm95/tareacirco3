@@ -79,6 +79,14 @@
     -fx-background-color: #cccccc;
 }
 
+.formulario {
+    -fx-background-color: #eee;
+    -fx-padding: 10;
+    -fx-background-radius: 5;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5;
+}
+
 /* Errores: */
 .text-field:error, .password-field:error, .date-picker:error, .combo-box:error{
     -fx-border-color: red;
@@ -87,13 +95,4 @@
 .error-label {
     -fx-text-fill: red;
     -fx-font-size: 12px;
-}
-
-/* Formulario: */
-.formulario {
-    -fx-background-color: #eee;
-    -fx-padding: 10;
-    -fx-background-radius: 5;
-    -fx-border-color: #ddd;
-    -fx-border-radius: 5;
 }

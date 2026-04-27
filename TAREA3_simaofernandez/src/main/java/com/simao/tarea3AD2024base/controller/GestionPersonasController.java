@@ -244,10 +244,10 @@ public class GestionPersonasController implements Initializable {
 		}
 
 		Label nombre = new Label("[id " + p.getId() + "] - " + p.getNombre());
-		nombre.getStyleClass().add("titulo-card");
+		nombre.getStyleClass().add("card-titulo");
 
 		Label subtitulo = new Label(subText);
-		subtitulo.getStyleClass().add("subtitulo-card");
+		subtitulo.getStyleClass().add("card-subtitulo");
 
 		VBox card = new VBox(nombre, subtitulo);
 		card.getStyleClass().add("card");
@@ -306,8 +306,6 @@ public class GestionPersonasController implements Initializable {
 	@FXML
 	private void save() {
 		if (validarForm()) {
-			// don't save
-			System.out.println("Uhh... Maybe don't do that...");
 			return;
 		}
 
@@ -338,8 +336,7 @@ public class GestionPersonasController implements Initializable {
 		persona.setCredenciales(creds);
 
 		peService.save(persona);
-
-		System.out.println("That should do");
+		
 		limpiarForm();
 		cargarPersonas();
 

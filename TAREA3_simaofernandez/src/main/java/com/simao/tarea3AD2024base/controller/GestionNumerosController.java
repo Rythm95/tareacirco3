@@ -1,7 +1,9 @@
 package com.simao.tarea3AD2024base.controller;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +16,14 @@ import com.simao.tarea3AD2024base.modelo.Persona;
 import com.simao.tarea3AD2024base.services.NumeroService;
 import com.simao.tarea3AD2024base.services.PersonaService;
 
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
@@ -29,6 +31,8 @@ import javafx.scene.layout.VBox;
 
 @Controller
 public class GestionNumerosController implements Initializable {
+
+	private PseudoClass EMPTY = PseudoClass.getPseudoClass("error");
 
 	@Autowired
 	private PersonaService peService;
@@ -47,34 +51,41 @@ public class GestionNumerosController implements Initializable {
 
 	@FXML
 	private TextField txtNombre;
-	
+
 	@FXML
 	private Spinner<Integer> spMinutos;
-	
+
 	@FXML
 	private ComboBox<String> cbDecimal;
 
 	@FXML
-	private ListView<Persona> lvArtistas;
-	
+	private ScrollPane artistasBox;
+
 	@FXML
-	private ComboBox<String> cbArtista;
+	private VBox containerArtistas;
+
+	private Map<Artista, CheckBox> checkArtistas = new HashMap<>();
 
 	@FXML
 	private Label lblError;
 
 	@FXML
 	private Button save;
-	
+
 	private String getNombre() {
 		return txtNombre.getText();
 	}
-	
+
 	private double getDuracion() {
 		int min = spMinutos.getValue();
 		if (cbDecimal.getValue() == ".5")
 			min += 0.5;
 		return min;
+	}
+
+	private List<Artista> getArtistas() {
+		return checkArtistas.entrySet().stream().filter(es -> es.getValue().isSelected()).map(Map.Entry::getKey)
+				.toList();
 	}
 
 	@Override
@@ -85,19 +96,19 @@ public class GestionNumerosController implements Initializable {
 		List<Numero> listaNumeros = nuService.findAll();
 
 		spMinutos.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 999, 1));
-		
+
 		cbDecimal.getItems().addAll(".0", ".5");
-		
-		lvArtistas.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-				
+
 		if (listaArtistas.isEmpty()) {
 			save.setDisable(true);
 			lblError.setText("Registra un artista antes de crear un número.");
 			lblError.setVisible(true);
 		} else {
-			lvArtistas.getItems().addAll(listaArtistas);
 			for (Persona p : listaArtistas) {
-				cbArtista.getItems().add(p.getNombre());
+				Artista a = (Artista) p;
+				CheckBox cb = new CheckBox(p.getNombre());
+				checkArtistas.put(a, cb);
+				containerArtistas.getChildren().add(cb);
 			}
 		}
 
@@ -140,8 +151,44 @@ public class GestionNumerosController implements Initializable {
 	}
 
 	@FXML
+	private void save() {
+		if (validarForm()) {
+			System.out.println("Maybe don't do that...");
+			return;
+		}
+
+		Numero num = new Numero();
+		num.setNombre(getNombre());
+		num.setDuracion(getDuracion());
+		num.setArtistas(getArtistas());
+		
+		nuService.save(num);
+		
+		limpiarForm();
+		//recargar datos
+
+	}
+
+	private boolean validarForm() {
+
+		boolean nombre = getNombre().isEmpty();
+		txtNombre.pseudoClassStateChanged(EMPTY, nombre);
+
+		boolean artistas = getArtistas().isEmpty();
+		lblError.setText("Debe seleccionar al menos un artista que participará en el número.");
+
+		lblError.setManaged(artistas);
+		lblError.setVisible(artistas);
+
+		return nombre;
+	}
+
+	@FXML
 	public void limpiarForm() {
 		txtNombre.clear();
+		spMinutos.getValueFactory().setValue(1);
+		cbDecimal.setValue(".0");
+		checkArtistas.values().forEach(check -> check.setSelected(false));
 
 	}
 
