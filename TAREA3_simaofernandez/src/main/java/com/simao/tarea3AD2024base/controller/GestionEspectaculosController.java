@@ -1,6 +1,5 @@
 package com.simao.tarea3AD2024base.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
+import com.simao.tarea3AD2024base.modelo.Session;
 import com.simao.tarea3AD2024base.services.EspectaculoService;
 import com.simao.tarea3AD2024base.services.NumeroService;
 import com.simao.tarea3AD2024base.services.PersonaService;
@@ -30,10 +30,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -42,7 +39,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 @Controller
 public class GestionEspectaculosController implements Initializable {
@@ -61,6 +57,9 @@ public class GestionEspectaculosController implements Initializable {
 
 	@Autowired
 	private PersonaService peService;
+	
+	@Autowired
+	private Session session;
 
 	@EventListener
 	public void onNewPersona(NewPersonaEvent event) {
@@ -149,6 +148,7 @@ public class GestionEspectaculosController implements Initializable {
 			lblError.setText("Registra un coordinador antes de crear un espectáculo.");
 			lblError.setVisible(true);
 		} else {
+			cbCoordinador.getItems().clear();
 			for (Persona p : listaCoordinacion) {
 				cbCoordinador.getItems().add(p.getNombre());
 			}
@@ -163,6 +163,7 @@ public class GestionEspectaculosController implements Initializable {
 			lblError.setText("Registra al menos 3 números circenses antes de crear un espectáculo.");
 			lblError.setVisible(true);
 		} else {
+			cbNumeros.getItems().clear();
 			lvNumeros.setItems(numSelected);
 			for (Numero n : listaNumeros) {
 				cbNumeros.getItems().add(n.getNombre());
@@ -198,31 +199,15 @@ public class GestionEspectaculosController implements Initializable {
 		card.getStyleClass().add("card");
 
 		card.setOnMouseClicked(event -> {
-			openEspectaculo(e);
+			session.setEspectaculo(e);
+			openEspectaculo();
 		});
 
 		return card;
 	}
 
-	private void openEspectaculo(Espectaculo e) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Detalle.fxml"));
-			Parent root;
-
-			root = loader.load();
-
-			EspectaculoController controller = loader.getController();
-			controller.setEspectaculo(e);
-
-			Stage stage = new Stage();
-			stage.setTitle(e.getNombre());
-			stage.setScene(new Scene(root));
-			
-			stage.show();
-			
-		} catch (IOException er) {
-			er.printStackTrace();
-		}
+	private void openEspectaculo() {
+		stageManager.switchScene(FxmlView.ESPECTACULO);
 	}
 
 	@FXML

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.Credenciales;
+import com.simao.tarea3AD2024base.modelo.Session;
 import com.simao.tarea3AD2024base.services.CredsService;
 import com.simao.tarea3AD2024base.view.FxmlView;
 
@@ -50,6 +51,9 @@ public class LoginController implements Initializable {
 	@Lazy
 	@Autowired
 	private StageManager stageManager;
+	
+	@Autowired
+	private Session session;
 
 	@FXML
 	private void login(ActionEvent event) throws IOException {
@@ -70,6 +74,7 @@ public class LoginController implements Initializable {
 			return;
 		}
 		else if (user.equals(getUsername()) && pass.equals(getPassword())) {
+			session.setNombre("Admin");
 			stageManager.switchScene(FxmlView.ADMINISTRADOR);
 		} else if (credService.authenticate(getUsername(), getPassword())) {
 
