@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
@@ -25,21 +26,38 @@
 			<Button fx:id="btnForm" mnemonicParsing="false" onAction="#showForm" prefHeight="25.0" prefWidth="125.0" styleClass="btn-secondary" text="Nuevo Espectáculo" />
 		</children>
 	</HBox>
-   <ScrollPane fx:id="formularioBox" fitToWidth="true" hbarPolicy="NEVER" managed="false" prefWidth="526.0" visible="false">
-      <content>
-      	<VBox spacing="10" styleClass="formulario">
-         		<TextField fx:id="txtNombre" promptText="Nombre del Espectáculo" />
-         		<DatePicker fx:id="dpInicio" promptText="Fecha de Inicio" />
-         		<DatePicker fx:id="dpFin" promptText="Fecha de Fin" />
-         		<ComboBox fx:id="cbCoordinador" promptText="Selecciona coordinador" />
-         		<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
-         		<HBox spacing="10">
-         			<Button fx:id="save" text="Guardar" />
-         			<Button onAction="#limpiarForm" text="Limpiar" />
-         		</HBox>
-      	</VBox>
-      </content>
-   </ScrollPane>
+	<ScrollPane fx:id="formularioBox" fitToWidth="true" hbarPolicy="NEVER" managed="false" prefWidth="526.0" visible="false">
+		<content>
+			<VBox spacing="10" styleClass="formulario">
+				<TextField fx:id="txtNombre" promptText="Nombre del Espectáculo" />
+				<Label fx:id="lblErrorNombre" managed="false" styleClass="error-label" text="Error" visible="false" />
+				<HBox spacing="10">
+					<DatePicker fx:id="dpInicio" promptText="Fecha de Inicio" />
+					<DatePicker fx:id="dpFin" promptText="Fecha de Fin" />
+				</HBox>
+				<Label fx:id="lblErrorFecha" managed="false" styleClass="error-label" text="Error" visible="false" />
+				<ComboBox fx:id="cbCoordinador" promptText="Coordinador" />
+				<VBox spacing="10">
+					<HBox spacing="10">
+						<ComboBox fx:id="cbNumeros" prefWidth="200.0" promptText="Selecciona número" />
+						<Button onAction="#addNumero" text="Añadir" />
+					</HBox>
+					<ListView fx:id="lvNumeros" prefHeight="80.0" />
+					<HBox spacing="10">
+						<Button onAction="#numeroMoveUp" text="Subir" />
+						<Button onAction="#numeroMoveDown" text="Bajar" />
+						<Button onAction="#eliminarNumero" text="Eliminar" />
+					</HBox>
+				</VBox>
+				<Label fx:id="lblErrorNumeros" managed="false" styleClass="error-label" text="Error" visible="false" />
+				<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
+				<HBox spacing="10">
+					<Button fx:id="save" onAction="#save" text="Guardar" />
+					<Button onAction="#limpiarForm" text="Limpiar" />
+				</HBox>
+			</VBox>
+		</content>
+	</ScrollPane>
 	<Separator prefWidth="200.0" />
 	<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefWidth="526.0" VBox.vgrow="ALWAYS">
 		<content>

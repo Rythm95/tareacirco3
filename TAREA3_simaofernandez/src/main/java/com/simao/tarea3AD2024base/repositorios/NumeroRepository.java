@@ -7,4 +7,7 @@ import com.simao.tarea3AD2024base.modelo.Numero;
 
 
 @Repository
-public interface NumeroRepository extends JpaRepository<Numero, Long> {}
+public interface NumeroRepository extends JpaRepository<Numero, Long> {
+	
+	Numero findByNombre(String nombre);
+}

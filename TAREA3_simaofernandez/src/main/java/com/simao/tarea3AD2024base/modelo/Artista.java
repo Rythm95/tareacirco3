@@ -1,11 +1,13 @@
 package com.simao.tarea3AD2024base.modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToMany;
 
 /**
  * @author Ram Alapure
@@ -20,6 +22,9 @@ public class Artista extends Persona {
 	@ElementCollection
     @Enumerated(EnumType.STRING)
 	private List<Especialidad> especialidades;
+	
+	@ManyToMany(mappedBy = "artistas")
+	private List<Numero> numeros = new ArrayList<>();
 
 	public String getApodo() {
 		return apodo;

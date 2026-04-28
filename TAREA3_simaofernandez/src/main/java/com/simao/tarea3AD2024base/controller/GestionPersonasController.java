@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
@@ -128,6 +129,9 @@ public class GestionPersonasController implements Initializable {
 
 	@Autowired
 	private CredsService crService;
+	
+	@Autowired
+	private ApplicationEventPublisher evPublisher;
 
 	private String getNombre() {
 		return txtNombre.getText();
@@ -339,6 +343,8 @@ public class GestionPersonasController implements Initializable {
 		
 		limpiarForm();
 		cargarPersonas();
+		
+		evPublisher.publishEvent(new NewPersonaEvent(persona));
 
 	}
 

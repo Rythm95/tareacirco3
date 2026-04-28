@@ -33,6 +33,10 @@ public class NumeroService {
 	public Numero find(Long id) {
 		return repo.findById(id).get();
 	}
+	
+	public Numero findByNombre(String nombre) {
+		return repo.findByNombre(nombre);
+	}
 
 	public List<Numero> findAll() {
 		return repo.findAll();

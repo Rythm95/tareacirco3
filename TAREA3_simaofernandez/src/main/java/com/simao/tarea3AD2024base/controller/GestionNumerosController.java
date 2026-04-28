@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.modelo.Artista;
@@ -39,6 +41,16 @@ public class GestionNumerosController implements Initializable {
 
 	@Autowired
 	private NumeroService nuService;
+	
+	@Autowired
+	private ApplicationEventPublisher evPublisher;
+	
+	@EventListener
+	public void onNewPersona(NewPersonaEvent event) {
+		if (event.getPersona() instanceof Artista) {
+			cargarArtistas();
+		}
+	}
 
 	@FXML
 	private VBox container;
@@ -68,6 +80,9 @@ public class GestionNumerosController implements Initializable {
 
 	@FXML
 	private Label lblError;
+	
+	@FXML
+	private Label lblErrorNombre;
 
 	@FXML
 	private Button save;
@@ -77,8 +92,8 @@ public class GestionNumerosController implements Initializable {
 	}
 
 	private double getDuracion() {
-		int min = spMinutos.getValue();
-		if (cbDecimal.getValue() == ".5")
+		double min = spMinutos.getValue();
+		if (cbDecimal.getValue().equals(".5"))
 			min += 0.5;
 		return min;
 	}
@@ -91,14 +106,22 @@ public class GestionNumerosController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		List<Persona> listaArtistas = peService.findByPerfil(Perfil.ARTISTA);
-
-		List<Numero> listaNumeros = nuService.findAll();
-
 		spMinutos.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 999, 1));
-
 		cbDecimal.getItems().addAll(".0", ".5");
+		cbDecimal.getSelectionModel().selectFirst();
 
+		cargarArtistas();
+		cargarNumeros();
+		
+		
+
+	}
+	
+	public void cargarArtistas() {
+		List<Persona> listaArtistas = peService.findByPerfil(Perfil.ARTISTA);
+		
+		containerArtistas.getChildren().clear();
+		
 		if (listaArtistas.isEmpty()) {
 			save.setDisable(true);
 			lblError.setText("Registra un artista antes de crear un número.");
@@ -111,6 +134,14 @@ public class GestionNumerosController implements Initializable {
 				containerArtistas.getChildren().add(cb);
 			}
 		}
+	}
+	
+
+	private void cargarNumeros() {
+
+		List<Numero> listaNumeros = nuService.findAll();
+
+		container.getChildren().clear();
 
 		if (listaNumeros.isEmpty()) {
 			Label vacio = new Label("No hay números registrados.");
@@ -128,8 +159,11 @@ public class GestionNumerosController implements Initializable {
 
 		Label nombre = new Label("[id " + n.getId() + "] - " + n.getNombre());
 		nombre.getStyleClass().add("card-titulo");
+		
+		Label subtitulo = new Label(n.getDuracion()+" Minutos.");
+		subtitulo.getStyleClass().add("card-subtitulo");
 
-		VBox card = new VBox(nombre);
+		VBox card = new VBox(nombre, subtitulo);
 		card.getStyleClass().add("card");
 
 		return card;
@@ -153,7 +187,6 @@ public class GestionNumerosController implements Initializable {
 	@FXML
 	private void save() {
 		if (validarForm()) {
-			System.out.println("Maybe don't do that...");
 			return;
 		}
 
@@ -161,18 +194,29 @@ public class GestionNumerosController implements Initializable {
 		num.setNombre(getNombre());
 		num.setDuracion(getDuracion());
 		num.setArtistas(getArtistas());
-		
-		nuService.save(num);
-		
-		limpiarForm();
-		//recargar datos
 
+		nuService.save(num);
+
+		limpiarForm();
+		cargarNumeros();
+		
+		evPublisher.publishEvent(new NewNumeroEvent(num));
 	}
 
 	private boolean validarForm() {
 
 		boolean nombre = getNombre().isEmpty();
 		txtNombre.pseudoClassStateChanged(EMPTY, nombre);
+		if (nuService.findByNombre(getNombre()) != null) {
+			nombre = true;
+			lblErrorNombre.setText("Ya existe un número con ese nombre.");
+			
+			lblErrorNombre.setManaged(nombre);
+			lblErrorNombre.setVisible(nombre);
+		} else {
+			lblErrorNombre.setManaged(false);
+			lblErrorNombre.setVisible(false);
+		}
 
 		boolean artistas = getArtistas().isEmpty();
 		lblError.setText("Debe seleccionar al menos un artista que participará en el número.");
@@ -180,7 +224,7 @@ public class GestionNumerosController implements Initializable {
 		lblError.setManaged(artistas);
 		lblError.setVisible(artistas);
 
-		return nombre;
+		return nombre || artistas;
 	}
 
 	@FXML

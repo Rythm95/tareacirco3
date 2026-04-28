@@ -29,6 +29,7 @@
 		<content>
 			<VBox spacing="10">
 				<TextField fx:id="txtNombre" promptText="Nombre del Número" />
+				<Label fx:id="lblErrorNombre" styleClass="error-label" text="Error" visible="false" managed="false" />
 				<VBox>
 					<Label text="Duración del Número:" />
 					<HBox alignment="CENTER_LEFT" spacing="10">

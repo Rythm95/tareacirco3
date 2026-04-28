@@ -37,6 +37,10 @@ public class EspectaculoService {
 	public List<Espectaculo> findAll() {
 		return repo.findAll();
 	}
+	
+	public Espectaculo findByNombre(String nombre) {
+		return repo.findByNombre(nombre);
+	}
 
 	public void deleteInBatch(List<Espectaculo> users) {
 		repo.deleteAll(users);

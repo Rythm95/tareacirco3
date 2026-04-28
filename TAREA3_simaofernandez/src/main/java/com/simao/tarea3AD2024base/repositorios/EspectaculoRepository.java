@@ -7,4 +7,7 @@ import com.simao.tarea3AD2024base.modelo.Espectaculo;
 
 
 @Repository
-public interface EspectaculoRepository extends JpaRepository<Espectaculo, Long> {}
+public interface EspectaculoRepository extends JpaRepository<Espectaculo, Long> {
+	
+	Espectaculo findByNombre(String nombre);
+}

@@ -1,5 +1,6 @@
 package com.simao.tarea3AD2024base.modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -11,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,10 +32,13 @@ public class Numero {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 	        name = "numero_artista",
-	        joinColumns = { @JoinColumn(name = "numero_id") },
-	        inverseJoinColumns = { @JoinColumn(name = "artista_id") }
+	        joinColumns = @JoinColumn(name = "numero_id"),
+	        inverseJoinColumns = @JoinColumn(name = "artista_id")
 	    )
 	private List<Artista> artistas;
+	
+	@OneToMany(mappedBy = "numero")
+	private List<EspectaculoNumero> espectaculos = new ArrayList<>();
 
 	public Numero() {}
 	
@@ -83,8 +88,16 @@ public class Numero {
 		this.artistas = artistas;
 	}
 
+	public List<EspectaculoNumero> getEspectaculos() {
+		return espectaculos;
+	}
+
+	public void setEspectaculos(List<EspectaculoNumero> espectaculos) {
+		this.espectaculos = espectaculos;
+	}
+
 	public String toString() {
-		return "Id: "+id+"\tNombre: "+nombre+"\tDuración: "+duracion + " min";
+		return "[id "+id+"]\tNombre: "+nombre+"\tDuración: "+duracion + " min";
 	}
 	
 }
