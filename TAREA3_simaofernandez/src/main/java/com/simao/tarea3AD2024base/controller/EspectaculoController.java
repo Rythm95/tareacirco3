@@ -1,6 +1,7 @@
 package com.simao.tarea3AD2024base.controller;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -11,10 +12,12 @@ import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
+import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
 import com.simao.tarea3AD2024base.modelo.Session;
+import com.simao.tarea3AD2024base.services.EspectaculoService;
 import com.simao.tarea3AD2024base.services.NumeroService;
 import com.simao.tarea3AD2024base.services.PersonaService;
 import com.simao.tarea3AD2024base.view.FxmlView;
@@ -39,12 +42,15 @@ public class EspectaculoController implements Initializable {
 
 	@Autowired
 	private Session session;
-	
+
 	@Autowired
 	private PersonaService peService;
-	
+
 	@Autowired
 	private NumeroService nuService;
+	
+	@Autowired
+	private EspectaculoService esService;
 
 	@FXML
 	private TextField txtNombre;
@@ -54,10 +60,10 @@ public class EspectaculoController implements Initializable {
 
 	@FXML
 	private DatePicker dpFin;
-	
+
 	@FXML
 	private ComboBox<String> cbCoordinador;
-	
+
 	@FXML
 	private ComboBox<String> cbNumeros;
 
@@ -65,10 +71,10 @@ public class EspectaculoController implements Initializable {
 	private ListView<Numero> lvNumeros;
 
 	private ObservableList<Numero> numSelected = FXCollections.observableArrayList();
-	
+
 	@FXML
 	private Button save;
-	
+
 	@FXML
 	private Label lblError;
 
@@ -87,16 +93,17 @@ public class EspectaculoController implements Initializable {
 			System.out.println("Error!!!");
 		} else {
 			cargarDatos(session.getEspectaculo());
+			cargarCoordinadores();
 		}
 
 	}
-	
+
 	private void cargarCoordinadores() {
 		List<Persona> listaCoordinacion = peService.findByPerfil(Perfil.COORDINACION);
 
 		if (listaCoordinacion.isEmpty()) {
 			save.setDisable(true);
-			lblError.setText("Registra un coordinador antes de crear un espectáculo.");
+			lblError.setText("Error al cargar los coordinadores.");
 			lblError.setVisible(true);
 		} else {
 			cbCoordinador.getItems().clear();
@@ -106,14 +113,26 @@ public class EspectaculoController implements Initializable {
 		}
 	}
 
-	private void cargarDatos(Espectaculo es) {
+	private void cargarDatos(Long idEs) {
+		
+		Espectaculo es = esService.find(idEs);  
+		
+		txtNombre.setPromptText(es.getNombre());
 		txtNombre.setText(es.getNombre());
 		dpInicio.setValue(es.getFechaini());
+		dpInicio.setPromptText(es.getFechaini().toString());
 		dpFin.setValue(es.getFechafin());
-		
+		dpFin.setPromptText(es.getFechafin().toString());
+		cbCoordinador.setValue(es.getCoordinacion().getNombre());
+		cbCoordinador.setPromptText(es.getCoordinacion().getNombre());
 
+		//numSelected.clear();
+		//lvNumeros.setItems(numSelected);
+		List<Numero> numeros = es.getNumeros().stream().map(EspectaculoNumero::getNumero).toList();
+		lvNumeros.getItems().setAll(numeros);
+		//numSelected.addAll(numeros);
 	}
-	
+
 	@FXML
 	private void addNumero() {
 		Numero num = nuService.findByNombre(cbNumeros.getValue());
@@ -146,15 +165,35 @@ public class EspectaculoController implements Initializable {
 	private void numeroMoveDown() {
 		int index = lvNumeros.getSelectionModel().getSelectedIndex();
 
-		if (index < numSelected.size() - 1) {
+		if (index != -1 && index < numSelected.size() - 1) {
 			Collections.swap(numSelected, index, index + 1);
 			lvNumeros.getSelectionModel().select(index + 1);
 		}
 	}
 
 	@FXML
-	private void login() {
-		stageManager.switchScene(FxmlView.LOGIN);
+	private void eliminarNumero() {
+		Numero seleccionado = lvNumeros.getSelectionModel().getSelectedItem();
+		numSelected.remove(seleccionado);
+	}
+
+	@FXML
+	private void goBack() {
+		Perfil p = session.getPerfil();
+
+		if (p != null) {
+			switch (p) {
+			case ARTISTA:
+				stageManager.switchScene(FxmlView.ARTISTA);
+				break;
+			case COORDINACION:
+				stageManager.switchScene(FxmlView.COORDINADOR);
+				break;
+			}
+		} else {
+			stageManager.switchScene(FxmlView.ADMINISTRADOR);
+		}
+
 	}
 
 	@FXML

@@ -37,6 +37,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 @Controller
@@ -49,6 +50,12 @@ public class GestionPersonasController implements Initializable {
 
 	@FXML
 	private ScrollPane formularioBox;
+	
+	@FXML
+	private VBox formularioContent;
+	
+	@FXML
+	private ScrollPane listaBox;
 
 	@FXML
 	private TextField txtNombre;
@@ -191,6 +198,9 @@ public class GestionPersonasController implements Initializable {
 		checkSenior.selectedProperty().addListener((observable, oldVal, newVal) -> showSenior(newVal));
 
 		checkApodo.selectedProperty().addListener((observable, oldVal, newVal) -> showApodo(newVal));
+		
+		formularioBox.viewportBoundsProperty().addListener((obs, oldVal, newVal) -> ajustarLayout());
+		formularioContent.heightProperty().addListener((obs, oldVal, newVal) -> ajustarLayout());
 
 		if (nacionalidades.isEmpty()) {
 			save.setDisable(true);
@@ -210,6 +220,14 @@ public class GestionPersonasController implements Initializable {
 
 		cargarPersonas();
 
+	}
+	
+	private void ajustarLayout() {
+		if (formularioContent.getHeight() <= formularioBox.getViewportBounds().getHeight()) {
+			VBox.setVgrow(formularioBox, Priority.NEVER);
+		} else {
+			VBox.setVgrow(formularioBox, Priority.ALWAYS);
+		}
 	}
 
 	private void cargarPersonas() {
@@ -264,10 +282,13 @@ public class GestionPersonasController implements Initializable {
 		if (formularioBox.isVisible()) {
 			formularioBox.setVisible(false);
 			formularioBox.setManaged(false);
+			listaBox.setMaxHeight(Double.MAX_VALUE);
 			btnForm.setText("Nueva Persona");
 		} else {
 			formularioBox.setVisible(true);
 			formularioBox.setManaged(true);
+			listaBox.setMaxHeight(70);
+			listaBox.setMinHeight(70);
 			btnForm.setText("Ocultar Formulario");
 		}
 	}

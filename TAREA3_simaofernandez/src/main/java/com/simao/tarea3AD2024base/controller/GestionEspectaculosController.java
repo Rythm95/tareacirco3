@@ -38,6 +38,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 @Controller
@@ -77,6 +78,12 @@ public class GestionEspectaculosController implements Initializable {
 
 	@FXML
 	private ScrollPane formularioBox;
+	
+	@FXML
+	private VBox formularioContent;
+	
+	@FXML
+	private ScrollPane listaBox;
 
 	@FXML
 	private TextField txtNombre;
@@ -137,7 +144,18 @@ public class GestionEspectaculosController implements Initializable {
 		cargarCoordinadores();
 		cargarNumeros();
 		cargarEspectaculos();
+		
+		formularioBox.viewportBoundsProperty().addListener((obs, oldVal, newVal) -> ajustarLayout());
+		formularioContent.heightProperty().addListener((obs, oldVal, newVal) -> ajustarLayout());
 
+	}
+	
+	private void ajustarLayout() {
+		if (formularioContent.getHeight() <= formularioBox.getViewportBounds().getHeight()) {
+			VBox.setVgrow(formularioBox, Priority.NEVER);
+		} else {
+			VBox.setVgrow(formularioBox, Priority.ALWAYS);
+		}
 	}
 
 	private void cargarCoordinadores() {
@@ -199,7 +217,7 @@ public class GestionEspectaculosController implements Initializable {
 		card.getStyleClass().add("card");
 
 		card.setOnMouseClicked(event -> {
-			session.setEspectaculo(e);
+			session.setEspectaculo(e.getId());
 			openEspectaculo();
 		});
 
@@ -215,10 +233,13 @@ public class GestionEspectaculosController implements Initializable {
 		if (formularioBox.isVisible()) {
 			formularioBox.setVisible(false);
 			formularioBox.setManaged(false);
+			listaBox.setMaxHeight(Double.MAX_VALUE);
 			btnForm.setText("Nuevo Espectáculo");
 		} else {
 			formularioBox.setVisible(true);
 			formularioBox.setManaged(true);
+			listaBox.setMaxHeight(70);
+			listaBox.setMinHeight(70);
 			btnForm.setText("Ocultar Formulario");
 		}
 	}
@@ -255,7 +276,7 @@ public class GestionEspectaculosController implements Initializable {
 	private void numeroMoveDown() {
 		int index = lvNumeros.getSelectionModel().getSelectedIndex();
 
-		if (index < numSelected.size() - 1) {
+		if (index != -1 && index < numSelected.size() - 1) {
 			Collections.swap(numSelected, index, index + 1);
 			lvNumeros.getSelectionModel().select(index + 1);
 		}
@@ -279,16 +300,14 @@ public class GestionEspectaculosController implements Initializable {
 	@FXML
 	public void save() {
 		if (validarForm()) {
-			System.out.println("Maybe don't do that...");
 			return;
 		}
-		System.out.println("Yeah, that's fine.");
 		Espectaculo es = new Espectaculo();
 
 		es.setNombre(getNombre());
 		es.setFechaini(getFechaIni());
 		es.setFechafin(getFechaFin());
-		es.setIdCoordinacion(getCoordinador());
+		es.setCoordinacion(getCoordinador());
 
 		List<EspectaculoNumero> numeros = new ArrayList<>();
 
@@ -318,7 +337,6 @@ public class GestionEspectaculosController implements Initializable {
 		if (esService.findByNombre(getNombre()) != null) {
 			nombre = true;
 			lblErrorNombre.setText("Ya existe un espectáculo con ese nombre.");
-			System.out.println("Ya existe");
 
 			lblErrorNombre.setManaged(nombre);
 			lblErrorNombre.setVisible(nombre);

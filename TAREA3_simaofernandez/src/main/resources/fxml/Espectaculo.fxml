@@ -23,7 +23,7 @@
 					</padding>
 					<Label styleClass="title" text="Espectáculo" />
 					<HBox HBox.hgrow="ALWAYS" />
-					<Button onAction="#login" styleClass="btn-primary" text="Volver" />
+					<Button onAction="#goBack" styleClass="btn-primary" text="Volver" />
 				</HBox>
             <Separator prefWidth="200.0" />
 			</children>
@@ -35,12 +35,14 @@
             <Insets bottom="20" left="20" right="20" top="20" />
          </padding>
          <children>
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="526.0" >
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="526.0">
                <content>
                   <VBox spacing="10" styleClass="formulario">
                      <children>
+                        <Label text="Nombre del Espectáculo:" />
                         <TextField fx:id="txtNombre" promptText="Nombre del Espectáculo" />
                         <Label fx:id="lblErrorNombre" managed="false" styleClass="error-label" text="Error" visible="false" />
+                        <Label text="Fechas del espectáculo:" />
                         <HBox spacing="10">
                            <children>
                               <DatePicker fx:id="dpInicio" promptText="Fecha de Inicio" />
@@ -48,9 +50,11 @@
                            </children>
                         </HBox>
                         <Label fx:id="lblErrorFecha" managed="false" styleClass="error-label" text="Error" visible="false" />
+                        <Label text="Coordinador/a del espectáculo:" />
                         <ComboBox fx:id="cbCoordinador" promptText="Coordinador" />
                         <VBox spacing="10">
                            <children>
+                              <Label text="Números del espectáculo:" />
                               <HBox spacing="10">
                                  <children>
                                     <ComboBox fx:id="cbNumeros" prefWidth="200.0" promptText="Selecciona número" />
@@ -68,17 +72,17 @@
                            </children>
                         </VBox>
                         <Label fx:id="lblErrorNumeros" managed="false" styleClass="error-label" text="Error" visible="false" />
-                        <Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
-                        <HBox spacing="10">
-                           <children>
-                              <Button fx:id="save" onAction="#save" text="Guardar" />
-                              <Button onAction="reiniciarForm" text="Limpiar" />
-                           </children>
-                        </HBox>
                      </children>
                   </VBox>
                </content>
             </ScrollPane>
+            <Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
+            <HBox spacing="10">
+               <children>
+                  <Button fx:id="save" onAction="#save" text="Actualizar Espectáculo" />
+                  <Button onAction="#reiniciarForm" text="Reiniciar" />
+               </children>
+            </HBox>
          </children>
       </VBox>
    </center>

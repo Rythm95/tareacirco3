@@ -29,7 +29,7 @@
 	</HBox>
    <ScrollPane fx:id="formularioBox" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" managed="false" prefWidth="526.0" visible="false">
       <content>
-      	<VBox spacing="10" styleClass="formulario">
+      	<VBox fx:id="formularioContent" spacing="10" styleClass="formulario">
       		<TextField fx:id="txtNombre" promptText="Nombre Real" />
       		<Label fx:id="lblErrorNombre" managed="false" styleClass="error-label" text="Error" visible="false" wrapText="true" />
             <TextField fx:id="txtEmail" promptText="Email" />
@@ -69,7 +69,7 @@
       </content>
    </ScrollPane>
 	<Separator prefWidth="200.0" />
-	<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefWidth="526.0" VBox.vgrow="ALWAYS">
+	<ScrollPane fx:id="listaBox" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefWidth="526.0" VBox.vgrow="ALWAYS">
 		<content>
 			<VBox fx:id="container" spacing="10">
 				<padding>

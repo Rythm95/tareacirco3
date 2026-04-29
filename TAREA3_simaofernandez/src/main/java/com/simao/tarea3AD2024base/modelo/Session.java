@@ -13,9 +13,9 @@ public class Session {
 	private Long id;
 	private String nombre;
 	private Perfil perfil = null;
-	private Espectaculo espectaculo = null;
-	private Numero numero = null;
-	private Persona persona = null;
+	private Long idEspectaculo = null;
+	private Long idNumero = null;
+	private Long idPersona = null;
 
 	public Long getId() {
 		return id;
@@ -41,27 +41,27 @@ public class Session {
 		this.perfil = perfil;
 	}
 
-	public Espectaculo getEspectaculo() {
-		return espectaculo;
+	public Long getEspectaculo() {
+		return idEspectaculo;
 	}
 
-	public void setEspectaculo(Espectaculo espectaculo) {
-		this.espectaculo = espectaculo;
+	public void setEspectaculo(Long idEspectaculo) {
+		this.idEspectaculo = idEspectaculo;
 	}
 
-	public Numero getNumero() {
-		return numero;
+	public Long getNumero() {
+		return idNumero;
 	}
 
-	public void setNumero(Numero numero) {
-		this.numero = numero;
+	public void setNumero(Long idNumero) {
+		this.idNumero = idNumero;
 	}
 
-	public Persona getPersona() {
-		return persona;
+	public Long getPersona() {
+		return idPersona;
 	}
 
-	public void setPersona(Persona persona) {
-		this.persona = persona;
+	public void setPersona(Long idPersona) {
+		this.idPersona = idPersona;
 	}
 }

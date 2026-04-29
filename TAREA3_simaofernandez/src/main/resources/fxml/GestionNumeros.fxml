@@ -25,9 +25,9 @@
 			<Button fx:id="btnForm" mnemonicParsing="false" onAction="#showForm" prefHeight="25.0" prefWidth="125.0" styleClass="btn-secondary" text="Nuevo Número" />
 		</children>
 	</HBox>
-	<ScrollPane fx:id="formularioBox" fitToWidth="true" hbarPolicy="NEVER" managed="false" prefWidth="526.0" visible="false">
+	<ScrollPane fx:id="formularioBox" fitToWidth="true" hbarPolicy="NEVER" managed="false" prefWidth="526.0" visible="false" VBox.vgrow="ALWAYS">
 		<content>
-			<VBox spacing="10">
+			<VBox fx:id="formularioContent" spacing="10">
 				<TextField fx:id="txtNombre" promptText="Nombre del Número" />
 				<Label fx:id="lblErrorNombre" styleClass="error-label" text="Error" visible="false" managed="false" />
 				<VBox>
@@ -40,11 +40,7 @@
 				</VBox>
 				<VBox spacing="5">
 					<Label text="Artistas participantes:" />
-               <ScrollPane fx:id="artistasBox" hbarPolicy="NEVER" fitToWidth="true" fitToHeight="true">
-                 <content>
-                     <VBox fx:id="containerArtistas" />
-                 </content>
-               </ScrollPane>
+                    <VBox fx:id="containerArtistas" />
 				</VBox>
 				<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
 				<HBox spacing="10">
@@ -55,7 +51,7 @@
 		</content>
 	</ScrollPane>
 	<Separator prefWidth="200.0" />
-	<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefWidth="526.0">
+	<ScrollPane fx:id="listaBox" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefWidth="526.0" VBox.vgrow="NEVER">
 		<content>
 			<VBox fx:id="container" spacing="10">
 				<padding>

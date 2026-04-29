@@ -29,6 +29,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 @Controller
@@ -41,10 +42,10 @@ public class GestionNumerosController implements Initializable {
 
 	@Autowired
 	private NumeroService nuService;
-	
+
 	@Autowired
 	private ApplicationEventPublisher evPublisher;
-	
+
 	@EventListener
 	public void onNewPersona(NewPersonaEvent event) {
 		if (event.getPersona() instanceof Artista) {
@@ -62,6 +63,9 @@ public class GestionNumerosController implements Initializable {
 	private ScrollPane formularioBox;
 
 	@FXML
+	private VBox formularioContent;
+
+	@FXML
 	private TextField txtNombre;
 
 	@FXML
@@ -74,13 +78,16 @@ public class GestionNumerosController implements Initializable {
 	private ScrollPane artistasBox;
 
 	@FXML
+	private ScrollPane listaBox;
+
+	@FXML
 	private VBox containerArtistas;
 
 	private Map<Artista, CheckBox> checkArtistas = new HashMap<>();
 
 	@FXML
 	private Label lblError;
-	
+
 	@FXML
 	private Label lblErrorNombre;
 
@@ -112,16 +119,25 @@ public class GestionNumerosController implements Initializable {
 
 		cargarArtistas();
 		cargarNumeros();
-		
-		
+
+		formularioBox.viewportBoundsProperty().addListener((obs, oldVal, newVal) -> ajustarLayout());
+		formularioContent.heightProperty().addListener((obs, oldVal, newVal) -> ajustarLayout());
 
 	}
-	
-	public void cargarArtistas() {
+
+	private void ajustarLayout() {
+		if (formularioContent.getHeight() <= formularioBox.getViewportBounds().getHeight()) {
+			VBox.setVgrow(formularioBox, Priority.NEVER);
+		} else {
+			VBox.setVgrow(formularioBox, Priority.ALWAYS);
+		}
+	}
+
+	private void cargarArtistas() {
 		List<Persona> listaArtistas = peService.findByPerfil(Perfil.ARTISTA);
-		
+
 		containerArtistas.getChildren().clear();
-		
+
 		if (listaArtistas.isEmpty()) {
 			save.setDisable(true);
 			lblError.setText("Registra un artista antes de crear un número.");
@@ -135,7 +151,6 @@ public class GestionNumerosController implements Initializable {
 			}
 		}
 	}
-	
 
 	private void cargarNumeros() {
 
@@ -159,8 +174,8 @@ public class GestionNumerosController implements Initializable {
 
 		Label nombre = new Label("[id " + n.getId() + "] - " + n.getNombre());
 		nombre.getStyleClass().add("card-titulo");
-		
-		Label subtitulo = new Label(n.getDuracion()+" Minutos.");
+
+		Label subtitulo = new Label(n.getDuracion() + " Minutos.");
 		subtitulo.getStyleClass().add("card-subtitulo");
 
 		VBox card = new VBox(nombre, subtitulo);
@@ -175,10 +190,13 @@ public class GestionNumerosController implements Initializable {
 		if (formularioBox.isVisible()) {
 			formularioBox.setVisible(false);
 			formularioBox.setManaged(false);
+			listaBox.setMaxHeight(Double.MAX_VALUE);
 			btnForm.setText("Nuevo Número");
 		} else {
 			formularioBox.setVisible(true);
 			formularioBox.setManaged(true);
+			listaBox.setMaxHeight(70);
+			listaBox.setMinHeight(70);
 			btnForm.setText("Ocultar Formulario");
 		}
 
@@ -199,7 +217,7 @@ public class GestionNumerosController implements Initializable {
 
 		limpiarForm();
 		cargarNumeros();
-		
+
 		evPublisher.publishEvent(new NewNumeroEvent(num));
 	}
 
@@ -210,7 +228,7 @@ public class GestionNumerosController implements Initializable {
 		if (nuService.findByNombre(getNombre()) != null) {
 			nombre = true;
 			lblErrorNombre.setText("Ya existe un número con ese nombre.");
-			
+
 			lblErrorNombre.setManaged(nombre);
 			lblErrorNombre.setVisible(nombre);
 		} else {

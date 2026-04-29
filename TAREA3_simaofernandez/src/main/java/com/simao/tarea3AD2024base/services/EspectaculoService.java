@@ -1,6 +1,7 @@
 package com.simao.tarea3AD2024base.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,10 @@ public class EspectaculoService {
 
 	public Espectaculo find(Long id) {
 		return repo.findById(id).get();
+	}
+	
+	public Optional<Espectaculo> findByIdWithNumeros(Long id) {
+		return repo.findByIdWithNumeros(id);
 	}
 
 	public List<Espectaculo> findAll() {

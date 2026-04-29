@@ -34,7 +34,7 @@ public class Espectaculo implements Comparable<Espectaculo> {
 	private Coordinacion coordinacion;
 	
 	@OneToMany(mappedBy = "espectaculo", cascade = CascadeType.ALL, orphanRemoval = true)
-	@OrderBy("order ASC")
+	@OrderBy("orden ASC")
 	private List<EspectaculoNumero> numeros = new ArrayList<>();
 	
 	public Espectaculo() {}
@@ -57,11 +57,11 @@ public class Espectaculo implements Comparable<Espectaculo> {
 		this.id = id;
 	}
 
-	public Coordinacion getIdCoordinacion() {
+	public Coordinacion getCoordinacion() {
 		return coordinacion;
 	}
 
-	public void setIdCoordinacion(Coordinacion coordinacion) {
+	public void setCoordinacion(Coordinacion coordinacion) {
 		this.coordinacion = coordinacion;
 	}
 
