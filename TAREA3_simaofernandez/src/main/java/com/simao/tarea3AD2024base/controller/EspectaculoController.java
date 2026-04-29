@@ -1,7 +1,6 @@
 package com.simao.tarea3AD2024base.controller;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
-import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
@@ -92,8 +90,12 @@ public class EspectaculoController implements Initializable {
 		if (session.getEspectaculo() == null) {
 			System.out.println("Error!!!");
 		} else {
-			cargarDatos(session.getEspectaculo());
+			cargarDatos();
 			cargarCoordinadores();
+			List<Numero> listaNumeros = nuService.findAll();
+			for (Numero n : listaNumeros) {
+				cbNumeros.getItems().add(n.getNombre());
+			}
 		}
 
 	}
@@ -113,9 +115,9 @@ public class EspectaculoController implements Initializable {
 		}
 	}
 
-	private void cargarDatos(Long idEs) {
+	private void cargarDatos() {
 		
-		Espectaculo es = esService.find(idEs);  
+		Espectaculo es = esService.find(session.getEspectaculo());  
 		
 		txtNombre.setPromptText(es.getNombre());
 		txtNombre.setText(es.getNombre());
@@ -125,12 +127,11 @@ public class EspectaculoController implements Initializable {
 		dpFin.setPromptText(es.getFechafin().toString());
 		cbCoordinador.setValue(es.getCoordinacion().getNombre());
 		cbCoordinador.setPromptText(es.getCoordinacion().getNombre());
-
-		//numSelected.clear();
-		//lvNumeros.setItems(numSelected);
-		List<Numero> numeros = es.getNumeros().stream().map(EspectaculoNumero::getNumero).toList();
-		lvNumeros.getItems().setAll(numeros);
-		//numSelected.addAll(numeros);
+		
+		numSelected.clear();
+		lvNumeros.setItems(numSelected);
+		List<Numero> numeros = esService.getNumerosFromEspectaculo(es.getId());
+		numSelected.addAll(numeros);
 	}
 
 	@FXML
@@ -203,6 +204,6 @@ public class EspectaculoController implements Initializable {
 
 	@FXML
 	private void reiniciarForm() {
-		cargarDatos(session.getEspectaculo());
+		cargarDatos();
 	}
 }

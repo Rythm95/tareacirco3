@@ -1,12 +1,14 @@
 package com.simao.tarea3AD2024base.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
+import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
+import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.repositorios.EspectaculoRepository;
 
 @Service
@@ -35,8 +37,12 @@ public class EspectaculoService {
 		return repo.findById(id).get();
 	}
 	
-	public Optional<Espectaculo> findByIdWithNumeros(Long id) {
-		return repo.findByIdWithNumeros(id);
+	@Transactional(readOnly = true)
+	public List<Numero> getNumerosFromEspectaculo(Long id) {
+		
+		Espectaculo es = repo.findWithNumeros(id);
+		
+		return es.getNumeros().stream().map(EspectaculoNumero::getNumero).toList();
 	}
 
 	public List<Espectaculo> findAll() {
