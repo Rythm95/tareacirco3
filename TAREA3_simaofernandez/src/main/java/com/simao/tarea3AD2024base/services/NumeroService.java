@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.simao.tarea3AD2024base.modelo.Artista;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.repositorios.NumeroRepository;
 
@@ -19,11 +20,18 @@ public class NumeroService {
 	}
 
 	public Numero update(Long oldId, Numero newEntity) {
-		
-		Numero ogEntity = find(oldId);
-		
+
+		Numero ogEntity = getNumeroWithArtistas(oldId);
+
 		ogEntity.setNombre(newEntity.getNombre());
-			
+		ogEntity.setDuracion(newEntity.getDuracion());
+
+		ogEntity.getArtistas().clear();
+
+		for (Artista a : newEntity.getArtistas()) {
+			ogEntity.getArtistas().add(a);
+		}
+
 		return repo.save(ogEntity);
 	}
 
@@ -38,7 +46,13 @@ public class NumeroService {
 	public Numero find(Long id) {
 		return repo.findById(id).get();
 	}
-	
+
+	public Numero getNumeroWithArtistas(Long id) {
+
+		return repo.findWithArtistas(id);
+
+	}
+
 	public Numero findByNombre(String nombre) {
 		return repo.findByNombre(nombre);
 	}

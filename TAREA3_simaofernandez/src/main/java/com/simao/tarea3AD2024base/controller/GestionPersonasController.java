@@ -20,9 +20,11 @@ import com.simao.tarea3AD2024base.modelo.Credenciales;
 import com.simao.tarea3AD2024base.modelo.Especialidad;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
+import com.simao.tarea3AD2024base.modelo.Session;
 import com.simao.tarea3AD2024base.services.AccesoPaises;
 import com.simao.tarea3AD2024base.services.CredsService;
 import com.simao.tarea3AD2024base.services.PersonaService;
+import com.simao.tarea3AD2024base.view.FxmlView;
 
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
@@ -50,10 +52,10 @@ public class GestionPersonasController implements Initializable {
 
 	@FXML
 	private ScrollPane formularioBox;
-	
+
 	@FXML
 	private VBox formularioContent;
-	
+
 	@FXML
 	private ScrollPane listaBox;
 
@@ -136,9 +138,12 @@ public class GestionPersonasController implements Initializable {
 
 	@Autowired
 	private CredsService crService;
-	
+
 	@Autowired
 	private ApplicationEventPublisher evPublisher;
+
+	@Autowired
+	private Session session;
 
 	private String getNombre() {
 		return txtNombre.getText();
@@ -198,7 +203,7 @@ public class GestionPersonasController implements Initializable {
 		checkSenior.selectedProperty().addListener((observable, oldVal, newVal) -> showSenior(newVal));
 
 		checkApodo.selectedProperty().addListener((observable, oldVal, newVal) -> showApodo(newVal));
-		
+
 		formularioBox.viewportBoundsProperty().addListener((obs, oldVal, newVal) -> ajustarLayout());
 		formularioContent.heightProperty().addListener((obs, oldVal, newVal) -> ajustarLayout());
 
@@ -221,7 +226,7 @@ public class GestionPersonasController implements Initializable {
 		cargarPersonas();
 
 	}
-	
+
 	private void ajustarLayout() {
 		if (formularioContent.getHeight() <= formularioBox.getViewportBounds().getHeight()) {
 			VBox.setVgrow(formularioBox, Priority.NEVER);
@@ -274,7 +279,27 @@ public class GestionPersonasController implements Initializable {
 		VBox card = new VBox(nombre, subtitulo);
 		card.getStyleClass().add("card");
 
+		if (p instanceof Coordinacion) {
+			card.setOnMouseClicked(event -> {
+				session.setEspectaculoId(p.getId());
+				openCoordinacion();
+			});
+		} else {
+			card.setOnMouseClicked(event -> {
+				session.setEspectaculoId(p.getId());
+				openArtista();
+			});
+		}
+
 		return card;
+	}
+
+	private void openCoordinacion() {
+		stageManager.switchScene(FxmlView.PERSONA);
+	}
+	
+	private void openArtista() {
+		stageManager.switchScene(FxmlView.PERSONA);
 	}
 
 	@FXML
@@ -361,10 +386,10 @@ public class GestionPersonasController implements Initializable {
 		persona.setCredenciales(creds);
 
 		peService.save(persona);
-		
+
 		limpiarForm();
 		cargarPersonas();
-		
+
 		evPublisher.publishEvent(new NewPersonaEvent(persona));
 
 	}

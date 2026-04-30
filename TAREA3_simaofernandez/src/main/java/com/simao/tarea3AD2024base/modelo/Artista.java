@@ -42,7 +42,6 @@ public class Artista extends Persona {
 		this.especialidades = especialidades;
 	}
 
-	// Convierte las especialidades a una cadena de texto, separandolas por comas.
 	public String especialidadesToString() {
 		return especialidades.stream().map(Enum::name).reduce((a, b) -> a + "," + b).orElse("");
 	}

@@ -28,7 +28,6 @@ import com.simao.tarea3AD2024base.view.FxmlView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -389,10 +388,5 @@ public class GestionEspectaculosController implements Initializable {
 	@FXML
 	private void login() {
 		stageManager.switchScene(FxmlView.LOGIN);
-	}
-
-	@FXML
-	private void exit(ActionEvent event) {
-		System.exit(0);
 	}
 }

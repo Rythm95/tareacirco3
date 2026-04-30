@@ -2,7 +2,6 @@ package com.simao.tarea3AD2024base.controller;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,13 +13,10 @@ import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.Artista;
-import com.simao.tarea3AD2024base.modelo.Espectaculo;
-import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
 import com.simao.tarea3AD2024base.modelo.Session;
-import com.simao.tarea3AD2024base.services.EspectaculoService;
 import com.simao.tarea3AD2024base.services.NumeroService;
 import com.simao.tarea3AD2024base.services.PersonaService;
 import com.simao.tarea3AD2024base.view.FxmlView;
@@ -54,9 +50,6 @@ public class NumeroController implements Initializable {
 
 	@Autowired
 	private NumeroService nuService;
-
-	@Autowired
-	private EspectaculoService esService;
 
 	@FXML
 	private TextField txtNombre;
@@ -117,7 +110,6 @@ public class NumeroController implements Initializable {
 			cbDecimal.getSelectionModel().selectFirst();
 
 			cargarDatos();
-			cargarArtistas();
 		}
 
 	}
@@ -125,9 +117,14 @@ public class NumeroController implements Initializable {
 	private void cargarArtistas() {
 
 		List<Persona> listaArtistas = peService.findByPerfil(Perfil.ARTISTA);
+		List<Artista> ogArtistas = nuService.getNumeroWithArtistas(session.getNumeroId()).getArtistas();
+		List<Long> ogIdArtistas = new ArrayList<>();
 
-		List<Artista> ogArtistas = getOgNumero().getArtistas();
-
+		for (Artista a : ogArtistas) {
+			ogIdArtistas.add(a.getId());
+		}
+		
+		checkArtistas.clear();
 		containerArtistas.getChildren().clear();
 
 		for (Persona p : listaArtistas) {
@@ -136,7 +133,7 @@ public class NumeroController implements Initializable {
 			checkArtistas.put(a, cb);
 			containerArtistas.getChildren().add(cb);
 
-			if (ogArtistas.contains(a)) {
+			if (ogIdArtistas.contains(a.getId())) {
 				cb.setSelected(true);
 			}
 		}
@@ -152,6 +149,8 @@ public class NumeroController implements Initializable {
 		spMinutos.getValueFactory().setValue((int) nu.getDuracion());
 		if (nu.getDuracion() % 2 != 0)
 			cbDecimal.getSelectionModel().selectLast();
+		
+		cargarArtistas();
 	}
 
 	@FXML
@@ -178,29 +177,14 @@ public class NumeroController implements Initializable {
 		if (validarForm()) {
 			return;
 		}
-		Espectaculo es = new Espectaculo();
+		Numero nu = new Numero();
 
-		es.setNombre(getNombre());
-		es.setFechaini(getFechaIni());
-		es.setFechafin(getFechaFin());
-		es.setCoordinacion(getCoordinador());
+		nu.setNombre(getNombre());
+		nu.setDuracion(getDuracion());
+		nu.setArtistas(getArtistas());
 
-		List<EspectaculoNumero> numeros = new ArrayList<>();
+		nuService.update(session.getNumeroId(), nu);
 
-		for (int i = 0; i < numSelected.size(); i++) {
-			Numero num = numSelected.get(i);
-
-			EspectaculoNumero esnu = new EspectaculoNumero();
-			esnu.setEspectaculo(es);
-			esnu.setNumero(num);
-			esnu.setOrden(i + 1);
-
-			numeros.add(esnu);
-		}
-
-		es.setNumeros(numeros);
-
-		esService.update(session.getEspectaculoId(), es);
 		goBack();
 
 	}
@@ -209,10 +193,11 @@ public class NumeroController implements Initializable {
 
 		boolean nombre = getNombre().isEmpty();
 		txtNombre.pseudoClassStateChanged(EMPTY, nombre);
-		Espectaculo newEspectaculo = esService.findByNombre(getNombre());
-		if (newEspectaculo != null && !newEspectaculo.getId().equals(session.getEspectaculoId())) {
+		Numero newNumero = nuService.findByNombre(getNombre());
+
+		if (newNumero != null && !newNumero.getId().equals(session.getNumeroId())) {
 			nombre = true;
-			lblErrorNombre.setText("Ya existe un espectáculo con ese nombre.");
+			lblErrorNombre.setText("Ya existe un número con ese nombre.");
 
 			lblErrorNombre.setManaged(nombre);
 			lblErrorNombre.setVisible(nombre);
@@ -221,45 +206,13 @@ public class NumeroController implements Initializable {
 			lblErrorNombre.setVisible(false);
 		}
 
-		boolean fechaIni = getFechaIni() == null;
-		dpInicio.pseudoClassStateChanged(EMPTY, fechaIni);
+		boolean artistas = getArtistas().isEmpty();
+		lblError.setText("Debe seleccionar al menos un artista que participará en el número.");
 
-		boolean fechaFin = getFechaFin() == null;
-		dpFin.pseudoClassStateChanged(EMPTY, fechaFin);
+		lblError.setManaged(artistas);
+		lblError.setVisible(artistas);
 
-		boolean fechas = false;
-		if (!fechaIni && !fechaFin) {
-			if (getFechaFin().isBefore(getFechaIni())) {
-				fechas = true;
-				lblErrorFecha.setText("La fecha final no puede ser anterior a la fecha inicial.");
-			} else if (getFechaIni().plusYears(1).isBefore(getFechaFin())) {
-				fechas = true;
-				lblErrorFecha.setText("La duración del espectáculo no debe ser superior a un año.");
-			}
-
-			lblErrorFecha.setManaged(fechas);
-			lblErrorFecha.setVisible(fechas);
-		} else {
-			lblErrorFecha.setManaged(false);
-			lblErrorFecha.setVisible(false);
-		}
-
-		boolean coordinador = getCoordinador() == null;
-		cbCoordinador.pseudoClassStateChanged(EMPTY, coordinador);
-
-		boolean numeros = false;
-		if (numSelected.size() < 3) {
-			numeros = true;
-			lblErrorNumeros.setText("Se deben seleccionar 3 espectáculos como mínimo.");
-
-			lblErrorNumeros.setManaged(numeros);
-			lblErrorNumeros.setVisible(numeros);
-		} else {
-			lblErrorNumeros.setManaged(false);
-			lblErrorNumeros.setVisible(false);
-		}
-
-		return nombre || fechas || coordinador || numeros;
+		return nombre || artistas;
 	}
 
 	@FXML

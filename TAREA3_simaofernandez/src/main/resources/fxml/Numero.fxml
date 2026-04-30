@@ -20,7 +20,7 @@
 					<padding>
 						<Insets bottom="10" left="20" right="20" top="10" />
 					</padding>
-					<Label styleClass="title" text="Espectáculo" />
+					<Label styleClass="title" text="Número" />
 					<HBox HBox.hgrow="ALWAYS" />
 					<Button onAction="#goBack" styleClass="btn-primary" text="Volver" />
 				</HBox>
@@ -59,12 +59,6 @@
                            </children>
                         </VBox>
                         <Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
-                        <HBox spacing="10">
-                           <children>
-                              <Button fx:id="save" onAction="#save" text="Guardar" />
-                              <Button onAction="#reiniciarForm" text="Limpiar" />
-                           </children>
-                        </HBox>
                      </children>
                   </VBox>
                </content>
@@ -72,7 +66,7 @@
             <Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
             <HBox spacing="10">
                <children>
-                  <Button fx:id="save" onAction="#save" text="Actualizar Espectáculo" />
+                  <Button fx:id="save" onAction="#save" text="Actualizar Número" />
                   <Button onAction="#reiniciarForm" text="Reiniciar" />
                </children>
             </HBox>

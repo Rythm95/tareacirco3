@@ -69,6 +69,40 @@ public enum FxmlView {
 		public String getFxmlFile() {
 			return "/fxml/Espectaculo.fxml";
 		}
+		
+	},
+	NUMERO {
+		@Override
+		public String getTitle() {
+			return getStringFromResourceBundle("numero.title");
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return "/fxml/Numero.fxml";
+		}
+	},
+	PERSONA_COORDINACION {
+		@Override
+		public String getTitle() {
+			return getStringFromResourceBundle("coordinacion.title");
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return "/fxml/Persona.fxml";
+		}
+	},
+	PERSONA_ARTISTA {
+		@Override
+		public String getTitle() {
+			return getStringFromResourceBundle("artista.title");
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return "/fxml/Persona.fxml";
+		}
 	};
 
 	public abstract String getTitle();

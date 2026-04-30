@@ -8,15 +8,19 @@ import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 
+import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.Artista;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
+import com.simao.tarea3AD2024base.modelo.Session;
 import com.simao.tarea3AD2024base.services.NumeroService;
 import com.simao.tarea3AD2024base.services.PersonaService;
+import com.simao.tarea3AD2024base.view.FxmlView;
 
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
@@ -37,6 +41,10 @@ public class GestionNumerosController implements Initializable {
 
 	private PseudoClass EMPTY = PseudoClass.getPseudoClass("error");
 
+	@Lazy
+	@Autowired
+	private StageManager stageManager;
+	
 	@Autowired
 	private PersonaService peService;
 
@@ -45,6 +53,9 @@ public class GestionNumerosController implements Initializable {
 
 	@Autowired
 	private ApplicationEventPublisher evPublisher;
+	
+	@Autowired
+	private Session session;
 
 	@EventListener
 	public void onNewPersona(NewPersonaEvent event) {
@@ -178,7 +189,16 @@ public class GestionNumerosController implements Initializable {
 		VBox card = new VBox(nombre, subtitulo);
 		card.getStyleClass().add("card");
 
+		card.setOnMouseClicked(event -> {
+			session.setNumeroId(n.getId());
+			openNumero();
+		});
+		
 		return card;
+	}
+	
+	private void openNumero() {
+		stageManager.switchScene(FxmlView.NUMERO);
 	}
 
 	@FXML
