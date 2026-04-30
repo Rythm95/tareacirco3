@@ -1,10 +1,11 @@
 package com.simao.tarea3AD2024base.controller;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
-import com.simao.tarea3AD2024base.modelo.Coordinacion;
+import com.simao.tarea3AD2024base.modelo.Artista;
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
 import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
 import com.simao.tarea3AD2024base.modelo.Numero;
@@ -24,23 +25,23 @@ import com.simao.tarea3AD2024base.services.NumeroService;
 import com.simao.tarea3AD2024base.services.PersonaService;
 import com.simao.tarea3AD2024base.view.FxmlView;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 @Controller
-public class EspectaculoController implements Initializable {
+public class NumeroController implements Initializable {
 
 	private PseudoClass EMPTY = PseudoClass.getPseudoClass("error");
-	
+
 	@Lazy
 	@Autowired
 	private StageManager stageManager;
@@ -53,7 +54,7 @@ public class EspectaculoController implements Initializable {
 
 	@Autowired
 	private NumeroService nuService;
-	
+
 	@Autowired
 	private EspectaculoService esService;
 
@@ -61,21 +62,15 @@ public class EspectaculoController implements Initializable {
 	private TextField txtNombre;
 
 	@FXML
-	private DatePicker dpInicio;
+	private Spinner<Integer> spMinutos;
 
 	@FXML
-	private DatePicker dpFin;
+	private ComboBox<String> cbDecimal;
 
 	@FXML
-	private ComboBox<String> cbCoordinador;
+	private VBox containerArtistas;
 
-	@FXML
-	private ComboBox<String> cbNumeros;
-
-	@FXML
-	private ListView<Numero> lvNumeros;
-
-	private ObservableList<Numero> numSelected = FXCollections.observableArrayList();
+	private Map<Artista, CheckBox> checkArtistas = new HashMap<>();
 
 	@FXML
 	private Button save;
@@ -91,114 +86,72 @@ public class EspectaculoController implements Initializable {
 
 	@FXML
 	private Label lblErrorNumeros;
-	
+
 	private String getNombre() {
 		return txtNombre.getText();
 	}
-	
-	private LocalDate getFechaIni() {
-		return dpInicio.getValue();
+
+	private double getDuracion() {
+		double min = spMinutos.getValue();
+		if (cbDecimal.getValue().equals(".5"))
+			min += 0.5;
+		return min;
 	}
-	
-	private LocalDate getFechaFin() {
-		return dpFin.getValue();
+
+	private Numero getOgNumero() {
+		return nuService.find(session.getNumeroId());
 	}
-	
-	private Coordinacion getCoordinador() {
-		return (Coordinacion) peService.findByNombre(cbCoordinador.getValue());
+
+	private List<Artista> getArtistas() {
+		return checkArtistas.entrySet().stream().filter(es -> es.getValue().isSelected()).map(Map.Entry::getKey)
+				.toList();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		if (session.getEspectaculoId() == null) {
+		if (session.getNumeroId() == null) {
 			System.out.println("Error!!!");
 		} else {
+			spMinutos.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 999, 1));
+			cbDecimal.getItems().addAll(".0", ".5");
+			cbDecimal.getSelectionModel().selectFirst();
+
 			cargarDatos();
-			cargarCoordinadores();
-			List<Numero> listaNumeros = nuService.findAll();
-			for (Numero n : listaNumeros) {
-				cbNumeros.getItems().add(n.getNombre());
-			}
+			cargarArtistas();
 		}
 
 	}
 
-	private void cargarCoordinadores() {
-		List<Persona> listaCoordinacion = peService.findByPerfil(Perfil.COORDINACION);
+	private void cargarArtistas() {
 
-		if (listaCoordinacion.isEmpty()) {
-			save.setDisable(true);
-			lblError.setText("Error al cargar los coordinadores.");
-			lblError.setVisible(true);
-		} else {
-			cbCoordinador.getItems().clear();
-			for (Persona p : listaCoordinacion) {
-				cbCoordinador.getItems().add(p.getNombre());
+		List<Persona> listaArtistas = peService.findByPerfil(Perfil.ARTISTA);
+
+		List<Artista> ogArtistas = getOgNumero().getArtistas();
+
+		containerArtistas.getChildren().clear();
+
+		for (Persona p : listaArtistas) {
+			Artista a = (Artista) p;
+			CheckBox cb = new CheckBox(p.getNombre());
+			checkArtistas.put(a, cb);
+			containerArtistas.getChildren().add(cb);
+
+			if (ogArtistas.contains(a)) {
+				cb.setSelected(true);
 			}
 		}
+
 	}
 
 	private void cargarDatos() {
-		
-		Espectaculo es = esService.find(session.getEspectaculoId());  
-		
-		txtNombre.setPromptText(es.getNombre());
-		txtNombre.setText(es.getNombre());
-		dpInicio.setValue(es.getFechaini());
-		dpInicio.setPromptText(es.getFechaini().toString());
-		dpFin.setValue(es.getFechafin());
-		dpFin.setPromptText(es.getFechafin().toString());
-		cbCoordinador.setValue(es.getCoordinacion().getNombre());
-		cbCoordinador.setPromptText(es.getCoordinacion().getNombre());
-		
-		numSelected.clear();
-		lvNumeros.setItems(numSelected);
-		List<Numero> numeros = esService.getNumerosFromEspectaculo(es.getId());
-		numSelected.addAll(numeros);
-	}
 
-	@FXML
-	private void addNumero() {
-		Numero num = nuService.findByNombre(cbNumeros.getValue());
+		Numero nu = getOgNumero();
 
-		if (num != null) {
-			boolean equals = false;
-			for (Numero ns : numSelected) {
-				if (ns.getId() == num.getId()) {
-					equals = true;
-					break;
-				}
-			}
-			if (!equals) {
-				numSelected.add(num);
-			}
-		}
-	}
-
-	@FXML
-	private void numeroMoveUp() {
-		int index = lvNumeros.getSelectionModel().getSelectedIndex();
-
-		if (index > 0) {
-			Collections.swap(numSelected, index, index - 1);
-			lvNumeros.getSelectionModel().select(index - 1);
-		}
-	}
-
-	@FXML
-	private void numeroMoveDown() {
-		int index = lvNumeros.getSelectionModel().getSelectedIndex();
-
-		if (index != -1 && index < numSelected.size() - 1) {
-			Collections.swap(numSelected, index, index + 1);
-			lvNumeros.getSelectionModel().select(index + 1);
-		}
-	}
-
-	@FXML
-	private void eliminarNumero() {
-		Numero seleccionado = lvNumeros.getSelectionModel().getSelectedItem();
-		numSelected.remove(seleccionado);
+		txtNombre.setPromptText(nu.getNombre());
+		txtNombre.setText(nu.getNombre());
+		spMinutos.getValueFactory().setValue((int) nu.getDuracion());
+		if (nu.getDuracion() % 2 != 0)
+			cbDecimal.getSelectionModel().selectLast();
 	}
 
 	@FXML

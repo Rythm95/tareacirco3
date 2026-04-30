@@ -75,9 +75,6 @@ public class GestionNumerosController implements Initializable {
 	private ComboBox<String> cbDecimal;
 
 	@FXML
-	private ScrollPane artistasBox;
-
-	@FXML
 	private ScrollPane listaBox;
 
 	@FXML

@@ -4,12 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
 import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.repositorios.EspectaculoRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class EspectaculoService {
@@ -21,8 +22,24 @@ public class EspectaculoService {
 		return repo.save(entity);
 	}
 
-	public Espectaculo update(Espectaculo entity) {
-		return repo.save(entity);
+	@Transactional
+	public Espectaculo update(Long oldId, Espectaculo newEntity) {
+
+		Espectaculo ogEntity = find(oldId);
+
+		ogEntity.setNombre(newEntity.getNombre());
+		ogEntity.setFechaini(newEntity.getFechaini());
+		ogEntity.setFechafin(newEntity.getFechafin());
+		ogEntity.setCoordinacion(newEntity.getCoordinacion());
+
+		ogEntity.getNumeros().clear();
+
+		for (EspectaculoNumero en : newEntity.getNumeros()) {
+			en.setEspectaculo(ogEntity);
+			ogEntity.getNumeros().add(en);
+		}
+
+		return repo.save(ogEntity);
 	}
 
 	public void delete(Espectaculo entity) {
@@ -36,19 +53,18 @@ public class EspectaculoService {
 	public Espectaculo find(Long id) {
 		return repo.findById(id).get();
 	}
-	
-	@Transactional(readOnly = true)
+
 	public List<Numero> getNumerosFromEspectaculo(Long id) {
-		
-		Espectaculo es = repo.findWithNumeros(id);
-		
+
+		Espectaculo es = repo.findNumerosFromEspectaculo(id);
+
 		return es.getNumeros().stream().map(EspectaculoNumero::getNumero).toList();
 	}
 
 	public List<Espectaculo> findAll() {
 		return repo.findAll();
 	}
-	
+
 	public Espectaculo findByNombre(String nombre) {
 		return repo.findByNombre(nombre);
 	}

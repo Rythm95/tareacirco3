@@ -217,7 +217,7 @@ public class GestionEspectaculosController implements Initializable {
 		card.getStyleClass().add("card");
 
 		card.setOnMouseClicked(event -> {
-			session.setEspectaculo(e.getId());
+			session.setEspectaculoId(e.getId());
 			openEspectaculo();
 		});
 

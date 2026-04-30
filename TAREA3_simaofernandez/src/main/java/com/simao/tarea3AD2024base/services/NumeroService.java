@@ -18,12 +18,17 @@ public class NumeroService {
 		return repo.save(entity);
 	}
 
-	public Numero update(Numero entity) {
-		return repo.save(entity);
+	public Numero update(Long oldId, Numero newEntity) {
+		
+		Numero ogEntity = find(oldId);
+		
+		ogEntity.setNombre(newEntity.getNombre());
+			
+		return repo.save(ogEntity);
 	}
 
 	public void delete(Numero entity) {
-		repo.delete(null);
+		repo.delete(entity);
 	}
 
 	public void delete(Long id) {

@@ -41,27 +41,27 @@ public class Session {
 		this.perfil = perfil;
 	}
 
-	public Long getEspectaculo() {
+	public Long getEspectaculoId() {
 		return idEspectaculo;
 	}
 
-	public void setEspectaculo(Long idEspectaculo) {
+	public void setEspectaculoId(Long idEspectaculo) {
 		this.idEspectaculo = idEspectaculo;
 	}
 
-	public Long getNumero() {
+	public Long getNumeroId() {
 		return idNumero;
 	}
 
-	public void setNumero(Long idNumero) {
+	public void setNumeroId(Long idNumero) {
 		this.idNumero = idNumero;
 	}
 
-	public Long getPersona() {
+	public Long getPersonaId() {
 		return idPersona;
 	}
 
-	public void setPersona(Long idPersona) {
+	public void setPersonaId(Long idPersona) {
 		this.idPersona = idPersona;
 	}
 }

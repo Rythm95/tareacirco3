@@ -13,22 +13,6 @@
     -fx-font-weight: bold;
 }
 
-.card {
-    -fx-background-color: #eee;
-    -fx-background-radius: 5.0;
-    -fx-padding: 12.0;
-    -fx-effect: dropshadow(gaussian, rgba(0.0,0.0,0.0,0.1), 5.0, 0.0, 0.0, 2.0);
-}
-
-.card-titulo {
-    -fx-font-size: 12.0px;
-    -fx-font-weight: bold;
-}
-
-.card-subtitulo {
-    -fx-text-fill: #555;
-}
-
 .scroll-pane {
     -fx-background-color: transparent;
 }
@@ -85,6 +69,28 @@
     -fx-background-radius: 5;
     -fx-border-color: #ddd;
     -fx-border-radius: 5;
+}
+
+/* Cards */
+.card {
+    -fx-background-color: #eee;
+    -fx-background-radius: 5.0;
+    -fx-padding: 12.0;
+    -fx-effect: dropshadow(gaussian, rgba(0.0,0.0,0.0,0.1), 5.0, 0.0, 0.0, 2.0);
+}
+
+.card:hover {
+    -fx-background-color: #D7D7D7;
+    -fx-cursor: hand;
+}
+
+.card-titulo {
+    -fx-font-size: 12.0px;
+    -fx-font-weight: bold;
+}
+
+.card-subtitulo {
+    -fx-text-fill: #555;
 }
 
 /* Errores: */

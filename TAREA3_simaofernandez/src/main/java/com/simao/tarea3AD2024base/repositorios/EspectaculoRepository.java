@@ -11,7 +11,7 @@ import com.simao.tarea3AD2024base.modelo.Espectaculo;
 public interface EspectaculoRepository extends JpaRepository<Espectaculo, Long> {
 	
 	@Query("SELECT e FROM Espectaculo e LEFT JOIN FETCH e.numeros en LEFT JOIN FETCH en.numero WHERE e.id = :id")
-	Espectaculo findWithNumeros(Long id);
+	Espectaculo findNumerosFromEspectaculo(Long id);
 	
 	Espectaculo findByNombre(String nombre);
 }
