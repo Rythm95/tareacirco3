@@ -75,9 +75,6 @@ public class NumeroController implements Initializable {
 	private Label lblErrorNombre;
 
 	@FXML
-	private Label lblErrorFecha;
-
-	@FXML
 	private Label lblErrorNumeros;
 
 	private String getNombre() {
@@ -123,7 +120,7 @@ public class NumeroController implements Initializable {
 		for (Artista a : ogArtistas) {
 			ogIdArtistas.add(a.getId());
 		}
-		
+
 		checkArtistas.clear();
 		containerArtistas.getChildren().clear();
 
@@ -147,9 +144,11 @@ public class NumeroController implements Initializable {
 		txtNombre.setPromptText(nu.getNombre());
 		txtNombre.setText(nu.getNombre());
 		spMinutos.getValueFactory().setValue((int) nu.getDuracion());
-		if (nu.getDuracion() % 2 != 0)
+		if (nu.getDuracion() % 1 != 0)
 			cbDecimal.getSelectionModel().selectLast();
-		
+		else
+			cbDecimal.getSelectionModel().selectFirst();
+
 		cargarArtistas();
 	}
 
@@ -169,7 +168,6 @@ public class NumeroController implements Initializable {
 		} else {
 			stageManager.switchScene(FxmlView.ADMINISTRADOR);
 		}
-
 	}
 
 	@FXML
@@ -206,13 +204,16 @@ public class NumeroController implements Initializable {
 			lblErrorNombre.setVisible(false);
 		}
 
+		boolean duracion = spMinutos.getValue() == null;
+		spMinutos.pseudoClassStateChanged(EMPTY, duracion);
+
 		boolean artistas = getArtistas().isEmpty();
 		lblError.setText("Debe seleccionar al menos un artista que participará en el número.");
 
 		lblError.setManaged(artistas);
 		lblError.setVisible(artistas);
 
-		return nombre || artistas;
+		return nombre || duracion || artistas;
 	}
 
 	@FXML

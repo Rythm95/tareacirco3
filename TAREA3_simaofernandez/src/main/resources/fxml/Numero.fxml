@@ -38,8 +38,11 @@
                <content>
                   <VBox styleClass="formulario" spacing="10">
                      <children>
+                     <VBox>
+                     	<Label text="Nombre del Número:"/>
                         <TextField fx:id="txtNombre" promptText="Nombre del Número" />
                         <Label fx:id="lblErrorNombre" managed="false" styleClass="error-label" text="Error" visible="false" />
+                        </VBox>
                         <VBox>
                            <children>
                               <Label text="Duración del Número:" />

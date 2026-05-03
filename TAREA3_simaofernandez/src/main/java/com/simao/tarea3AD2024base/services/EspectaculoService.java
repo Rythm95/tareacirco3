@@ -17,6 +17,9 @@ public class EspectaculoService {
 
 	@Autowired
 	private EspectaculoRepository repo;
+	
+	@Autowired
+	private NumeroService nuService;
 
 	public Espectaculo save(Espectaculo entity) {
 		return repo.save(entity);
@@ -59,6 +62,18 @@ public class EspectaculoService {
 		Espectaculo es = repo.findNumerosFromEspectaculo(id);
 
 		return es.getNumeros().stream().map(EspectaculoNumero::getNumero).toList();
+	}
+
+	@Transactional
+	public Espectaculo getEspectaculoCompleto(Long id) {
+		Espectaculo es = repo.findEspectaculoCompleto(id);		
+		List<Numero> nums = es.getNumeros().stream().map(EspectaculoNumero::getNumero).toList();
+		
+		List<Numero> numerosArtistas = nuService.getListArtistas(nums);
+		
+		numerosArtistas.forEach(n -> n.getArtistas().forEach(a -> a.getEspecialidades().size()));
+		
+		return es;
 	}
 
 	public List<Espectaculo> findAll() {

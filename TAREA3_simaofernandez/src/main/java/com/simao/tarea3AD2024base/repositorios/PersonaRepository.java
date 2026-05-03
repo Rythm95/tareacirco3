@@ -16,7 +16,13 @@ public interface PersonaRepository extends JpaRepository<Persona, Long> {
 	@Query("SELECT p FROM Persona p WHERE p.credenciales.perfil = :perfil")
 	List<Persona> findByPerfil(@Param("perfil") Perfil perfil);
 
+	@Query("SELECT p FROM Persona p LEFT JOIN FETCH TREAT(p AS Artista).especialidades WHERE p.id = :id")
+	Persona findWithEspecialidades(Long id);
+
+	@Query("SELECT DISTINCT a FROM Artista a LEFT JOIN FETCH a.numeros n WHERE a.id = :id")
+	Persona findArtistaWithNumeros(Long id);
+
 	Persona findByEmail(String email);
-	
+
 	Persona findByNombre(String nombre);
 }

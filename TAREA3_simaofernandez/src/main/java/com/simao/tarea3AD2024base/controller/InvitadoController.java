@@ -58,15 +58,15 @@ public class InvitadoController implements Initializable {
 	private VBox espectaculoCard(Espectaculo e) {
 
 	    Label nombre = new Label(e.getNombre());
-	    nombre.getStyleClass().add("titulo-espectaculo");
+	    nombre.getStyleClass().add("card-titulo");
 
 	    Label fechas = new Label(
 	        "Del " + e.getFechaini() + " al " + e.getFechafin()
 	    );
-	    fechas.getStyleClass().add("fecha");
+	    fechas.getStyleClass().add("card-subtitulo");
 
 	    VBox caja = new VBox(nombre, fechas);
-	    caja.getStyleClass().add("card");
+	    caja.getStyleClass().add("card-invitado");
 
 	    return caja;
 	}

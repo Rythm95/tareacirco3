@@ -252,6 +252,9 @@ public class GestionNumerosController implements Initializable {
 			lblErrorNombre.setManaged(false);
 			lblErrorNombre.setVisible(false);
 		}
+		
+		boolean duracion = spMinutos.getValue() == null;
+		spMinutos.pseudoClassStateChanged(EMPTY, duracion);	
 
 		boolean artistas = getArtistas().isEmpty();
 		lblError.setText("Debe seleccionar al menos un artista que participará en el número.");
@@ -259,7 +262,7 @@ public class GestionNumerosController implements Initializable {
 		lblError.setManaged(artistas);
 		lblError.setVisible(artistas);
 
-		return nombre || artistas;
+		return nombre || duracion || artistas;
 	}
 
 	@FXML

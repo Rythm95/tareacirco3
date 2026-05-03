@@ -35,12 +35,13 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 @Controller
 public class EspectaculoController implements Initializable {
 
 	private PseudoClass EMPTY = PseudoClass.getPseudoClass("error");
-	
+
 	@Lazy
 	@Autowired
 	private StageManager stageManager;
@@ -53,7 +54,7 @@ public class EspectaculoController implements Initializable {
 
 	@Autowired
 	private NumeroService nuService;
-	
+
 	@Autowired
 	private EspectaculoService esService;
 
@@ -65,6 +66,9 @@ public class EspectaculoController implements Initializable {
 
 	@FXML
 	private DatePicker dpFin;
+
+	@FXML
+	private VBox coordinacionContainer;
 
 	@FXML
 	private ComboBox<String> cbCoordinador;
@@ -91,30 +95,39 @@ public class EspectaculoController implements Initializable {
 
 	@FXML
 	private Label lblErrorNumeros;
-	
+
 	private String getNombre() {
 		return txtNombre.getText();
 	}
-	
+
 	private LocalDate getFechaIni() {
 		return dpInicio.getValue();
 	}
-	
+
 	private LocalDate getFechaFin() {
 		return dpFin.getValue();
 	}
-	
+
 	private Coordinacion getCoordinador() {
-		return (Coordinacion) peService.findByNombre(cbCoordinador.getValue());
+		if (session.getPerfil() == Perfil.COORDINACION)
+			return (Coordinacion) peService.find(session.getPersonaId());
+		else
+			return (Coordinacion) peService.findByNombre(cbCoordinador.getValue());
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		if (session.getEspectaculoId() == null) {
-			System.out.println("Error!!!");
+			goBack();
 		} else {
 			cargarDatos();
-			cargarCoordinadores();
+
+			if (session.getPerfil() == Perfil.COORDINACION) {
+				coordinacionContainer.setVisible(false);
+				coordinacionContainer.setManaged(false);
+			} else {
+				cargarCoordinadores();
+			}
 			List<Numero> listaNumeros = nuService.findAll();
 			for (Numero n : listaNumeros) {
 				cbNumeros.getItems().add(n.getNombre());
@@ -139,9 +152,9 @@ public class EspectaculoController implements Initializable {
 	}
 
 	private void cargarDatos() {
-		
-		Espectaculo es = esService.find(session.getEspectaculoId());  
-		
+
+		Espectaculo es = esService.find(session.getEspectaculoId());
+
 		txtNombre.setPromptText(es.getNombre());
 		txtNombre.setText(es.getNombre());
 		dpInicio.setValue(es.getFechaini());
@@ -150,7 +163,7 @@ public class EspectaculoController implements Initializable {
 		dpFin.setPromptText(es.getFechafin().toString());
 		cbCoordinador.setValue(es.getCoordinacion().getNombre());
 		cbCoordinador.setPromptText(es.getCoordinacion().getNombre());
-		
+
 		numSelected.clear();
 		lvNumeros.setItems(numSelected);
 		List<Numero> numeros = esService.getNumerosFromEspectaculo(es.getId());
@@ -257,7 +270,13 @@ public class EspectaculoController implements Initializable {
 		boolean nombre = getNombre().isEmpty();
 		txtNombre.pseudoClassStateChanged(EMPTY, nombre);
 		Espectaculo newEspectaculo = esService.findByNombre(getNombre());
-		if (newEspectaculo != null && !newEspectaculo.getId().equals(session.getEspectaculoId())) {
+		if (getNombre().length() > 25) {
+			nombre = true;
+			lblErrorNombre.setText("El nombre no debe superar los 25 caracteres.");
+
+			lblErrorNombre.setManaged(nombre);
+			lblErrorNombre.setVisible(nombre);
+		} else if (newEspectaculo != null && !newEspectaculo.getId().equals(session.getEspectaculoId())) {
 			nombre = true;
 			lblErrorNombre.setText("Ya existe un espectáculo con ese nombre.");
 
@@ -291,8 +310,11 @@ public class EspectaculoController implements Initializable {
 			lblErrorFecha.setVisible(false);
 		}
 
-		boolean coordinador = getCoordinador() == null;
-		cbCoordinador.pseudoClassStateChanged(EMPTY, coordinador);
+		boolean coordinador = false;
+		if (session.getPersonaId() != null) {
+			coordinador = getCoordinador() == null;
+			cbCoordinador.pseudoClassStateChanged(EMPTY, coordinador);
+		}
 
 		boolean numeros = false;
 		if (numSelected.size() < 3) {

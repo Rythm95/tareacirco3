@@ -281,12 +281,12 @@ public class GestionPersonasController implements Initializable {
 
 		if (p instanceof Coordinacion) {
 			card.setOnMouseClicked(event -> {
-				session.setEspectaculoId(p.getId());
+				session.setPersonaId(p.getId());
 				openCoordinacion();
 			});
 		} else {
 			card.setOnMouseClicked(event -> {
-				session.setEspectaculoId(p.getId());
+				session.setPersonaId(p.getId());
 				openArtista();
 			});
 		}
@@ -295,11 +295,11 @@ public class GestionPersonasController implements Initializable {
 	}
 
 	private void openCoordinacion() {
-		stageManager.switchScene(FxmlView.PERSONA);
+		stageManager.switchScene(FxmlView.PERSONA_COORDINACION);
 	}
 	
 	private void openArtista() {
-		stageManager.switchScene(FxmlView.PERSONA);
+		stageManager.switchScene(FxmlView.PERSONA_ARTISTA);
 	}
 
 	@FXML

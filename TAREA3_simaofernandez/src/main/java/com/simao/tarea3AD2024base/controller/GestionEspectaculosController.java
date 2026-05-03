@@ -57,7 +57,7 @@ public class GestionEspectaculosController implements Initializable {
 
 	@Autowired
 	private PersonaService peService;
-	
+
 	@Autowired
 	private Session session;
 
@@ -77,10 +77,10 @@ public class GestionEspectaculosController implements Initializable {
 
 	@FXML
 	private ScrollPane formularioBox;
-	
+
 	@FXML
 	private VBox formularioContent;
-	
+
 	@FXML
 	private ScrollPane listaBox;
 
@@ -135,20 +135,29 @@ public class GestionEspectaculosController implements Initializable {
 	}
 
 	private Coordinacion getCoordinador() {
-		return (Coordinacion) peService.findByNombre(cbCoordinador.getValue());
+		if (session.getPerfil() == Perfil.COORDINACION)
+			return (Coordinacion) peService.find(session.getPersonaId());
+		else
+			return (Coordinacion) peService.findByNombre(cbCoordinador.getValue());
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		cargarCoordinadores();
 		cargarNumeros();
 		cargarEspectaculos();
-		
+
+		if (session.getPerfil() == Perfil.COORDINACION) {
+			cbCoordinador.setVisible(false);
+			cbCoordinador.setManaged(false);
+		} else {
+			cargarCoordinadores();
+		}
+
 		formularioBox.viewportBoundsProperty().addListener((obs, oldVal, newVal) -> ajustarLayout());
 		formularioContent.heightProperty().addListener((obs, oldVal, newVal) -> ajustarLayout());
 
 	}
-	
+
 	private void ajustarLayout() {
 		if (formularioContent.getHeight() <= formularioBox.getViewportBounds().getHeight()) {
 			VBox.setVgrow(formularioBox, Priority.NEVER);
@@ -333,7 +342,13 @@ public class GestionEspectaculosController implements Initializable {
 
 		boolean nombre = getNombre().isEmpty();
 		txtNombre.pseudoClassStateChanged(EMPTY, nombre);
-		if (esService.findByNombre(getNombre()) != null) {
+		if (getNombre().length() > 25) {
+			nombre = true;
+			lblErrorNombre.setText("El nombre no debe superar los 25 caracteres.");
+
+			lblErrorNombre.setManaged(nombre);
+			lblErrorNombre.setVisible(nombre);
+		} else if (esService.findByNombre(getNombre()) != null) {
 			nombre = true;
 			lblErrorNombre.setText("Ya existe un espectáculo con ese nombre.");
 
@@ -367,8 +382,11 @@ public class GestionEspectaculosController implements Initializable {
 			lblErrorFecha.setVisible(false);
 		}
 
-		boolean coordinador = getCoordinador() == null;
-		cbCoordinador.pseudoClassStateChanged(EMPTY, coordinador);
+		boolean coordinador = false;
+		if (session.getPersonaId() != null) {
+			coordinador = getCoordinador() == null;
+			cbCoordinador.pseudoClassStateChanged(EMPTY, coordinador);
+		}
 
 		boolean numeros = false;
 		if (numSelected.size() < 3) {

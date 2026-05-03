@@ -72,7 +72,7 @@
 }
 
 /* Cards */
-.card {
+.card, .card-invitado {
     -fx-background-color: #eee;
     -fx-background-radius: 5.0;
     -fx-padding: 12.0;
@@ -94,7 +94,7 @@
 }
 
 /* Errores: */
-.text-field:error, .password-field:error, .date-picker:error, .combo-box:error{
+.text-field:error, .password-field:error, .date-picker:error, .combo-box:error, .spinner:error{
     -fx-border-color: red;
 }
 

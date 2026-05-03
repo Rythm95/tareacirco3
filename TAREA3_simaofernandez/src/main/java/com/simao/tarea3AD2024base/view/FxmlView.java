@@ -18,12 +18,12 @@ public enum FxmlView {
 	COORDINADOR {
 		@Override
 		public String getTitle() {
-			return getStringFromResourceBundle("coordinador.title");
+			return getStringFromResourceBundle("coordinacion.title");
 		}
 
 		@Override
 		public String getFxmlFile() {
-			return "/fxml/Coordinador.fxml";
+			return "/fxml/VistaCoordinador.fxml";
 		}
 	},
 	ARTISTA {
@@ -34,7 +34,7 @@ public enum FxmlView {
 
 		@Override
 		public String getFxmlFile() {
-			return "/fxml/Artista.fxml";
+			return "/fxml/VistaArtista.fxml";
 		}
 	},
 	INVITADO {
@@ -85,23 +85,34 @@ public enum FxmlView {
 	PERSONA_COORDINACION {
 		@Override
 		public String getTitle() {
-			return getStringFromResourceBundle("coordinacion.title");
+			return getStringFromResourceBundle("personacoordinacion.title");
 		}
 
 		@Override
 		public String getFxmlFile() {
-			return "/fxml/Persona.fxml";
+			return "/fxml/Coordinacion.fxml";
 		}
 	},
 	PERSONA_ARTISTA {
 		@Override
 		public String getTitle() {
-			return getStringFromResourceBundle("artista.title");
+			return getStringFromResourceBundle("personaartista.title");
 		}
 
 		@Override
 		public String getFxmlFile() {
-			return "/fxml/Persona.fxml";
+			return "/fxml/Artista.fxml";
+		}
+	},
+	ESPECTACULO_DETALLE {
+		@Override
+		public String getTitle() {
+			return getStringFromResourceBundle("espectaculo.title");
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return "/fxml/EspectaculoDetalle.fxml";
 		}
 	};
 

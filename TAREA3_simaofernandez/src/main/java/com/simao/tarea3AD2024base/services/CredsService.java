@@ -12,30 +12,30 @@ import com.simao.tarea3AD2024base.repositorios.CredsRepository;
 public class CredsService {
 
 	@Autowired
-	private CredsRepository credsRepository;
+	private CredsRepository repo;
 
 	public Credenciales save(Credenciales entity) {
-		return credsRepository.save(entity);
+		return repo.save(entity);
 	}
 
 	public Credenciales update(Credenciales entity) {
-		return credsRepository.save(entity);
+		return repo.save(entity);
 	}
 
 	public void delete(Credenciales entity) {
-		credsRepository.delete(entity);
+		repo.delete(entity);
 	}
 
 	public void delete(Long id) {
-		credsRepository.deleteById(id);
+		repo.deleteById(id);
 	}
 
 	public Credenciales find(Long id) {
-		return credsRepository.findById(id).get();
+		return repo.findById(id).get();
 	}
 
 	public List<Credenciales> findAll() {
-		return credsRepository.findAll();
+		return repo.findAll();
 	}
 
 	public boolean authenticate(String username, String password) {
@@ -52,11 +52,15 @@ public class CredsService {
 	}
 
 	public Credenciales findByUsername(String user) {
-		return credsRepository.findByUsername(user);
+		return repo.findByUsername(user);
+	}
+	
+	public Credenciales findByPersona_Id(Long id) {
+		 return repo.findByPersona_Id(id); 
 	}
 
 	public void deleteInBatch(List<Credenciales> users) {
-		credsRepository.deleteAll(users);
+		repo.deleteAll(users);
 	}
 
 }

@@ -10,4 +10,6 @@ import com.simao.tarea3AD2024base.modelo.Credenciales;
 public interface CredsRepository extends JpaRepository<Credenciales, Long> {
 
 	Credenciales findByUsername(String user);
+	
+	Credenciales findByPersona_Id(Long id);
 }

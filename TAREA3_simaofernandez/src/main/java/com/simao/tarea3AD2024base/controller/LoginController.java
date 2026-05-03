@@ -3,7 +3,6 @@ package com.simao.tarea3AD2024base.controller;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -51,7 +50,7 @@ public class LoginController implements Initializable {
 	@Lazy
 	@Autowired
 	private StageManager stageManager;
-	
+
 	@Autowired
 	private Session session;
 
@@ -69,32 +68,26 @@ public class LoginController implements Initializable {
 
 		usernameField.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), getUsername().isEmpty());
 		passwordField.pseudoClassStateChanged(PseudoClass.getPseudoClass("error"), getPassword().isEmpty());
-		
+
 		if (getPassword().isEmpty() || getUsername().isEmpty()) {
 			return;
-		}
-		else if (user.equals(getUsername()) && pass.equals(getPassword())) {
-			session.setNombre("Admin");
+		} else if (user.equals(getUsername()) && pass.equals(getPassword())) {
 			stageManager.switchScene(FxmlView.ADMINISTRADOR);
 		} else if (credService.authenticate(getUsername(), getPassword())) {
 
-			List<Credenciales> creds = credService.findAll();
-			String rol = "";
-			for (Credenciales cr : creds) {
+			Credenciales creds = credService.findByUsername(getUsername());
+			if (creds != null && creds.getPassword().equals(getPassword())) {
 
-				if (cr.getUsername().equals(getUsername())) {
-
-					rol = cr.getPerfil().toString();
-					break;
-				}
+				session.setPersonaId(creds.getPersona().getId());
+				session.setPerfil(creds.getPerfil());
 			}
 
-			switch (rol) {
-			case "ARTISTA":
+			switch (creds.getPerfil()) {
+			case ARTISTA:
 				stageManager.switchScene(FxmlView.ARTISTA);
 				break;
 
-			case "COORDINADOR":
+			case COORDINACION:
 				stageManager.switchScene(FxmlView.COORDINADOR);
 				break;
 

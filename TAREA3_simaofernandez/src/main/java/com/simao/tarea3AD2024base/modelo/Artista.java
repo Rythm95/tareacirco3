@@ -46,4 +46,8 @@ public class Artista extends Persona {
 		return especialidades.stream().map(Enum::name).reduce((a, b) -> a + "," + b).orElse("");
 	}
 
+	public List<Numero> getNumeros() {
+		return numeros;
+	}
+
 }

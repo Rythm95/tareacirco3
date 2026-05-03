@@ -31,7 +31,7 @@ public class Persona {
 	@OneToOne(mappedBy = "persona", cascade = CascadeType.ALL)
     private Credenciales credenciales;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 

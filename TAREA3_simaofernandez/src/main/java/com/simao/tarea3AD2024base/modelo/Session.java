@@ -10,28 +10,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Session {
-	private Long id;
-	private String nombre;
 	private Perfil perfil = null;
 	private Long idEspectaculo = null;
 	private Long idNumero = null;
 	private Long idPersona = null;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
 
 	public Perfil getPerfil() {
 		return perfil;

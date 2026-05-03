@@ -48,13 +48,19 @@ public class NumeroService {
 	}
 
 	public Numero getNumeroWithArtistas(Long id) {
-
 		return repo.findWithArtistas(id);
-
+	}
+	
+	public List<Numero> getListArtistas(List<Numero> list){
+		return repo.findListArtistas(list);
 	}
 
 	public Numero findByNombre(String nombre) {
 		return repo.findByNombre(nombre);
+	}
+	
+	public List<Numero> getNumerosWithEspectaculos(List<Numero> list){
+		return repo.findNumerosWithEspectaculos(list);
 	}
 
 	public List<Numero> findAll() {

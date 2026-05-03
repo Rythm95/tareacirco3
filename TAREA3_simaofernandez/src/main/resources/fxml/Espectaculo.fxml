@@ -39,9 +39,12 @@
                <content>
                   <VBox spacing="10" styleClass="formulario">
                      <children>
+                     <VBox>
                         <Label text="Nombre del Espectáculo:" />
                         <TextField fx:id="txtNombre" promptText="Nombre del Espectáculo" />
                         <Label fx:id="lblErrorNombre" managed="false" styleClass="error-label" text="Error" visible="false" />
+                        </VBox>
+                        <VBox>
                         <Label text="Fechas del espectáculo:" />
                         <HBox spacing="10">
                            <children>
@@ -50,10 +53,14 @@
                            </children>
                         </HBox>
                         <Label fx:id="lblErrorFecha" managed="false" styleClass="error-label" text="Error" visible="false" />
+                        </VBox>
+                        <VBox fx:id="coordinacionContainer">
                         <Label text="Coordinador/a del espectáculo:" />
                         <ComboBox fx:id="cbCoordinador" promptText="Coordinador" />
+                        </VBox>
                         <VBox spacing="10">
                            <children>
+                           <VBox>
                               <Label text="Números del espectáculo:" />
                               <HBox spacing="10">
                                  <children>
@@ -61,6 +68,7 @@
                                     <Button onAction="#addNumero" text="Añadir" />
                                  </children>
                               </HBox>
+                              </VBox>
                               <ListView fx:id="lvNumeros" prefHeight="80.0" />
                               <HBox spacing="10">
                                  <children>
