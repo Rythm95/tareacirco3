@@ -219,14 +219,7 @@ public class EspectaculoController implements Initializable {
 		Perfil p = session.getPerfil();
 
 		if (p != null) {
-			switch (p) {
-			case ARTISTA:
-				stageManager.switchScene(FxmlView.ARTISTA);
-				break;
-			case COORDINACION:
-				stageManager.switchScene(FxmlView.COORDINADOR);
-				break;
-			}
+			stageManager.switchScene(FxmlView.COORDINADOR);
 		} else {
 			stageManager.switchScene(FxmlView.ADMINISTRADOR);
 		}

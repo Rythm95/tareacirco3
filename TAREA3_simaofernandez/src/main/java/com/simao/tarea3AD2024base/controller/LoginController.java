@@ -56,6 +56,10 @@ public class LoginController implements Initializable {
 
 	@FXML
 	private void login(ActionEvent event) throws IOException {
+		session.setEspectaculoId(null);
+		session.setNumeroId(null);
+		session.setPersonaId(null);
+		session.setPerfil(null);
 
 		Properties properties = new Properties();
 		try (FileInputStream fis = new FileInputStream("src/main/resources/application.properties")) {
