@@ -151,6 +151,8 @@ public class GestionNumerosController implements Initializable {
 			lblError.setText("Registra un artista antes de crear un número.");
 			lblError.setVisible(true);
 		} else {
+			save.setDisable(false);
+			lblError.setVisible(false);
 			for (Persona p : listaArtistas) {
 				Artista a = (Artista) p;
 				CheckBox cb = new CheckBox(p.getNombre());

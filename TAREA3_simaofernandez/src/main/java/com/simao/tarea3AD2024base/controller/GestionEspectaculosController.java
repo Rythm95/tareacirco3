@@ -174,6 +174,8 @@ public class GestionEspectaculosController implements Initializable {
 			lblError.setText("Registra un coordinador antes de crear un espectáculo.");
 			lblError.setVisible(true);
 		} else {
+			save.setDisable(false);
+			lblError.setVisible(false);
 			cbCoordinador.getItems().clear();
 			for (Persona p : listaCoordinacion) {
 				cbCoordinador.getItems().add(p.getNombre());
@@ -189,6 +191,8 @@ public class GestionEspectaculosController implements Initializable {
 			lblError.setText("Registra al menos 3 números circenses antes de crear un espectáculo.");
 			lblError.setVisible(true);
 		} else {
+			save.setDisable(false);
+			lblError.setVisible(false);
 			cbNumeros.getItems().clear();
 			lvNumeros.setItems(numSelected);
 			for (Numero n : listaNumeros) {
