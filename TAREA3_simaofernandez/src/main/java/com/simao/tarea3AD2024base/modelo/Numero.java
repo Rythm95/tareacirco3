@@ -1,6 +1,5 @@
 package com.simao.tarea3AD2024base.modelo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -12,43 +11,46 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Numero")
 public class Numero {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
-		
+
 	@Column(unique = true)
 	private String nombre;
 
 	private double duracion;
-	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(
-	        name = "numero_artista",
-	        joinColumns = @JoinColumn(name = "numero_id"),
-	        inverseJoinColumns = @JoinColumn(name = "artista_id")
-	    )
-	private List<Artista> artistas;
-	
-	@OneToMany(mappedBy = "numero")
-	private List<EspectaculoNumero> espectaculos = new ArrayList<>();
 
-	public Numero() {}
-	
-	public Numero(Long id, int orden, String nombre, double duracion, Long idEspec) {
+	private int orden;
+
+	@ManyToOne
+	@JoinColumn(name = "espectaculo_id")
+	private Espectaculo espectaculo;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "numero_artista", joinColumns = @JoinColumn(name = "numero_id"), inverseJoinColumns = @JoinColumn(name = "artista_id"))
+	private List<Artista> artistas;
+
+	public Numero() {
+	}
+
+	public Numero(Long id, String nombre, double duracion, int orden, Espectaculo espectaculo, List<Artista> artistas) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.duracion = duracion;
+		this.orden = orden;
+		this.espectaculo = espectaculo;
+		this.artistas = artistas;
 	}
-	
+
 	public Numero(Long id, String nombre, double duracion) {
 		super();
 		this.id = id;
@@ -79,7 +81,7 @@ public class Numero {
 	public void setDuracion(double duracion) {
 		this.duracion = duracion;
 	}
-	
+
 	public List<Artista> getArtistas() {
 		return artistas;
 	}
@@ -88,16 +90,24 @@ public class Numero {
 		this.artistas = artistas;
 	}
 
-	public List<EspectaculoNumero> getEspectaculos() {
-		return espectaculos;
+	public int getOrden() {
+		return orden;
 	}
 
-	public void setEspectaculos(List<EspectaculoNumero> espectaculos) {
-		this.espectaculos = espectaculos;
+	public void setOrden(int orden) {
+		this.orden = orden;
+	}
+
+	public Espectaculo getEspectaculo() {
+		return espectaculo;
+	}
+
+	public void setEspectaculo(Espectaculo espectaculo) {
+		this.espectaculo = espectaculo;
 	}
 
 	public String toString() {
-		return "[id "+id+"]\tNombre: "+nombre+"\tDuración: "+duracion + " min";
+		return "[id " + id + "]\tNombre: " + nombre + "\tDuración: " + duracion + " min";
 	}
-	
+
 }

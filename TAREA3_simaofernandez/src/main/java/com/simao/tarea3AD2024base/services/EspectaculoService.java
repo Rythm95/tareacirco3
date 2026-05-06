@@ -1,12 +1,12 @@
 package com.simao.tarea3AD2024base.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
-import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.repositorios.EspectaculoRepository;
 
@@ -17,16 +17,31 @@ public class EspectaculoService {
 
 	@Autowired
 	private EspectaculoRepository repo;
-	
+
 	@Autowired
 	private NumeroService nuService;
 
-	public Espectaculo save(Espectaculo entity) {
+	@Transactional
+	public Espectaculo save(Espectaculo entity, List<Long> numeroIds) {
+		List<Numero> numeros = new ArrayList<>();
+
+		for (int i = 0; i < numeroIds.size(); i++) {
+
+			Numero n = nuService.find(numeroIds.get(i)); 
+
+			n.setEspectaculo(entity); 
+			n.setOrden(i + 1);
+
+			numeros.add(n);
+		}
+		
+		entity.setNumeros(numeros);
+
 		return repo.save(entity);
 	}
 
 	@Transactional
-	public Espectaculo update(Long oldId, Espectaculo newEntity) {
+	public Espectaculo update(Long oldId, Espectaculo newEntity, List<Long> numIds) {
 
 		Espectaculo ogEntity = find(oldId);
 
@@ -35,12 +50,21 @@ public class EspectaculoService {
 		ogEntity.setFechafin(newEntity.getFechafin());
 		ogEntity.setCoordinacion(newEntity.getCoordinacion());
 
-		ogEntity.getNumeros().clear();
-
-		for (EspectaculoNumero en : newEntity.getNumeros()) {
-			en.setEspectaculo(ogEntity);
-			ogEntity.getNumeros().add(en);
+		for (Numero n : ogEntity.getNumeros()) {
+			n.setEspectaculo(null);
 		}
+		
+		ogEntity.getNumeros().clear();
+		
+		for (int i = 0; i < numIds.size(); i++) {
+
+	        Numero n = nuService.find(numIds.get(i));
+
+	        n.setEspectaculo(ogEntity);
+	        n.setOrden(i + 1);
+
+	        ogEntity.getNumeros().add(n);
+	    }
 
 		return repo.save(ogEntity);
 	}
@@ -59,20 +83,20 @@ public class EspectaculoService {
 
 	public List<Numero> getNumerosFromEspectaculo(Long id) {
 
-		Espectaculo es = repo.findNumerosFromEspectaculo(id);
+		Espectaculo es = repo.findEspectaculoCompleto(id);
 
-		return es.getNumeros().stream().map(EspectaculoNumero::getNumero).toList();
+		return es.getNumeros();
 	}
 
 	@Transactional
 	public Espectaculo getEspectaculoCompleto(Long id) {
-		Espectaculo es = repo.findEspectaculoCompleto(id);		
-		List<Numero> nums = es.getNumeros().stream().map(EspectaculoNumero::getNumero).toList();
-		
+		Espectaculo es = repo.findEspectaculoCompleto(id);
+		List<Numero> nums = es.getNumeros();
+
 		List<Numero> numerosArtistas = nuService.getListArtistas(nums);
-		
+
 		numerosArtistas.forEach(n -> n.getArtistas().forEach(a -> a.getEspecialidades().size()));
-		
+
 		return es;
 	}
 

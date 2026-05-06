@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.Coordinacion;
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
-import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
@@ -185,21 +184,32 @@ public class GestionEspectaculosController implements Initializable {
 
 	private void cargarNumeros() {
 		List<Numero> listaNumeros = nuService.findAll();
+		List<Numero> numsDisponibles = new ArrayList<>();
 
-		if (listaNumeros.size() < 3 && !lblError.isVisible()) {
+		for (Numero n : listaNumeros) {
+			if (n.getEspectaculo() == null)
+				numsDisponibles.add(n);
+		}
+
+		if (numsDisponibles.size() < 3) {
 			save.setDisable(true);
-			lblError.setText("Registra al menos 3 números circenses antes de crear un espectáculo.");
-			lblError.setVisible(true);
+			lblErrorNumeros.setText("Registra al menos 3 números circenses antes de crear un espectáculo.");
+			lblErrorNumeros.setVisible(true);
+			lblErrorNumeros.setManaged(true);
 		} else {
 			save.setDisable(false);
-			lblError.setVisible(false);
-			cbNumeros.getItems().clear();
+			lblErrorNumeros.setVisible(false);
+			lblErrorNumeros.setManaged(false);
 			lvNumeros.setItems(numSelected);
-			for (Numero n : listaNumeros) {
+		}
+
+		if (!numsDisponibles.isEmpty()) {
+			cbNumeros.getItems().clear();
+			for (Numero n : numsDisponibles) {
 				cbNumeros.getItems().add(n.getNombre());
 			}
-
 		}
+
 	}
 
 	private void cargarEspectaculos() {
@@ -311,9 +321,9 @@ public class GestionEspectaculosController implements Initializable {
 
 	@FXML
 	public void save() {
-		if (validarForm()) {
+		if (validarForm())
 			return;
-		}
+
 		Espectaculo es = new Espectaculo();
 
 		es.setNombre(getNombre());
@@ -321,22 +331,9 @@ public class GestionEspectaculosController implements Initializable {
 		es.setFechafin(getFechaFin());
 		es.setCoordinacion(getCoordinador());
 
-		List<EspectaculoNumero> numeros = new ArrayList<>();
-
-		for (int i = 0; i < numSelected.size(); i++) {
-			Numero num = numSelected.get(i);
-
-			EspectaculoNumero esnu = new EspectaculoNumero();
-			esnu.setEspectaculo(es);
-			esnu.setNumero(num);
-			esnu.setOrden(i + 1);
-
-			numeros.add(esnu);
-		}
-
-		es.setNumeros(numeros);
-
-		esService.save(es);
+		List<Long> numeroIds = numSelected.stream().map(Numero::getId).toList();
+		
+		esService.save(es, numeroIds);
 		limpiarForm();
 		cargarEspectaculos();
 
@@ -395,7 +392,7 @@ public class GestionEspectaculosController implements Initializable {
 		boolean numeros = false;
 		if (numSelected.size() < 3) {
 			numeros = true;
-			lblErrorNumeros.setText("Se deben seleccionar 3 espectáculos como mínimo.");
+			lblErrorNumeros.setText("Se deben seleccionar 3 números como mínimo.");
 
 			lblErrorNumeros.setManaged(numeros);
 			lblErrorNumeros.setVisible(numeros);

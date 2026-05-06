@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.Coordinacion;
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
-import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
@@ -129,8 +128,18 @@ public class EspectaculoController implements Initializable {
 				cargarCoordinadores();
 			}
 			List<Numero> listaNumeros = nuService.findAll();
+			List<Numero> numsDisponibles = new ArrayList<>();
+
 			for (Numero n : listaNumeros) {
-				cbNumeros.getItems().add(n.getNombre());
+				if (n.getEspectaculo() == null || n.getEspectaculo().getId() == session.getEspectaculoId())
+					numsDisponibles.add(n);
+			}
+
+			if (!numsDisponibles.isEmpty()) {
+				cbNumeros.getItems().clear();
+				for (Numero n : numsDisponibles) {
+					cbNumeros.getItems().add(n.getNombre());
+				}
 			}
 		}
 
@@ -228,32 +237,19 @@ public class EspectaculoController implements Initializable {
 
 	@FXML
 	public void save() {
-		if (validarForm()) {
+		if (validarForm())
 			return;
-		}
+
 		Espectaculo es = new Espectaculo();
 
 		es.setNombre(getNombre());
 		es.setFechaini(getFechaIni());
 		es.setFechafin(getFechaFin());
 		es.setCoordinacion(getCoordinador());
+		
+		List<Long> numeroIds = numSelected.stream().map(Numero::getId).toList();
 
-		List<EspectaculoNumero> numeros = new ArrayList<>();
-
-		for (int i = 0; i < numSelected.size(); i++) {
-			Numero num = numSelected.get(i);
-
-			EspectaculoNumero esnu = new EspectaculoNumero();
-			esnu.setEspectaculo(es);
-			esnu.setNumero(num);
-			esnu.setOrden(i + 1);
-
-			numeros.add(esnu);
-		}
-
-		es.setNumeros(numeros);
-
-		esService.update(session.getEspectaculoId(), es);
+		esService.update(session.getEspectaculoId(), es, numeroIds);
 		goBack();
 
 	}

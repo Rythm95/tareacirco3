@@ -44,7 +44,7 @@ public class LoginController implements Initializable {
 	@FXML
 	private Label lblError;
 
-	@Autowired // Auto-conectar
+	@Autowired
 	private CredsService credService;
 
 	@Lazy

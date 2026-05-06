@@ -17,8 +17,11 @@ public interface NumeroRepository extends JpaRepository<Numero, Long> {
 	@Query("SELECT DISTINCT n FROM Numero n LEFT JOIN FETCH n.artistas WHERE n IN :numeros")
 	List<Numero> findListArtistas(List<Numero> numeros);
 	
-	@Query("SELECT DISTINCT n FROM Numero n LEFT JOIN FETCH n.espectaculos en LEFT JOIN FETCH en.espectaculo WHERE n IN :numeros")
-	List<Numero> findNumerosWithEspectaculos(List<Numero> numeros);
+	@Query("SELECT n FROM Numero n LEFT JOIN FETCH n.espectaculo WHERE n.id = :id")
+    Numero findWithEspectaculo(Long id);
+
+    @Query("SELECT DISTINCT n FROM Numero n LEFT JOIN FETCH n.espectaculo WHERE n IN :numeros")
+    List<Numero> findNumerosWithEspectaculo(List<Numero> numeros);
 
 	Numero findByNombre(String nombre);
 }

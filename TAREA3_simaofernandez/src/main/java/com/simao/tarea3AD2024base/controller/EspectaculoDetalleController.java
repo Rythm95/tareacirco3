@@ -11,7 +11,6 @@ import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.Artista;
 import com.simao.tarea3AD2024base.modelo.Coordinacion;
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
-import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Session;
@@ -68,8 +67,7 @@ public class EspectaculoDetalleController implements Initializable {
 			lblNombre.setText("Nombre: "+ es.getNombre());
 			lblFechas.setText("Del " + es.getFechaini() + " al " + es.getFechafin() + ".");
 
-			for (EspectaculoNumero en : es.getNumeros()) {
-				Numero n = en.getNumero();
+			for (Numero n : es.getNumeros()) {
 
 				VBox numeroCard = new VBox(5);
 				numeroCard.getStyleClass().add("card-invitado");
@@ -82,7 +80,7 @@ public class EspectaculoDetalleController implements Initializable {
 				for (Artista a : n.getArtistas()) {
 					String texto = a.getNombre() + " - " + a.getNacionalidad();
 
-					if (!a.getApodo().isEmpty()) {
+					if (a.getApodo() !=null && !a.getApodo().isEmpty()) {
 						texto += " (" + a.getApodo() + ")";
 					}
 

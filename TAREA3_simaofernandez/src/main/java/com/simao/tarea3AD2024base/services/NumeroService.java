@@ -60,7 +60,7 @@ public class NumeroService {
 	}
 	
 	public List<Numero> getNumerosWithEspectaculos(List<Numero> list){
-		return repo.findNumerosWithEspectaculos(list);
+		return repo.findNumerosWithEspectaculo(list);
 	}
 
 	public List<Numero> findAll() {

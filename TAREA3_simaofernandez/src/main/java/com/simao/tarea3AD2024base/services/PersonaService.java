@@ -21,9 +21,6 @@ public class PersonaService {
 	@Autowired
 	private PersonaRepository repo;
 
-	@Autowired
-	private NumeroService nuService;
-
 	public Persona save(Persona entity) {
 		return repo.save(entity);
 	}
@@ -113,11 +110,14 @@ public class PersonaService {
 		Artista a = (Artista) repo.findArtistaWithNumeros(id);
 
 		List<Numero> nums = a.getNumeros();
-		List<Numero> numsFull = nuService.getNumerosWithEspectaculos(nums);
 
-		numsFull.forEach(n -> n.getEspectaculos().forEach(en -> en.getEspectaculo().getNombre()));
+		nums.forEach(n -> {
+			if (n.getEspectaculo() != null) {
+				n.getEspectaculo().getNombre();
+			}
+		});
 		a.getEspecialidades().size();
-		
+
 		return a;
 	}
 

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import com.simao.tarea3AD2024base.config.StageManager;
 import com.simao.tarea3AD2024base.modelo.Artista;
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
-import com.simao.tarea3AD2024base.modelo.EspectaculoNumero;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Session;
 import com.simao.tarea3AD2024base.services.EspectaculoService;
@@ -80,7 +79,10 @@ public class VistaArtistaController implements Initializable {
 			espectaculosContainer.getChildren().add(card);
 		}
 
-		cargarFicha();
+		if (session.getPersonaId() != null)
+			cargarFicha();
+		else
+			System.out.println("No hay persona!!!");
 
 	}
 
@@ -93,7 +95,7 @@ public class VistaArtistaController implements Initializable {
 		fechas.getStyleClass().add("card-subtitulo");
 
 		VBox card = new VBox(nombre, fechas);
-		
+
 		card.getStyleClass().add("card");
 
 		card.setOnMouseClicked(event -> {
@@ -114,7 +116,7 @@ public class VistaArtistaController implements Initializable {
 		lblNombre.setText("Nombre: " + a.getNombre());
 		lblEmail.setText("Email: " + a.getEmail());
 		lblNacionalidad.setText("Nacionalidad: " + a.getNacionalidad());
-		if (!a.getApodo().isEmpty()) {
+		if (a.getApodo() != null && !a.getApodo().isEmpty()) {
 			lblApodo.setText("Apodo: " + a.getApodo());
 		} else {
 			lblApodo.setManaged(false);
@@ -130,16 +132,18 @@ public class VistaArtistaController implements Initializable {
 			Label lblNum = new Label("[Id " + n.getId() + "] " + n.getNombre());
 			lblNum.getStyleClass().add("card-titulo");
 
-			VBox espectaculosBox = new VBox(2);
+			Label lblEsp;
 
-			for (EspectaculoNumero en : n.getEspectaculos()) {
-				Espectaculo es = en.getEspectaculo();
-
-				String texto = "- [Id " + es.getId() + "] " + es.getNombre();
-				espectaculosBox.getChildren().add(new Label(texto));
+			if (n.getEspectaculo() != null) {
+				Espectaculo es = n.getEspectaculo();
+				lblEsp = new Label("Del espectáculo [Id " + es.getId() + "] " + es.getNombre());
+			} else {
+				lblEsp = new Label("Sin espectáculo asociado.");
 			}
 
-			numBox.getChildren().addAll(lblNum, espectaculosBox);
+			lblEsp.getStyleClass().add("card-subtitulo");
+
+			numBox.getChildren().addAll(lblNum, lblEsp);
 			numerosContainer.getChildren().add(numBox);
 		}
 

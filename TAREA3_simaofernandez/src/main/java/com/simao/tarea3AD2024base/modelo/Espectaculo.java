@@ -33,9 +33,9 @@ public class Espectaculo implements Comparable<Espectaculo> {
 	@JoinColumn(name = "id_coordinacion")
 	private Coordinacion coordinacion;
 	
-	@OneToMany(mappedBy = "espectaculo", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "espectaculo", cascade = CascadeType.ALL)
 	@OrderBy("orden ASC")
-	private List<EspectaculoNumero> numeros = new ArrayList<>();
+	private List<Numero> numeros = new ArrayList<>();
 	
 	public Espectaculo() {}
 	
@@ -89,11 +89,11 @@ public class Espectaculo implements Comparable<Espectaculo> {
 		this.fechafin = fechacfin;
 	}
 
-	public List<EspectaculoNumero> getNumeros() {
+	public List<Numero> getNumeros() {
 		return numeros;
 	}
 
-	public void setNumeros(List<EspectaculoNumero> numeros) {
+	public void setNumeros(List<Numero> numeros) {
 		this.numeros = numeros;
 	}
 
