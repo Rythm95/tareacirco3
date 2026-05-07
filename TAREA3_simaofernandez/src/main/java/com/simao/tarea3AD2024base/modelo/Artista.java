@@ -9,10 +9,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToMany;
 
-/**
- * @author Ram Alapure
- * @since 05-04-2017
- */
 
 @Entity
 public class Artista extends Persona {

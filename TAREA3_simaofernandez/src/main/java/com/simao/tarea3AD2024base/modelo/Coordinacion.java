@@ -4,11 +4,6 @@ import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 
-/**
- * @author Ram Alapure
- * @since 05-04-2017
- */
-
 @Entity
 public class Coordinacion extends Persona {
 
