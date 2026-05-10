@@ -1,22 +1,22 @@
 package com.simao.tarea3AD2024base.modelo;
 
-import java.time.LocalDateTime;
-
 public class LogOperacion {
 
 	private Long id;
-	private LocalDateTime fechaHora;
-	private String typeOperacion;
+	private String fechaHora;
+	private String user;
+	private String tipoOperacion;
 	private String resumen;
 
 	public LogOperacion() {
 	}
 
-	public LogOperacion(Long id, LocalDateTime fechaHora, String typeOperacion, String resumen) {
+	public LogOperacion(Long id, String fechaHora, String user, String tipoOperacion, String resumen) {
 		super();
 		this.id = id;
 		this.fechaHora = fechaHora;
-		this.typeOperacion = typeOperacion;
+		this.user = user;
+		this.tipoOperacion = tipoOperacion;
 		this.resumen = resumen;
 	}
 
@@ -28,20 +28,28 @@ public class LogOperacion {
 		this.id = id;
 	}
 
-	public LocalDateTime getFechaHora() {
+	public String getFechaHora() {
 		return fechaHora;
 	}
 
-	public void setFechaHora(LocalDateTime fechaHora) {
+	public void setFechaHora(String fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 
-	public String getTypeOperacion() {
-		return typeOperacion;
+	public String getUser() {
+		return user;
 	}
 
-	public void setTypeOperacion(String typeOperacion) {
-		this.typeOperacion = typeOperacion;
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getTipoOperacion() {
+		return tipoOperacion;
+	}
+
+	public void setTipoOperacion(String tipoOperacion) {
+		this.tipoOperacion = tipoOperacion;
 	}
 
 	public String getResumen() {

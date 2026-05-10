@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.simao.tarea3AD2024base.modelo.Artista;
 import com.simao.tarea3AD2024base.modelo.Numero;
+import com.simao.tarea3AD2024base.modelo.Persona;
+import com.simao.tarea3AD2024base.modelo.Session;
+import com.simao.tarea3AD2024base.modelo.TipoOperacion;
 import com.simao.tarea3AD2024base.repositorios.NumeroRepository;
 
 @Service
@@ -14,9 +17,28 @@ public class NumeroService {
 
 	@Autowired
 	private NumeroRepository repo;
+	
+	@Autowired
+	private LogOperacionService loService;
+	
+	@Autowired
+	private PersonaService peService;
+	
+	@Autowired
+	private Session session;
 
 	public Numero save(Numero entity) {
-		return repo.save(entity);
+		Numero saved = repo.save(entity);
+		
+		String user = "Admin";
+		if (session.getPersonaId() != null) {
+			Persona p = peService.find(session.getPersonaId());
+			user = p.getCredenciales().getUsername();
+		}
+		
+		loService.newOperacion(user, TipoOperacion.NUEVO, "Se ha registrado un nuevo número de id "+saved.getId());
+		
+		return saved;
 	}
 
 	public Numero update(Long oldId, Numero newEntity) {
@@ -32,6 +54,14 @@ public class NumeroService {
 			ogEntity.getArtistas().add(a);
 		}
 
+		String user = "Admin";
+		if (session.getPersonaId() != null) {
+			Persona p = peService.find(session.getPersonaId());
+			user = p.getCredenciales().getUsername();
+		}
+		
+		loService.newOperacion(user, TipoOperacion.ACTUALIZACION, "Se ha actualizado la información del número de id "+oldId);
+		
 		return repo.save(ogEntity);
 	}
 

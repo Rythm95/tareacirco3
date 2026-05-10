@@ -11,6 +11,7 @@ import com.simao.tarea3AD2024base.modelo.Credenciales;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
+import com.simao.tarea3AD2024base.modelo.TipoOperacion;
 import com.simao.tarea3AD2024base.repositorios.PersonaRepository;
 
 import jakarta.transaction.Transactional;
@@ -20,11 +21,20 @@ public class PersonaService {
 
 	@Autowired
 	private PersonaRepository repo;
+	
+	@Autowired
+	private LogOperacionService loService;
 
+	@Transactional
 	public Persona save(Persona entity) {
-		return repo.save(entity);
+		Persona saved = repo.save(entity);
+		
+		loService.newOperacion("Admin", TipoOperacion.NUEVO, "Se ha registrado una nueva persona de id "+saved.getId());
+		
+		return saved;
 	}
 
+	@Transactional
 	public Persona updateCoordinacion(Long oldId, Coordinacion newEntity, Credenciales newCreds) {
 		Coordinacion ogCoord = (Coordinacion) find(oldId);
 		Credenciales ogCreds = ogCoord.getCredenciales();
@@ -44,10 +54,13 @@ public class PersonaService {
 		ogCreds.setPerfil(newCreds.getPerfil());
 		ogCreds.setPersona(ogCoord);
 		ogCoord.setCredenciales(ogCreds);
+		
+		loService.newOperacion("Admin", TipoOperacion.ACTUALIZACION, "Se ha actualiazado la información del coordinador de id "+oldId);
 
 		return repo.save(ogCoord);
 	}
 
+	@Transactional
 	public Persona updateArtista(Long oldId, Artista newEntity, Credenciales newCreds) {
 		Artista ogArt = (Artista) findArtistaEspecialidades(oldId);
 		Credenciales ogCreds = ogArt.getCredenciales();
@@ -66,6 +79,8 @@ public class PersonaService {
 		ogCreds.setPersona(ogArt);
 		ogArt.setCredenciales(ogCreds);
 
+		loService.newOperacion("Admin",TipoOperacion.ACTUALIZACION, "Se ha actualiazado la información del artista de id "+oldId);
+		
 		return repo.save(ogArt);
 	}
 
