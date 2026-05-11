@@ -192,6 +192,9 @@ public class GestionPersonasController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		if (session.getPerfil() == Perfil.COORDINACION)
+			btnForm.setVisible(false);
 
 		Map<String, String> nacionalidades = AccesoPaises.loadPaises();
 
@@ -246,8 +249,15 @@ public class GestionPersonasController implements Initializable {
 			container.getChildren().add(vacio);
 		} else {
 			for (Persona p : listaPersonas) {
-				VBox card = personaCard(p);
-				container.getChildren().add(card);
+				if (session.getPerfil() == Perfil.COORDINACION) {
+					if (p instanceof Artista) {
+						VBox card = personaCard(p);
+						container.getChildren().add(card);
+					}
+				} else {
+					VBox card = personaCard(p);
+					container.getChildren().add(card);
+				}
 			}
 		}
 
@@ -297,7 +307,7 @@ public class GestionPersonasController implements Initializable {
 	private void openCoordinacion() {
 		stageManager.switchScene(FxmlView.PERSONA_COORDINACION);
 	}
-	
+
 	private void openArtista() {
 		stageManager.switchScene(FxmlView.PERSONA_ARTISTA);
 	}
