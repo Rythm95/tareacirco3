@@ -7,8 +7,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
-//@Entity
-public class Incidencia {/*
+@Entity
+public class Incidencia {
 
 	@Id
 	@GeneratedValue
@@ -110,4 +110,4 @@ public class Incidencia {/*
 		this.idNumero = idNumero;
 	}
 
-*/}
+}

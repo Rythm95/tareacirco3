@@ -29,7 +29,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 
 @Component
-public class IncidenciaController implements Initializable {/*
+public class IncidenciaController implements Initializable {
 
 	@Autowired
 	private IncidenciaService inService;
@@ -143,25 +143,25 @@ public class IncidenciaController implements Initializable {/*
 		return id.longValue();
 	}
 
-	*/@Override
+	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-//		cbTipo.getItems().addAll(TipoIncidencia.values());
-//		cbFiltroTipo.getItems().addAll("TODOS", "TECNICA", "ARTISTICA", "ORGANIZATIVA");
-//		cbFiltroTipo.setValue("TODOS");
-//		cbFiltroEstado.getItems().addAll("TODAS", "RESUELTAS", "NO RESUELTAS");
-//		cbFiltroEstado.setValue("TODAS");
-//
-//		spIdEspectaculo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
-//		spIdNumero.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
-//		spFiltroEspectaculo
-//				.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
-//		spFiltroNumero.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
+		cbTipo.getItems().addAll(TipoIncidencia.values());
+		cbFiltroTipo.getItems().addAll("TODOS", "TECNICA", "ARTISTICA", "ORGANIZATIVA");
+		cbFiltroTipo.setValue("TODOS");
+		cbFiltroEstado.getItems().addAll("TODAS", "RESUELTAS", "NO RESUELTAS");
+		cbFiltroEstado.setValue("TODAS");
 
-		//cargarTabla();
+		spIdEspectaculo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
+		spIdNumero.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
+		spFiltroEspectaculo
+				.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
+		spFiltroNumero.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
 
-		//cargarIncidencias();
-	}/*
+		cargarTabla();
+
+		cargarIncidencias();
+	}
 
 	private void cargarTabla() {
 
@@ -195,11 +195,11 @@ public class IncidenciaController implements Initializable {/*
 
 	private void cargarIncidencias() {
 
-		//tablaIncidencias.setItems(FXCollections.observableArrayList(inService.findAll()));
+		tablaIncidencias.setItems(FXCollections.observableArrayList(inService.findAll()));
 	}
 
 	@FXML
-	public void registrarIncidencia() {/*
+	public void registrarIncidencia() {
 
 		lblRegistro.setText("");
 
@@ -232,7 +232,7 @@ public class IncidenciaController implements Initializable {/*
 	}
 
 	@FXML
-	public void buscarIncidencias() {/*
+	public void buscarIncidencias() {
 
 		TipoIncidencia tipo = null;
 
@@ -266,7 +266,7 @@ public class IncidenciaController implements Initializable {/*
 	}
 
 	@FXML
-	public void resolverIncidencia() {/*
+	public void resolverIncidencia() {
 
 		lblResolucion.setText("");
 
@@ -300,8 +300,8 @@ public class IncidenciaController implements Initializable {/*
 		cargarIncidencias();
 
 		lblResolucion.setText("Incidencia resuelta.");
-	}*/
-/*
+	}
+
 	@FXML
 	public void limpiarFiltros() {
 
@@ -315,4 +315,4 @@ public class IncidenciaController implements Initializable {/*
 		cargarIncidencias();
 	}
 
-*/}
+}

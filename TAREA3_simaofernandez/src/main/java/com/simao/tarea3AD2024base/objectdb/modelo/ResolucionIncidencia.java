@@ -6,8 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
-//@Entity
-public class ResolucionIncidencia {/*
+@Entity
+public class ResolucionIncidencia {
 
 	@Id
 	@GeneratedValue
@@ -76,4 +76,4 @@ public class ResolucionIncidencia {/*
 		this.incidencia = incidencia;
 	}
 
-*/}
+}
