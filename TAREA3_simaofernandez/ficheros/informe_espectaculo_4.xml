@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<informe>
+   <fechahora>2026-05-11T07:23:18.141250900</fechahora>
+   <espectaculo>
+      <id>4</id>
+      <nombre>La meca</nombre>
+      <fechaini>2026-04-28</fechaini>
+      <fechafin>2026-05-06</fechafin>
+      <coordinacion>
+         <nombre>Monochromenace</nombre>
+         <email>monochromail@mail.com</email>
+         <senior>false</senior>
+      </coordinacion>
+      <numeros>
+         <numero>
+            <orden>1</orden>
+            <nombre>nananana</nombre>
+            <duracion>4.5</duracion>
+            <artistas>
+               <artista>
+                  <nombre>Trollencio</nombre>
+                  <nacionalidad>Principado de Liechtenstein</nacionalidad>
+                  <email>troll@mail.com</email>
+                  <especialidades>[HUMOR, MALABARISMO, MAGIA]</especialidades>
+                  <apodo>Il Magnifico</apodo>
+               </artista>
+            </artistas>
+         </numero>
+         <numero>
+            <orden>2</orden>
+            <nombre>And we crawl </nombre>
+            <duracion>1.0</duracion>
+            <artistas>
+               <artista>
+                  <nombre>Trollencio</nombre>
+                  <nacionalidad>Principado de Liechtenstein</nacionalidad>
+                  <email>troll@mail.com</email>
+                  <especialidades>[HUMOR, MALABARISMO, MAGIA]</especialidades>
+                  <apodo>Il Magnifico</apodo>
+               </artista>
+               <artista>
+                  <nombre>Jamie Paige</nombre>
+                  <nacionalidad>Tailandia</nacionalidad>
+                  <email>jamiep@mail.com</email>
+                  <especialidades>[HUMOR, MAGIA]</especialidades>
+                  <apodo>Jamie Peak</apodo>
+               </artista>
+               <artista>
+                  <nombre>Hajime Hinata</nombre>
+                  <nacionalidad>Austria</nacionalidad>
+                  <email>nagito@mail.ess</email>
+                  <especialidades>[MAGIA]</especialidades>
+               </artista>
+            </artistas>
+         </numero>
+         <numero>
+            <orden>3</orden>
+            <nombre>asd</nombre>
+            <duracion>1.5</duracion>
+            <artistas>
+               <artista>
+                  <nombre>Random Guy</nombre>
+                  <nacionalidad>Reino Unido</nacionalidad>
+                  <email>ragu@mail.uk</email>
+                  <especialidades>[MAGIA, HUMOR]</especialidades>
+                  <apodo>The SUPERIOR Agnes Tachyon Gooner</apodo>
+               </artista>
+            </artistas>
+         </numero>
+      </numeros>
+   </espectaculo>
+</informe>

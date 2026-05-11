@@ -1,35 +1,35 @@
-package com.simao.tarea3AD2024base.modelo;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "Persona")
-public class Persona {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", updatable = false, nullable = false)
-	private long id;
-
-	private String nombre;
-
-	private String nacionalidad;
-
-	@Column(unique = true)
-	private String email;
+	package com.simao.tarea3AD2024base.modelo;
 	
-	@OneToOne(mappedBy = "persona", cascade = CascadeType.ALL)
-    private Credenciales credenciales;
+	import jakarta.persistence.CascadeType;
+	import jakarta.persistence.Column;
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Inheritance;
+	import jakarta.persistence.InheritanceType;
+	import jakarta.persistence.OneToOne;
+	import jakarta.persistence.Table;
+	
+	@Entity
+	@Inheritance(strategy = InheritanceType.JOINED)
+	@Table(name = "Persona")
+	public class Persona {
+	
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		@Column(name = "id", updatable = false, nullable = false)
+		private long id;
+	
+		private String nombre;
+	
+		private String nacionalidad;
+	
+		@Column(unique = true)
+		private String email;
+		
+		@OneToOne(mappedBy = "persona", cascade = CascadeType.ALL)
+	    private Credenciales credenciales;
 
 	public Long getId() {
 		return id;

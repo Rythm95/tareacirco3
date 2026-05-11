@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<informe>
+   <fechahora>2026-05-11T07:23:54.821678200</fechahora>
+   <espectaculo>
+      <id>5</id>
+      <nombre>Poor Performance</nombre>
+      <fechaini>2026-05-01</fechaini>
+      <fechafin>2026-05-02</fechafin>
+      <coordinacion>
+         <nombre>Monochromenace</nombre>
+         <email>monochromail@mail.com</email>
+         <senior>false</senior>
+      </coordinacion>
+      <numeros>
+         <numero>
+            <orden>1</orden>
+            <nombre>Ado's Best Adobum</nombre>
+            <duracion>50.0</duracion>
+            <artistas>
+               <artista>
+                  <nombre>Jamie Paige</nombre>
+                  <nacionalidad>Tailandia</nacionalidad>
+                  <email>jamiep@mail.com</email>
+                  <especialidades>[HUMOR, MAGIA]</especialidades>
+                  <apodo>Jamie Peak</apodo>
+               </artista>
+            </artistas>
+         </numero>
+         <numero>
+            <orden>2</orden>
+            <nombre>Regret Rock</nombre>
+            <duracion>4.5</duracion>
+            <artistas>
+               <artista>
+                  <nombre>Random Guy</nombre>
+                  <nacionalidad>Reino Unido</nacionalidad>
+                  <email>ragu@mail.uk</email>
+                  <especialidades>[MAGIA, HUMOR]</especialidades>
+                  <apodo>The SUPERIOR Agnes Tachyon Gooner</apodo>
+               </artista>
+               <artista>
+                  <nombre>Jamie Paige</nombre>
+                  <nacionalidad>Tailandia</nacionalidad>
+                  <email>jamiep@mail.com</email>
+                  <especialidades>[HUMOR, MAGIA]</especialidades>
+                  <apodo>Jamie Peak</apodo>
+               </artista>
+               <artista>
+                  <nombre>Trollencio</nombre>
+                  <nacionalidad>Principado de Liechtenstein</nacionalidad>
+                  <email>troll@mail.com</email>
+                  <especialidades>[HUMOR, MALABARISMO, MAGIA]</especialidades>
+                  <apodo>Il Magnifico</apodo>
+               </artista>
+            </artistas>
+         </numero>
+         <numero>
+            <orden>3</orden>
+            <nombre>Razzmatazz</nombre>
+            <duracion>7.0</duracion>
+            <artistas>
+               <artista>
+                  <nombre>Hajime Hinata</nombre>
+                  <nacionalidad>Austria</nacionalidad>
+                  <email>nagito@mail.ess</email>
+                  <especialidades>[MAGIA]</especialidades>
+               </artista>
+            </artistas>
+         </numero>
+      </numeros>
+   </espectaculo>
+</informe>
