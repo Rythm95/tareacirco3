@@ -20,15 +20,20 @@ import com.simao.tarea3AD2024base.modelo.Persona;
 import com.simao.tarea3AD2024base.modelo.Session;
 import com.simao.tarea3AD2024base.services.AccesoPaises;
 import com.simao.tarea3AD2024base.services.CredsService;
+import com.simao.tarea3AD2024base.services.DossierArtisticoService;
 import com.simao.tarea3AD2024base.services.PersonaService;
 import com.simao.tarea3AD2024base.view.FxmlView;
 
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -49,6 +54,9 @@ public class ArtistaController implements Initializable {
 
 	@Autowired
 	private CredsService crService;
+
+	@FXML
+	private ScrollPane spForm;
 
 	@FXML
 	private TextField txtNombre;
@@ -94,6 +102,30 @@ public class ArtistaController implements Initializable {
 	@FXML
 	private Label lblErrorPass;
 
+	@FXML
+	private Button btnSave;
+
+	@FXML
+	private ScrollPane spDoss;
+
+	@FXML
+	private TextArea txtComentEval;
+
+	@FXML
+	private ComboBox<String> cbNivelEvaluacion;
+
+	@FXML
+	private TextArea txtObservacion;
+
+	@FXML
+	private Label lblErrorDoss;
+
+	@FXML
+	private Button btnMostrarDossier;
+
+	@Autowired
+	private DossierArtisticoService daService;
+
 	private String getNombre() {
 		return txtNombre.getText();
 	}
@@ -133,8 +165,14 @@ public class ArtistaController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		if (session.getPerfil() == Perfil.COORDINACION) {
+			mostrarDossierForm();
+			btnMostrarDossier.setVisible(false);
+		}
+
+		cbNivelEvaluacion.getItems().addAll("Bajo", "Medio", "Alto");
 		if (session.getPersonaId() == null) {
-			System.out.println("Error!!!");
+			return;
 		} else {
 
 			checkApodo.selectedProperty().addListener((observable, oldVal, newVal) -> showApodo(newVal));
@@ -188,12 +226,21 @@ public class ArtistaController implements Initializable {
 
 	@FXML
 	private void goBack() {
-		session.setPersonaId(null);
-		stageManager.switchScene(FxmlView.ADMINISTRADOR);
+		if (session.getPerfil() == Perfil.COORDINACION)
+			stageManager.switchScene(FxmlView.COORDINADOR);
+		else
+			stageManager.switchScene(FxmlView.ADMINISTRADOR);
 	}
 
 	@FXML
 	public void save() {
+		if (spDoss.isVisible())
+			saveDossier();
+		else
+			saveArtista();
+	}
+
+	private void saveArtista() {
 		if (validarForm()) {
 			return;
 		}
@@ -219,9 +266,27 @@ public class ArtistaController implements Initializable {
 		art.setCredenciales(cr);
 
 		peService.updateArtista(session.getPersonaId(), art, cr);
+		daService.actualizarTrayectoria(session.getPersonaId());
 
-		goBack();
+		alert("Se ha actualizado el artista.");
+	}
 
+	private void saveDossier() {
+		String comentario = txtComentEval.getText();
+		String nivel = cbNivelEvaluacion.getValue();
+		String observacion = txtObservacion.getText();
+
+		daService.actualizarDossierArtista(session.getPersonaId(), comentario, nivel, observacion);
+
+		alert("Se ha actualizado el dossier del artista.");
+	}
+
+	private void alert(String mensaje) {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Artista actualizado");
+		alert.setHeaderText(null);
+		alert.setContentText(mensaje);
+		alert.showAndWait();
 	}
 
 	private boolean validarForm() {
@@ -322,7 +387,23 @@ public class ArtistaController implements Initializable {
 	}
 
 	@FXML
+	private void mostrarDossierForm() {
+		boolean b = spForm.isVisible();
+		spForm.setVisible(!b);
+		spForm.setManaged(!b);
+		spDoss.setVisible(b);
+		spDoss.setManaged(b);
+		btnMostrarDossier.setText(b ? "Artista" : "Dossier");
+		btnSave.setText(b ? "Actualizar Dossier" : "Actualizar Artista");
+	}
+
+	@FXML
 	private void reiniciarForm() {
-		cargarDatos();
+		if (spDoss.isVisible()) {
+			txtComentEval.clear();
+			txtObservacion.clear();
+			cbNivelEvaluacion.setValue(null);
+		} else
+			cargarDatos();
 	}
 }

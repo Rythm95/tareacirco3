@@ -24,12 +24,19 @@ public class PersonaService {
 	
 	@Autowired
 	private LogOperacionService loService;
+	
+	@Autowired
+	private DossierArtisticoService daService;
 
 	@Transactional
 	public Persona save(Persona entity) {
 		Persona saved = repo.save(entity);
 		
 		loService.newOperacion("Admin", TipoOperacion.NUEVO, "Se ha registrado una nueva persona de id "+saved.getId());
+		
+		if (saved instanceof Artista) {
+			daService.actualizarTrayectoria(saved.getId());
+		}
 		
 		return saved;
 	}
@@ -79,9 +86,13 @@ public class PersonaService {
 		ogCreds.setPersona(ogArt);
 		ogArt.setCredenciales(ogCreds);
 
-		loService.newOperacion("Admin",TipoOperacion.ACTUALIZACION, "Se ha actualiazado la información del artista de id "+oldId);
+		Artista updated = repo.save(ogArt);
 		
-		return repo.save(ogArt);
+		loService.newOperacion("Admin",TipoOperacion.ACTUALIZACION, "Se ha actualiazado la información del artista de id "+updated.getId());
+		
+		daService.actualizarTrayectoria(updated.getId());
+		
+		return updated;
 	}
 
 	public void delete(Persona entity) {

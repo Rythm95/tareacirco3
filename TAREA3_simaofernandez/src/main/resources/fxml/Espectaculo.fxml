@@ -89,6 +89,8 @@
                <children>
                   <Button fx:id="save" onAction="#save" text="Actualizar Espectáculo" />
                   <Button onAction="#reiniciarForm" text="Reiniciar" />
+                  <HBox prefHeight="100.0" prefWidth="200.0" />
+                  <Button onAction="#exportarEspectaculo" text="Exportar Info" />
                </children>
             </HBox>
          </children>

@@ -27,9 +27,9 @@ public class Persona {
 
 	@Column(unique = true)
 	private String email;
-	
+
 	@OneToOne(mappedBy = "persona", cascade = CascadeType.ALL)
-    private Credenciales credenciales;
+	private Credenciales credenciales;
 
 	public Long getId() {
 		return id;

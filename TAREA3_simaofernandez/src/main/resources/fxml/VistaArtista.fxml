@@ -119,6 +119,11 @@
                   </VBox>
                </content>
             </Tab>
+            <Tab text="Incidencias">
+					<content>
+						<fx:include source="Incidencias.fxml" />
+					</content>
+				</Tab>
 			</tabs>
 		</TabPane>
 	</center>

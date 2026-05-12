@@ -56,10 +56,7 @@ public class LoginController implements Initializable {
 
 	@FXML
 	private void login(ActionEvent event) throws IOException {
-		session.setEspectaculoId(null);
-		session.setNumeroId(null);
-		session.setPersonaId(null);
-		session.setPerfil(null);
+		session.clear();
 
 		Properties properties = new Properties();
 		try (FileInputStream fis = new FileInputStream("src/main/resources/application.properties")) {
@@ -82,7 +79,7 @@ public class LoginController implements Initializable {
 			Credenciales creds = credService.findByUsername(getUsername());
 			if (creds != null && creds.getPassword().equals(getPassword())) {
 
-				session.setPersonaId(creds.getPersona().getId());
+				session.setUserId(creds.getPersona().getId());
 				session.setPerfil(creds.getPerfil());
 			}
 

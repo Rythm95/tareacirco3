@@ -19,6 +19,7 @@ import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
 import com.simao.tarea3AD2024base.modelo.Session;
 import com.simao.tarea3AD2024base.services.EspectaculoService;
+import com.simao.tarea3AD2024base.services.InformeXMLService;
 import com.simao.tarea3AD2024base.services.NumeroService;
 import com.simao.tarea3AD2024base.services.PersonaService;
 import com.simao.tarea3AD2024base.view.FxmlView;
@@ -28,6 +29,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -56,6 +58,9 @@ public class EspectaculoController implements Initializable {
 
 	@Autowired
 	private EspectaculoService esService;
+
+	@Autowired
+	private InformeXMLService ixService;
 
 	@FXML
 	private TextField txtNombre;
@@ -109,7 +114,7 @@ public class EspectaculoController implements Initializable {
 
 	private Coordinacion getCoordinador() {
 		if (session.getPerfil() == Perfil.COORDINACION)
-			return (Coordinacion) peService.find(session.getPersonaId());
+			return (Coordinacion) peService.find(session.getUserId());
 		else
 			return (Coordinacion) peService.findByNombre(cbCoordinador.getValue());
 	}
@@ -246,7 +251,7 @@ public class EspectaculoController implements Initializable {
 		es.setFechaini(getFechaIni());
 		es.setFechafin(getFechaFin());
 		es.setCoordinacion(getCoordinador());
-		
+
 		List<Long> numeroIds = numSelected.stream().map(Numero::getId).toList();
 
 		esService.update(session.getEspectaculoId(), es, numeroIds);
@@ -300,7 +305,7 @@ public class EspectaculoController implements Initializable {
 		}
 
 		boolean coordinador = false;
-		if (session.getPersonaId() != null) {
+		if (session.getPerfil() == Perfil.COORDINACION) {
 			coordinador = getCoordinador() == null;
 			cbCoordinador.pseudoClassStateChanged(EMPTY, coordinador);
 		}
@@ -323,5 +328,17 @@ public class EspectaculoController implements Initializable {
 	@FXML
 	private void reiniciarForm() {
 		cargarDatos();
+	}
+
+	@FXML
+	private void exportarEspectaculo() {
+		Espectaculo es = esService.getEspectaculoCompleto(session.getEspectaculoId());
+		ixService.generarInforme(es);
+
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Exportación completada");
+		alert.setHeaderText(null);
+		alert.setContentText("El espectáculo se ha exportado correctamente.");
+		alert.showAndWait();
 	}
 }

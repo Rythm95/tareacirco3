@@ -71,7 +71,6 @@ public class VistaArtistaController implements Initializable {
 		if (listaEspectaculos.isEmpty()) {
 			Label vacio = new Label("No hay espectáculos programados.");
 			espectaculosContainer.getChildren().add(vacio);
-			return;
 		}
 
 		for (Espectaculo es : listaEspectaculos) {
@@ -79,10 +78,8 @@ public class VistaArtistaController implements Initializable {
 			espectaculosContainer.getChildren().add(card);
 		}
 
-		if (session.getPersonaId() != null)
+		if (session.getUserId() != null)
 			cargarFicha();
-		else
-			System.out.println("No hay persona!!!");
 
 	}
 
@@ -111,7 +108,7 @@ public class VistaArtistaController implements Initializable {
 	}
 
 	private void cargarFicha() {
-		Artista a = peService.findArtistaCompleto(session.getPersonaId());
+		Artista a = peService.findArtistaCompleto(session.getUserId());
 
 		lblNombre.setText("Nombre: " + a.getNombre());
 		lblEmail.setText("Email: " + a.getEmail());

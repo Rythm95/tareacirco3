@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.simao.tarea3AD2024base.modelo.Artista;
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Persona;
@@ -29,6 +30,9 @@ public class EspectaculoService {
 
 	@Autowired
 	private LogOperacionService loService;
+	
+	@Autowired
+	private DossierArtisticoService daService;
 
 	@Autowired
 	private Session session;
@@ -52,8 +56,8 @@ public class EspectaculoService {
 		Espectaculo saved = repo.save(entity);
 
 		String user = "Admin";
-		if (session.getPersonaId() != null) {
-			Persona p = peService.find(session.getPersonaId());
+		if (session.getUserId() != null) {
+			Persona p = peService.find(session.getUserId());
 			user = p.getCredenciales().getUsername();
 		}
 
@@ -75,6 +79,10 @@ public class EspectaculoService {
 
 		for (Numero n : ogEntity.getNumeros()) {
 			n.setEspectaculo(null);
+			
+			for (Artista a : n.getArtistas()) {
+				daService.actualizarTrayectoria(a.getId());
+			}
 		}
 
 		ogEntity.getNumeros().clear();
@@ -90,8 +98,8 @@ public class EspectaculoService {
 		}
 
 		String user = "Admin";
-		if (session.getPersonaId() != null) {
-			Persona p = peService.find(session.getPersonaId());
+		if (session.getUserId() != null) {
+			Persona p = peService.find(session.getUserId());
 			user = p.getCredenciales().getUsername();
 		}
 

@@ -135,7 +135,7 @@ public class GestionEspectaculosController implements Initializable {
 
 	private Coordinacion getCoordinador() {
 		if (session.getPerfil() == Perfil.COORDINACION)
-			return (Coordinacion) peService.find(session.getPersonaId());
+			return (Coordinacion) peService.find(session.getUserId());
 		else
 			return (Coordinacion) peService.findByNombre(cbCoordinador.getValue());
 	}
@@ -384,7 +384,7 @@ public class GestionEspectaculosController implements Initializable {
 		}
 
 		boolean coordinador = false;
-		if (session.getPersonaId() != null) {
+		if (session.getUserId() != null) {
 			coordinador = getCoordinador() == null;
 			cbCoordinador.pseudoClassStateChanged(EMPTY, coordinador);
 		}

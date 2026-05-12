@@ -25,14 +25,17 @@ public class NumeroService {
 	private PersonaService peService;
 	
 	@Autowired
+	private DossierArtisticoService daService;
+	
+	@Autowired
 	private Session session;
 
 	public Numero save(Numero entity) {
 		Numero saved = repo.save(entity);
 		
 		String user = "Admin";
-		if (session.getPersonaId() != null) {
-			Persona p = peService.find(session.getPersonaId());
+		if (session.getUserId() != null) {
+			Persona p = peService.find(session.getUserId());
 			user = p.getCredenciales().getUsername();
 		}
 		
@@ -51,12 +54,13 @@ public class NumeroService {
 		ogEntity.getArtistas().clear();
 
 		for (Artista a : newEntity.getArtistas()) {
+			daService.actualizarTrayectoria(a.getId());
 			ogEntity.getArtistas().add(a);
 		}
 
 		String user = "Admin";
-		if (session.getPersonaId() != null) {
-			Persona p = peService.find(session.getPersonaId());
+		if (session.getUserId() != null) {
+			Persona p = peService.find(session.getUserId());
 			user = p.getCredenciales().getUsername();
 		}
 		
