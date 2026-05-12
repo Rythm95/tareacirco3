@@ -1,4 +1,4 @@
-package com.simao.tarea3AD2024base.objectdb.controller;
+package com.simao.tarea3AD2024base.controller;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -8,17 +8,20 @@ import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Session;
 import com.simao.tarea3AD2024base.objectdb.modelo.Incidencia;
 import com.simao.tarea3AD2024base.objectdb.modelo.TipoIncidencia;
-import com.simao.tarea3AD2024base.objectdb.service.IncidenciaService;
+import com.simao.tarea3AD2024base.services.IncidenciaService;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -27,15 +30,27 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
 
 @Component
 public class IncidenciaController implements Initializable {
+
+	private PseudoClass EMPTY = PseudoClass.getPseudoClass("error");
 
 	@Autowired
 	private IncidenciaService inService;
 
 	@Autowired
 	private Session session;
+
+	@FXML
+	private VBox formRegistro;
+
+	@FXML
+	private VBox formConsulta;
+
+	@FXML
+	private Button btnForms;
 
 	@FXML
 	private ComboBox<TipoIncidencia> cbTipo;
@@ -89,7 +104,7 @@ public class IncidenciaController implements Initializable {
 	private TableColumn<Incidencia, Boolean> colResuelta;
 
 	@FXML
-	private TableColumn<Incidencia, Long> colPersona;
+	private TableColumn<Incidencia, String> colPersona;
 
 	@FXML
 	private TableColumn<Incidencia, Long> colEspectaculo;
@@ -98,13 +113,15 @@ public class IncidenciaController implements Initializable {
 	private TableColumn<Incidencia, Long> colNumero;
 
 	@FXML
+	private VBox formResolve;
+
+	@FXML
 	private TextArea txtResolucion;
 
 	@FXML
 	private Label lblResolucion;
 
 	private Long getIdEspectaculo() {
-
 		Integer id = spIdEspectaculo.getValue();
 
 		if (id == null || id == 0)
@@ -114,7 +131,6 @@ public class IncidenciaController implements Initializable {
 	}
 
 	private Long getIdNumero() {
-
 		Integer id = spIdNumero.getValue();
 
 		if (id == null || id == 0)
@@ -124,7 +140,6 @@ public class IncidenciaController implements Initializable {
 	}
 
 	private Long getFiltroEspectaculo() {
-
 		Integer id = spFiltroEspectaculo.getValue();
 
 		if (id == null || id == 0)
@@ -134,7 +149,6 @@ public class IncidenciaController implements Initializable {
 	}
 
 	private Long getFiltroNumero() {
-
 		Integer id = spFiltroNumero.getValue();
 
 		if (id == null || id == 0)
@@ -145,6 +159,11 @@ public class IncidenciaController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+
+		if (session.getPerfil() == Perfil.ARTISTA) {
+			formResolve.setVisible(false);
+			formResolve.setManaged(false);
+		}
 
 		cbTipo.getItems().addAll(TipoIncidencia.values());
 		cbFiltroTipo.getItems().addAll("TODOS", "TECNICA", "ARTISTICA", "ORGANIZATIVA");
@@ -166,12 +185,19 @@ public class IncidenciaController implements Initializable {
 	private void cargarTabla() {
 
 		colId.setCellValueFactory(data -> new SimpleLongProperty(data.getValue().getId()).asObject());
-		colFecha.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFechaHora()));
+		colFecha.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFechaHora().toString()));
 		colTipo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTipo().toString()));
 		colDescripcion.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDescripcion()));
 		colResuelta.setCellValueFactory(data -> new SimpleBooleanProperty(data.getValue().isResuelta()).asObject());
-		colPersona
-				.setCellValueFactory(data -> new SimpleLongProperty(data.getValue().getIdPersonaReporta()).asObject());
+		colPersona.setCellValueFactory(data -> {
+
+			Long id = data.getValue().getIdPersonaReporta();
+
+			if (id == null)
+				return new SimpleStringProperty("ADMIN");
+
+			return new SimpleStringProperty(id.toString());
+		});
 
 		colEspectaculo.setCellValueFactory(data -> {
 			Long id = data.getValue().getIdEspectaculo();
@@ -203,18 +229,20 @@ public class IncidenciaController implements Initializable {
 
 		lblRegistro.setText("");
 
-		if (cbTipo.getValue() == null || txtDescripcion.getText().isBlank()) {
+		boolean tipo = cbTipo.getValue() == null;
+		cbTipo.pseudoClassStateChanged(EMPTY, tipo);
 
-			lblRegistro.setText("Completa tipo y descripción.");
+		boolean desc = txtDescripcion.getText().isBlank();
+		txtDescripcion.pseudoClassStateChanged(EMPTY, desc);
+
+		if (tipo || desc)
 			return;
-		}
 
 		Long idEspectaculo = getIdEspectaculo();
 
 		Long idNumero = getIdNumero();
 
-		inService.registrarIncidencia(cbTipo.getValue(), txtDescripcion.getText(), session.getPersonaId(),
-				idEspectaculo, idNumero);
+		inService.registrar(cbTipo.getValue(), txtDescripcion.getText(), idEspectaculo, idNumero);
 
 		limpiarRegistro();
 
@@ -236,30 +264,22 @@ public class IncidenciaController implements Initializable {
 
 		TipoIncidencia tipo = null;
 
-		if (!cbFiltroTipo.getValue().equals("TODOS")) {
-
+		if (!cbFiltroTipo.getValue().equals("TODOS"))
 			tipo = TipoIncidencia.valueOf(cbFiltroTipo.getValue());
-		}
 
 		Boolean resuelta = null;
 
-		switch (cbFiltroEstado.getValue()) {
-
-		case "RESUELTAS":
+		if (cbFiltroEstado.getValue().equals("RESUELTAS"))
 			resuelta = true;
-			break;
-
-		case "NO_RESUELTAS":
+		else if (cbFiltroEstado.getValue().equals("NO RESUELTAS"))
 			resuelta = false;
-			break;
-		}
 
 		Long idEspectaculo = getFiltroEspectaculo();
 		Long idNumero = getFiltroNumero();
 		LocalDate fechaIni = dpFechaInicio.getValue();
 		LocalDate fechaFin = dpFechaFin.getValue();
 
-		List<Incidencia> lista = inService.buscarIncidencias(tipo, resuelta, idEspectaculo, idNumero, fechaIni,
+		List<Incidencia> lista = inService.findIncidenciaFiltro(tipo, resuelta, idEspectaculo, idNumero, fechaIni,
 				fechaFin);
 
 		tablaIncidencias.setItems(FXCollections.observableArrayList(lista));
@@ -273,33 +293,38 @@ public class IncidenciaController implements Initializable {
 		Incidencia i = tablaIncidencias.getSelectionModel().getSelectedItem();
 
 		if (i == null) {
-
 			lblResolucion.setText("Selecciona una incidencia.");
-
 			return;
 		}
 
 		if (i.isResuelta()) {
-
 			lblResolucion.setText("La incidencia ya está resuelta.");
-
 			return;
 		}
 
-		if (txtResolucion.getText().isBlank()) {
+		boolean resolution = txtResolucion.getText().isBlank();
+		txtResolucion.pseudoClassStateChanged(EMPTY, resolution);
 
-			lblResolucion.setText("Introduce las acciones realizadas.");
-
+		if (resolution)
 			return;
-		}
 
-		inService.resolverIncidencia(i.getId(), txtResolucion.getText(), session.getPersonaId());
+		inService.resolver(i, txtResolucion.getText());
 
 		txtResolucion.clear();
 
 		cargarIncidencias();
 
 		lblResolucion.setText("Incidencia resuelta.");
+	}
+
+	@FXML
+	private void switchForms() {
+		boolean b = formRegistro.isVisible();
+		formRegistro.setVisible(!b);
+		formRegistro.setManaged(!b);
+		formConsulta.setVisible(b);
+		formConsulta.setManaged(b);
+		btnForms.setText(b ? "Registrar incidencias" : "Consultar incidencias");
 	}
 
 	@FXML

@@ -71,7 +71,6 @@ public class VistaArtistaController implements Initializable {
 		if (listaEspectaculos.isEmpty()) {
 			Label vacio = new Label("No hay espectáculos programados.");
 			espectaculosContainer.getChildren().add(vacio);
-			return;
 		}
 
 		for (Espectaculo es : listaEspectaculos) {

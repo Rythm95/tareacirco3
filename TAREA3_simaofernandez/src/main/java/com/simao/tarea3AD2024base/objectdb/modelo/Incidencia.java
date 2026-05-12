@@ -1,5 +1,7 @@
 package com.simao.tarea3AD2024base.objectdb.modelo;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,7 +16,7 @@ public class Incidencia {
 	@GeneratedValue
 	private Long id;
 
-	private String fechaHora;
+	private LocalDateTime fechaHora;
 
 	@Enumerated(EnumType.STRING)
 	private TipoIncidencia tipo;
@@ -33,14 +35,13 @@ public class Incidencia {
 	public Incidencia() {
 	}
 
-	public Incidencia(Long id, String fechaHora, TipoIncidencia tipo, String descripcion, boolean resuelta,
-			Long idPersonaReporta, Long idEspectaculo, Long idNumero) {
+	public Incidencia(LocalDateTime fechaHora, TipoIncidencia tipo, String descripcion, Long idPersonaReporta,
+			Long idEspectaculo, Long idNumero) {
 		super();
-		this.id = id;
 		this.fechaHora = fechaHora;
 		this.tipo = tipo;
 		this.descripcion = descripcion;
-		this.resuelta = resuelta;
+		this.resuelta = false;
 		this.idPersonaReporta = idPersonaReporta;
 		this.idEspectaculo = idEspectaculo;
 		this.idNumero = idNumero;
@@ -54,11 +55,11 @@ public class Incidencia {
 		this.id = id;
 	}
 
-	public String getFechaHora() {
+	public LocalDateTime getFechaHora() {
 		return fechaHora;
 	}
 
-	public void setFechaHora(String fechaHora) {
+	public void setFechaHora(LocalDateTime fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 
