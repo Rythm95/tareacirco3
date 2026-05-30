@@ -57,6 +57,7 @@
                         <VBox fx:id="coordinacionContainer">
                         <Label text="Coordinador/a del espectáculo:" />
                         <ComboBox fx:id="cbCoordinador" promptText="Coordinador" />
+                        <Label fx:id="labelCoordinacion" text="" visible="false" managed="false"/>
                         </VBox>
                         <VBox spacing="10">
                            <children>

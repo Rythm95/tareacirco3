@@ -73,6 +73,9 @@ public class EspectaculoController implements Initializable {
 
 	@FXML
 	private VBox coordinacionContainer;
+	
+	@FXML
+	private Label labelCoordinacion;
 
 	@FXML
 	private ComboBox<String> cbCoordinador;
@@ -127,8 +130,12 @@ public class EspectaculoController implements Initializable {
 			cargarDatos();
 
 			if (session.getPerfil() == Perfil.COORDINACION) {
-				coordinacionContainer.setVisible(false);
-				coordinacionContainer.setManaged(false);
+				cbCoordinador.setVisible(false);
+				cbCoordinador.setManaged(false);
+				labelCoordinacion.setVisible(true);
+				labelCoordinacion.setManaged(true);
+				labelCoordinacion.setText(getCoordinador().getNombre());
+				
 			} else {
 				cargarCoordinadores();
 			}

@@ -11,7 +11,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="15" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simao.tarea3AD2024base.controller.GestionNumerosController">
+<VBox spacing="15" xmlns="http://javafx.com/javafx/25"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.simao.tarea3AD2024base.controller.GestionNumerosController">
 	<padding>
 		<Insets bottom="20" left="20" right="20" top="20" />
 	</padding>
@@ -22,36 +24,12 @@
 					<Label styleClass="subtitulo" text="Números Registrados:" />
 				</children>
 			</HBox>
-			<Button fx:id="btnForm" mnemonicParsing="false" onAction="#showForm" prefHeight="25.0" prefWidth="125.0" styleClass="btn-secondary" text="Nuevo Número" />
 		</children>
 	</HBox>
-	<ScrollPane fx:id="formularioBox" fitToWidth="true" hbarPolicy="NEVER" managed="false" prefWidth="526.0" visible="false" VBox.vgrow="ALWAYS">
-		<content>
-			<VBox fx:id="formularioContent" spacing="10">
-				<TextField fx:id="txtNombre" promptText="Nombre del Número" />
-				<Label fx:id="lblErrorNombre" styleClass="error-label" text="Error" visible="false" managed="false" />
-				<VBox>
-					<Label text="Duración del Número:" />
-					<HBox alignment="CENTER_LEFT" spacing="10">
-						<Spinner fx:id="spMinutos" editable="true" prefWidth="70" />
-						<ComboBox fx:id="cbDecimal" prefWidth="70" promptText=".0" />
-						<Label text="Minutos" />
-					</HBox>
-				</VBox>
-				<VBox spacing="5">
-					<Label text="Artistas participantes:" />
-                    <VBox fx:id="containerArtistas" />
-				</VBox>
-				<Label fx:id="lblError" styleClass="error-label" text="Error" visible="false" />
-				<HBox spacing="10">
-					<Button fx:id="save" onAction="#save" text="Guardar" />
-					<Button onAction="#limpiarForm" text="Limpiar" />
-				</HBox>
-			</VBox>
-		</content>
-	</ScrollPane>
 	<Separator prefWidth="200.0" />
-	<ScrollPane fx:id="listaBox" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefWidth="526.0" VBox.vgrow="NEVER">
+	<ScrollPane fx:id="listaBox" fitToHeight="true"
+		fitToWidth="true" hbarPolicy="NEVER" prefWidth="526.0"
+		VBox.vgrow="NEVER">
 		<content>
 			<VBox fx:id="container" spacing="10">
 				<padding>

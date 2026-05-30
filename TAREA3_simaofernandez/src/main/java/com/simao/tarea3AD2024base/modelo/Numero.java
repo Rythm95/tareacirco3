@@ -107,7 +107,7 @@ public class Numero {
 	}
 
 	public String toString() {
-		return "[id " + id + "]\tNombre: " + nombre + "\tDuración: " + duracion + " min";
+		return "Nombre: " + nombre + "\tDuración: " + duracion + " min";
 	}
 
 }

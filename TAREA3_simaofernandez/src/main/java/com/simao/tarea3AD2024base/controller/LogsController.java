@@ -2,7 +2,6 @@ package com.simao.tarea3AD2024base.controller;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -15,6 +14,7 @@ import com.simao.tarea3AD2024base.modelo.LogOperacion;
 import com.simao.tarea3AD2024base.modelo.TipoOperacion;
 import com.simao.tarea3AD2024base.services.LogOperacionService;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
@@ -35,7 +35,7 @@ public class LogsController implements Initializable {
 
 	@FXML
 	private DatePicker dpFechaIni;
-	
+
 	@FXML
 	private DatePicker dpFechaFin;
 
@@ -44,16 +44,16 @@ public class LogsController implements Initializable {
 
 	@FXML
 	private TableColumn<LogOperacion, Long> colId;
-	
+
 	@FXML
-	private TableColumn<LogOperacion, LocalDateTime> colFecha;
-	
+	private TableColumn<LogOperacion, String> colFecha;
+
 	@FXML
 	private TableColumn<LogOperacion, String> colUsuario;
-	
-	@FXML 
+
+	@FXML
 	private TableColumn<LogOperacion, TipoOperacion> colTipo;
-	
+
 	@FXML
 	private TableColumn<LogOperacion, String> colResumen;
 
@@ -69,31 +69,36 @@ public class LogsController implements Initializable {
 		cbTipoOperacion.getItems().addAll(TipoOperacion.values());
 
 		colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		colFecha.setCellValueFactory(new PropertyValueFactory<>("fechaHora"));
+		colFecha.setCellValueFactory(cellData -> {
+			String fecha = cellData.getValue().getFechaHora();
+			if (fecha == null)
+				return new SimpleStringProperty("");
+			return new SimpleStringProperty(fecha.substring(0, 16).replace("T", " "));
+		});
 		colUsuario.setCellValueFactory(new PropertyValueFactory<>("user"));
 		colTipo.setCellValueFactory(new PropertyValueFactory<>("tipoOperacion"));
 		colResumen.setCellValueFactory(new PropertyValueFactory<>("resumen"));
-		
+
 		cargarLogs();
 	}
-	
+
 	@FXML
 	public void limpiarFiltros() {
-	    txtUsuario.clear();
+		txtUsuario.clear();
 
-	    cbTipoOperacion.setValue(null);
-	    dpFechaIni.setValue(null);
-	    dpFechaFin.setValue(null);
-	    tvLogs.getItems().clear();
+		cbTipoOperacion.setValue(null);
+		dpFechaIni.setValue(null);
+		dpFechaFin.setValue(null);
+		tvLogs.getItems().clear();
 
-	    cargarLogs();
+		cargarLogs();
 	}
-	
+
 	private void cargarLogs() {
-	    tvLogs.getItems().clear();
-	    tvLogs.getItems().addAll(loService.findAll());
+		tvLogs.getItems().clear();
+		tvLogs.getItems().addAll(loService.findAll());
 	}
-	
+
 	@FXML
 	private void filtrarLogs() {
 		String user = txtUsuario.getText();
@@ -101,7 +106,7 @@ public class LogsController implements Initializable {
 		LocalDate fechaIni = dpFechaIni.getValue();
 		LocalDate fechaFin = dpFechaFin.getValue();
 		List<LogOperacion> logs = loService.findFiltrados(user, operacion, fechaIni, fechaFin);
-		
+
 		tvLogs.getItems().clear();
 		tvLogs.getItems().addAll(logs);
 	}
