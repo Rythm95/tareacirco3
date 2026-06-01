@@ -69,8 +69,8 @@ public class LogsController implements Initializable {
 		cbTipoOperacion.getItems().addAll(TipoOperacion.values());
 
 		colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		colFecha.setCellValueFactory(cellData -> {
-			String fecha = cellData.getValue().getFechaHora();
+		colFecha.setCellValueFactory(data -> {
+			String fecha = data.getValue().getFechaHora();
 			if (fecha == null)
 				return new SimpleStringProperty("");
 			return new SimpleStringProperty(fecha.substring(0, 16).replace("T", " "));

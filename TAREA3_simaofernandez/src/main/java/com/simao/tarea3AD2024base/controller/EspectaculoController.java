@@ -4,7 +4,9 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.simao.tarea3AD2024base.config.StageManager;
+import com.simao.tarea3AD2024base.modelo.Artista;
 import com.simao.tarea3AD2024base.modelo.Coordinacion;
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
 import com.simao.tarea3AD2024base.modelo.Numero;
@@ -19,7 +22,6 @@ import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
 import com.simao.tarea3AD2024base.modelo.Session;
 import com.simao.tarea3AD2024base.services.EspectaculoService;
-import com.simao.tarea3AD2024base.services.InformeXMLService;
 import com.simao.tarea3AD2024base.services.NumeroService;
 import com.simao.tarea3AD2024base.services.PersonaService;
 import com.simao.tarea3AD2024base.view.FxmlView;
@@ -29,12 +31,14 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -59,9 +63,6 @@ public class EspectaculoController implements Initializable {
 	@Autowired
 	private EspectaculoService esService;
 
-	@Autowired
-	private InformeXMLService ixService;
-
 	@FXML
 	private TextField txtNombre;
 
@@ -73,7 +74,7 @@ public class EspectaculoController implements Initializable {
 
 	@FXML
 	private VBox coordinacionContainer;
-	
+
 	@FXML
 	private Label labelCoordinacion;
 
@@ -81,7 +82,24 @@ public class EspectaculoController implements Initializable {
 	private ComboBox<String> cbCoordinador;
 
 	@FXML
-	private ComboBox<String> cbNumeros;
+	private VBox containerArtistas;
+
+	@FXML
+	private TextField txtNombreN;
+
+	@FXML
+	private Label lblErrorNombreN;
+
+	@FXML
+	private Label lblErrorN;
+
+	@FXML
+	private Spinner<Integer> spMinutos;
+
+	@FXML
+	private ComboBox<String> cbDecimal;
+
+	private Map<Artista, CheckBox> checkArtistas = new HashMap<>();
 
 	@FXML
 	private ListView<Numero> lvNumeros;
@@ -103,6 +121,8 @@ public class EspectaculoController implements Initializable {
 	@FXML
 	private Label lblErrorNumeros;
 
+	private List<Long> dropNumsIds = new ArrayList<>();
+
 	private String getNombre() {
 		return txtNombre.getText();
 	}
@@ -122,12 +142,31 @@ public class EspectaculoController implements Initializable {
 			return (Coordinacion) peService.findByNombre(cbCoordinador.getValue());
 	}
 
+	private String getNombreN() {
+		return txtNombreN.getText();
+	}
+
+	private double getDuracion() {
+		double min = spMinutos.getValue();
+		if (cbDecimal.getValue().equals(".5"))
+			min += 0.5;
+		return min;
+	}
+
+	private List<Artista> getArtistas() {
+		return checkArtistas.entrySet().stream().filter(es -> es.getValue().isSelected()).map(Map.Entry::getKey)
+				.toList();
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		if (session.getEspectaculoId() == null) {
 			goBack();
 		} else {
 			cargarDatos();
+			spMinutos.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 999, 1));
+			cbDecimal.getItems().addAll(".0", ".5");
+			cbDecimal.getSelectionModel().selectFirst();
 
 			if (session.getPerfil() == Perfil.COORDINACION) {
 				cbCoordinador.setVisible(false);
@@ -135,26 +174,12 @@ public class EspectaculoController implements Initializable {
 				labelCoordinacion.setVisible(true);
 				labelCoordinacion.setManaged(true);
 				labelCoordinacion.setText(getCoordinador().getNombre());
-				
+
 			} else {
 				cargarCoordinadores();
-			}
-			List<Numero> listaNumeros = nuService.findAll();
-			List<Numero> numsDisponibles = new ArrayList<>();
-
-			for (Numero n : listaNumeros) {
-				if (n.getEspectaculo() == null || n.getEspectaculo().getId() == session.getEspectaculoId())
-					numsDisponibles.add(n);
-			}
-
-			if (!numsDisponibles.isEmpty()) {
-				cbNumeros.getItems().clear();
-				for (Numero n : numsDisponibles) {
-					cbNumeros.getItems().add(n.getNombre());
-				}
+				cargarArtistas();
 			}
 		}
-
 	}
 
 	private void cargarCoordinadores() {
@@ -168,6 +193,27 @@ public class EspectaculoController implements Initializable {
 			cbCoordinador.getItems().clear();
 			for (Persona p : listaCoordinacion) {
 				cbCoordinador.getItems().add(p.getNombre());
+			}
+		}
+	}
+
+	private void cargarArtistas() {
+		List<Persona> listaArtistas = peService.findByPerfil(Perfil.ARTISTA);
+
+		containerArtistas.getChildren().clear();
+
+		if (listaArtistas.isEmpty()) {
+			save.setDisable(true);
+			lblError.setText("Registra un artista antes de crear un número.");
+			lblError.setVisible(true);
+		} else {
+			save.setDisable(false);
+			lblError.setVisible(false);
+			for (Persona p : listaArtistas) {
+				Artista a = (Artista) p;
+				CheckBox cb = new CheckBox(p.getNombre());
+				checkArtistas.put(a, cb);
+				containerArtistas.getChildren().add(cb);
 			}
 		}
 	}
@@ -193,20 +239,50 @@ public class EspectaculoController implements Initializable {
 
 	@FXML
 	private void addNumero() {
-		Numero num = nuService.findByNombre(cbNumeros.getValue());
-
-		if (num != null) {
-			boolean equals = false;
-			for (Numero ns : numSelected) {
-				if (ns.getId() == num.getId()) {
-					equals = true;
-					break;
-				}
-			}
-			if (!equals) {
-				numSelected.add(num);
-			}
+		if (validarNumero()) {
+			return;
 		}
+
+		Numero num = new Numero();
+		num.setNombre(getNombreN());
+		num.setDuracion(getDuracion());
+		num.setArtistas(getArtistas());
+
+		numSelected.add(num);
+
+		limpiarNum();
+	}
+
+	private boolean validarNumero() {
+
+		boolean nombre = getNombreN().isEmpty();
+		txtNombreN.pseudoClassStateChanged(EMPTY, nombre);
+		boolean inList = false;
+		for (Numero n : numSelected) {
+			if (n.getNombre().equals(getNombreN()))
+				inList = true;
+		}
+		if (nuService.findByNombre(getNombreN()) != null || inList) {
+			nombre = true;
+			lblErrorNombreN.setText("Ya existe un número con ese nombre.");
+
+			lblErrorNombreN.setManaged(nombre);
+			lblErrorNombreN.setVisible(nombre);
+		} else {
+			lblErrorNombreN.setManaged(false);
+			lblErrorNombreN.setVisible(false);
+		}
+
+		boolean duracion = spMinutos.getValue() == null;
+		spMinutos.pseudoClassStateChanged(EMPTY, duracion);
+
+		boolean artistas = getArtistas().isEmpty();
+		lblErrorN.setText("Debe seleccionar al menos un artista que participará en el número.");
+
+		lblErrorN.setManaged(artistas);
+		lblErrorN.setVisible(artistas);
+
+		return nombre || duracion || artistas;
 	}
 
 	@FXML
@@ -233,6 +309,9 @@ public class EspectaculoController implements Initializable {
 	private void eliminarNumero() {
 		Numero seleccionado = lvNumeros.getSelectionModel().getSelectedItem();
 		numSelected.remove(seleccionado);
+		if (seleccionado.getId() != null) {
+			dropNumsIds.add(seleccionado.getId());
+		}
 	}
 
 	@FXML
@@ -259,7 +338,15 @@ public class EspectaculoController implements Initializable {
 		es.setFechafin(getFechaFin());
 		es.setCoordinacion(getCoordinador());
 
-		List<Long> numeroIds = numSelected.stream().map(Numero::getId).toList();
+		List<Long> numeroIds = new ArrayList<>();
+
+		for (Long l : dropNumsIds)
+			nuService.delete(l);
+
+		for (Numero n : numSelected) {
+			Long id = nuService.save(n).getId();
+			numeroIds.add(id);
+		}
 
 		esService.update(session.getEspectaculoId(), es, numeroIds);
 		goBack();
@@ -334,18 +421,19 @@ public class EspectaculoController implements Initializable {
 
 	@FXML
 	private void reiniciarForm() {
+		dropNumsIds.clear();
 		cargarDatos();
 	}
 
-	@FXML
-	private void exportarEspectaculo() {
-		Espectaculo es = esService.getEspectaculoCompleto(session.getEspectaculoId());
-		ixService.generarInforme(es);
+	public void limpiarNum() {
+		txtNombreN.clear();
+		spMinutos.getValueFactory().setValue(1);
+		cbDecimal.setValue(".0");
+		checkArtistas.values().forEach(check -> check.setSelected(false));
+	}
 
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle("Exportación completada");
-		alert.setHeaderText(null);
-		alert.setContentText("El espectáculo se ha exportado correctamente.");
-		alert.showAndWait();
+	@FXML
+	private void openEspectaculoDetalle() {
+		stageManager.switchScene(FxmlView.ESPECTACULO_DETALLE);
 	}
 }

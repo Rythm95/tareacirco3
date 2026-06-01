@@ -84,9 +84,6 @@ public class GestionEspectaculosController implements Initializable {
 	private VBox formularioContent;
 
 	@FXML
-	private VBox formularioContentN;
-
-	@FXML
 	private ScrollPane listaBox;
 
 	@FXML
@@ -400,7 +397,7 @@ public class GestionEspectaculosController implements Initializable {
 	}
 
 	public void limpiarNum() {
-		txtNombre.clear();
+		txtNombreN.clear();
 		spMinutos.getValueFactory().setValue(1);
 		cbDecimal.setValue(".0");
 		checkArtistas.values().forEach(check -> check.setSelected(false));

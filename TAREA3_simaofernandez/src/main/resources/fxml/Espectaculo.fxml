@@ -8,6 +8,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -57,18 +58,41 @@
                         <VBox fx:id="coordinacionContainer">
                         <Label text="Coordinador/a del espectáculo:" />
                         <ComboBox fx:id="cbCoordinador" promptText="Coordinador" />
-                        <Label fx:id="labelCoordinacion" text="" visible="false" managed="false"/>
+                        <Label fx:id="labelCoordinacion" managed="false" text="" visible="false" />
                         </VBox>
                         <VBox spacing="10">
                            <children>
-                           <VBox>
-                              <Label text="Números del espectáculo:" />
-                              <HBox spacing="10">
+                              <VBox spacing="10" styleClass="formulario">
                                  <children>
-                                    <ComboBox fx:id="cbNumeros" prefWidth="200.0" promptText="Selecciona número" />
-                                    <Button onAction="#addNumero" text="Añadir" />
+                                    <Label text="Números del espectáculo:" />
+                                    <TextField fx:id="txtNombreN" promptText="Nombre del Número" />
+                                    <Label fx:id="lblErrorNombreN" managed="false" styleClass="error-label" text="Error" visible="false" />
+                                    <VBox>
+                                       <children>
+                                          <Label text="Duración del Número:" />
+                                          <HBox alignment="CENTER_LEFT" spacing="10">
+                                             <children>
+                                                <Spinner fx:id="spMinutos" editable="true" prefWidth="70" />
+                                                <ComboBox fx:id="cbDecimal" prefWidth="70" promptText=".0" />
+                                                <Label text="Minutos" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <VBox spacing="5">
+                                       <children>
+                                          <Label text="Artistas participantes:" />
+                                          <VBox fx:id="containerArtistas" />
+                                       </children>
+                                    </VBox>
+                                    <Label fx:id="lblErrorN" styleClass="error-label" text="Error" visible="false" />
+                                    <HBox spacing="10">
+                                       <children>
+                                          <Button onAction="#addNumero" text="Añadir" />
+                                          <Button onAction="#limpiarNum" text="Limpiar" />
+                                       </children>
+                                    </HBox>
                                  </children>
-                              </HBox>
                               </VBox>
                               <ListView fx:id="lvNumeros" prefHeight="80.0" />
                               <HBox spacing="10">
@@ -90,8 +114,8 @@
                <children>
                   <Button fx:id="save" onAction="#save" text="Actualizar Espectáculo" />
                   <Button onAction="#reiniciarForm" text="Reiniciar" />
-                  <HBox prefHeight="100.0" prefWidth="200.0" />
-                  <Button onAction="#exportarEspectaculo" text="Exportar Info" />
+                  <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <Button onAction="#openEspectaculoDetalle" text="Detalles" />
                </children>
             </HBox>
          </children>

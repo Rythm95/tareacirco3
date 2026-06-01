@@ -8,11 +8,15 @@ import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.simao.tarea3AD2024base.modelo.Espectaculo;
+import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Session;
 import com.simao.tarea3AD2024base.objectdb.modelo.Incidencia;
 import com.simao.tarea3AD2024base.objectdb.modelo.TipoIncidencia;
+import com.simao.tarea3AD2024base.services.EspectaculoService;
 import com.simao.tarea3AD2024base.services.IncidenciaService;
+import com.simao.tarea3AD2024base.services.NumeroService;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -25,8 +29,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -39,6 +41,12 @@ public class IncidenciaController implements Initializable {
 
 	@Autowired
 	private IncidenciaService inService;
+
+	@Autowired
+	private EspectaculoService esService;
+
+	@Autowired
+	private NumeroService nuService;
 
 	@Autowired
 	private Session session;
@@ -56,10 +64,10 @@ public class IncidenciaController implements Initializable {
 	private ComboBox<TipoIncidencia> cbTipo;
 
 	@FXML
-	private Spinner<Integer> spIdEspectaculo;
+	private ComboBox<Long> cbIdEspectaculo;
 
 	@FXML
-	private Spinner<Integer> spIdNumero;
+	private ComboBox<Long> cbIdNumero;
 
 	@FXML
 	private TextArea txtDescripcion;
@@ -80,10 +88,10 @@ public class IncidenciaController implements Initializable {
 	private DatePicker dpFechaFin;
 
 	@FXML
-	private Spinner<Integer> spFiltroEspectaculo;
+	private ComboBox<Long> cbFiltroEspectaculo;
 
 	@FXML
-	private Spinner<Integer> spFiltroNumero;
+	private ComboBox<Long> cbFiltroNumero;
 
 	@FXML
 	private TableView<Incidencia> tablaIncidencias;
@@ -121,40 +129,43 @@ public class IncidenciaController implements Initializable {
 	@FXML
 	private Label lblResolucion;
 
+	@FXML
+	private Label lblErrorIncidencia;
+
 	private Long getIdEspectaculo() {
-		Integer id = spIdEspectaculo.getValue();
+		Long id = cbIdEspectaculo.getValue();
 
 		if (id == null || id == 0)
 			return null;
 
-		return id.longValue();
+		return id;
 	}
 
 	private Long getIdNumero() {
-		Integer id = spIdNumero.getValue();
+		Long id = cbIdNumero.getValue();
 
 		if (id == null || id == 0)
 			return null;
 
-		return id.longValue();
+		return id;
 	}
 
 	private Long getFiltroEspectaculo() {
-		Integer id = spFiltroEspectaculo.getValue();
+		Long id = cbFiltroEspectaculo.getValue();
 
 		if (id == null || id == 0)
 			return null;
 
-		return id.longValue();
+		return id;
 	}
 
 	private Long getFiltroNumero() {
-		Integer id = spFiltroNumero.getValue();
+		Long id = cbFiltroNumero.getValue();
 
 		if (id == null || id == 0)
 			return null;
 
-		return id.longValue();
+		return id;
 	}
 
 	@Override
@@ -171,14 +182,18 @@ public class IncidenciaController implements Initializable {
 		cbFiltroEstado.getItems().addAll("TODAS", "RESUELTAS", "NO RESUELTAS");
 		cbFiltroEstado.setValue("TODAS");
 
-		spIdEspectaculo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
-		spIdNumero.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
-		spFiltroEspectaculo
-				.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
-		spFiltroNumero.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
+		List<Espectaculo> listaEspectaculos = esService.findAll();
+		for (Espectaculo es : listaEspectaculos) {
+			cbIdEspectaculo.getItems().add(es.getId());
+			cbFiltroEspectaculo.getItems().add(es.getId());
+		}
+		List<Numero> listaNumeros = nuService.findAll();
+		for (Numero n : listaNumeros) {
+			cbIdNumero.getItems().add(n.getId());
+			cbFiltroNumero.getItems().add(n.getId());
+		}
 
 		cargarTabla();
-
 		cargarIncidencias();
 	}
 
@@ -186,6 +201,12 @@ public class IncidenciaController implements Initializable {
 
 		colId.setCellValueFactory(data -> new SimpleLongProperty(data.getValue().getId()).asObject());
 		colFecha.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFechaHora().toString()));
+		colFecha.setCellValueFactory(data -> {
+			String fecha = data.getValue().getFechaHora().toString();
+			if (fecha == null)
+				return new SimpleStringProperty("");
+			return new SimpleStringProperty(fecha.substring(0, 16).replace("T", " "));
+		});
 		colTipo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTipo().toString()));
 		colDescripcion.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDescripcion()));
 		colResuelta.setCellValueFactory(data -> new SimpleBooleanProperty(data.getValue().isResuelta()).asObject());
@@ -234,6 +255,17 @@ public class IncidenciaController implements Initializable {
 
 		boolean desc = txtDescripcion.getText().isBlank();
 		txtDescripcion.pseudoClassStateChanged(EMPTY, desc);
+		if (!desc) {
+			if (txtDescripcion.getText().length() > 1000) {
+				desc = true;
+				lblErrorIncidencia.setText("La descripción no puede contener más de 1000 caracteres");
+			}
+			lblErrorIncidencia.setManaged(desc);
+			lblErrorIncidencia.setVisible(desc);
+		} else {
+			lblErrorIncidencia.setManaged(false);
+			lblErrorIncidencia.setVisible(false);
+		}
 
 		if (tipo || desc)
 			return;
@@ -255,8 +287,8 @@ public class IncidenciaController implements Initializable {
 
 		cbTipo.setValue(null);
 		txtDescripcion.clear();
-		spIdEspectaculo.getValueFactory().setValue(0);
-		spIdNumero.getValueFactory().setValue(0);
+		cbIdEspectaculo.setValue(null);
+		cbIdNumero.setValue(null);
 	}
 
 	@FXML
@@ -334,8 +366,8 @@ public class IncidenciaController implements Initializable {
 		cbFiltroEstado.setValue("TODAS");
 		dpFechaInicio.setValue(null);
 		dpFechaFin.setValue(null);
-		spFiltroEspectaculo.getValueFactory().setValue(0);
-		spFiltroNumero.getValueFactory().setValue(0);
+		cbFiltroEspectaculo.setValue(null);
+		cbFiltroNumero.setValue(null);
 
 		cargarIncidencias();
 	}

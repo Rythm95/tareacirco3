@@ -1,7 +1,10 @@
 package com.simao.tarea3AD2024base.controller;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,29 +124,37 @@ public class VistaArtistaController implements Initializable {
 		}
 		lblEspecialidades.setText("Especialidades: " + a.getEspecialidades().toString());
 
+		Map<Espectaculo, List<Numero>> espectaculosMap = new LinkedHashMap<>();
 		for (Numero n : a.getNumeros()) {
+			Espectaculo es = n.getEspectaculo();
 
-			VBox numBox = new VBox(3);
-			numBox.getStyleClass().add("card-invitado");
-
-			Label lblNum = new Label("[Id " + n.getId() + "] " + n.getNombre());
-			lblNum.getStyleClass().add("card-titulo");
-
-			Label lblEsp;
-
-			if (n.getEspectaculo() != null) {
-				Espectaculo es = n.getEspectaculo();
-				lblEsp = new Label("Del espectáculo [Id " + es.getId() + "] " + es.getNombre());
-			} else {
-				lblEsp = new Label("Sin espectáculo asociado.");
+			if (es != null) {
+				if (!espectaculosMap.containsKey(es)) {
+					espectaculosMap.put(es, new ArrayList<>());
+				}
+				espectaculosMap.get(es).add(n);
 			}
-
-			lblEsp.getStyleClass().add("card-subtitulo");
-
-			numBox.getChildren().addAll(lblNum, lblEsp);
-			numerosContainer.getChildren().add(numBox);
 		}
 
+		for (Map.Entry<Espectaculo, List<Numero>> entry : espectaculosMap.entrySet()) {
+
+			Espectaculo es = entry.getKey();
+
+			VBox esBox = new VBox(5);
+			esBox.getStyleClass().add("card-invitado");
+
+			Label lblEs = new Label("Del espectáculo " + es.getNombre() + "[Id " + es.getId() + "] ");
+			lblEs.getStyleClass().add("card-titulo");
+
+			esBox.getChildren().add(lblEs);
+
+			for (Numero n : entry.getValue()) {
+				Label lblNum = new Label("- " + n.getNombre() + "[Id " + n.getId() + "]");
+				lblNum.getStyleClass().add("card-subtitulo");
+				esBox.getChildren().add(lblNum);
+			}
+			numerosContainer.getChildren().add(esBox);
+		}
 	}
 
 	public void login() {

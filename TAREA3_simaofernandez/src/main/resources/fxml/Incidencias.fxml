@@ -15,7 +15,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="15" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simao.tarea3AD2024base.controller.IncidenciaController">
+<VBox spacing="15" xmlns="http://javafx.com/javafx/25"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.simao.tarea3AD2024base.controller.IncidenciaController">
 	<children>
 		<HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="516.0">
 			<children>
@@ -24,12 +26,16 @@
 						<Label styleClass="subtitulo" text="Incidencias:" />
 					</children>
 				</HBox>
-				<Button fx:id="btnForms" mnemonicParsing="false" onAction="#switchForms" prefHeight="25.0" prefWidth="125.0" styleClass="btn-secondary" text="Registrar incidencias" />
+				<Button fx:id="btnForms" mnemonicParsing="false"
+					onAction="#switchForms" prefHeight="26.0" prefWidth="150.0"
+					styleClass="btn-secondary" text="Registrar incidencias" />
 			</children>
 		</HBox>
-		<VBox fx:id="formRegistro" managed="false" spacing="10" styleClass="formulario" visible="false">
+		<VBox fx:id="formRegistro" managed="false" spacing="10"
+			styleClass="formulario" visible="false">
 			<children>
-				<Label styleClass="subtitulo" text="Registrar nueva incidencia" />
+				<Label styleClass="subtitulo"
+					text="Registrar nueva incidencia" />
 				<GridPane hgap="10" vgap="10">
 					<columnConstraints>
 						<ColumnConstraints percentWidth="25" />
@@ -42,19 +48,32 @@
 						<RowConstraints />
 					</rowConstraints>
 					<children>
-						<Label text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-						<ComboBox fx:id="cbTipo" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-						<Label text="Id espectáculo:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-						<Spinner fx:id="spIdEspectaculo" editable="true" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-						<Label text="Id número:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-						<Spinner fx:id="spIdNumero" editable="true" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-						<Label text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-						<TextArea fx:id="txtDescripcion" prefRowCount="5" promptText="Describe la incidencia..." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+						<Label text="Tipo:" GridPane.columnIndex="0"
+							GridPane.rowIndex="0" />
+						<ComboBox fx:id="cbTipo" prefWidth="250"
+							GridPane.columnIndex="1" GridPane.rowIndex="0" />
+						<Label text="Id espectáculo:" GridPane.columnIndex="0"
+							GridPane.rowIndex="1" />
+						<ComboBox fx:id="cbIdEspectaculo" prefWidth="150.0"
+							GridPane.columnIndex="1" GridPane.rowIndex="1" />
+						<Label text="Id número:" GridPane.columnIndex="0"
+							GridPane.rowIndex="2" />
+						<ComboBox fx:id="cbIdNumero" prefWidth="150"
+							GridPane.columnIndex="1" GridPane.rowIndex="2" />
+						<Label text="Descripción:" GridPane.columnIndex="0"
+							GridPane.rowIndex="3" />
+						<TextArea fx:id="txtDescripcion" prefRowCount="5"
+							promptText="Describe la incidencia..." wrapText="true"
+							GridPane.columnIndex="1" GridPane.rowIndex="3" />
 					</children>
 				</GridPane>
+				<Label fx:id="lblErrorIncidencia" managed="false"
+					styleClass="error-label" text="Error" visible="false"
+					wrapText="true" />
 				<HBox spacing="10">
 					<children>
-						<Button onAction="#registrarIncidencia" text="Registrar incidencia" />
+						<Button onAction="#registrarIncidencia"
+							text="Registrar incidencia" />
 						<Label fx:id="lblRegistro" styleClass="success-label" />
 					</children>
 				</HBox>
@@ -76,18 +95,30 @@
 						<RowConstraints />
 					</rowConstraints>
 					<children>
-						<Label text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-						<ComboBox fx:id="cbFiltroTipo" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-						<Label text="Estado:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-						<ComboBox fx:id="cbFiltroEstado" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-						<Label text="Fecha inicio:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-						<DatePicker fx:id="dpFechaInicio" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-						<Label text="Fecha fin:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-						<DatePicker fx:id="dpFechaFin" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-						<Label text="Id espectáculo:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-						<Spinner fx:id="spFiltroEspectaculo" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-						<Label text="Id número:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-						<Spinner fx:id="spFiltroNumero" editable="true" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+						<Label text="Tipo:" GridPane.columnIndex="0"
+							GridPane.rowIndex="0" />
+						<ComboBox fx:id="cbFiltroTipo" GridPane.columnIndex="1"
+							GridPane.rowIndex="0" />
+						<Label text="Estado:" GridPane.columnIndex="2"
+							GridPane.rowIndex="0" />
+						<ComboBox fx:id="cbFiltroEstado" GridPane.columnIndex="3"
+							GridPane.rowIndex="0" />
+						<Label text="Fecha inicio:" GridPane.columnIndex="0"
+							GridPane.rowIndex="1" />
+						<DatePicker fx:id="dpFechaInicio"
+							GridPane.columnIndex="1" GridPane.rowIndex="1" />
+						<Label text="Fecha fin:" GridPane.columnIndex="2"
+							GridPane.rowIndex="1" />
+						<DatePicker fx:id="dpFechaFin" GridPane.columnIndex="3"
+							GridPane.rowIndex="1" />
+						<Label text="Id espectáculo:" GridPane.columnIndex="0"
+							GridPane.rowIndex="2" />
+						<ComboBox fx:id="cbFiltroEspectaculo"
+							GridPane.columnIndex="1" GridPane.rowIndex="2" />
+						<Label text="Id número:" GridPane.columnIndex="2"
+							GridPane.rowIndex="2" />
+						<ComboBox fx:id="cbFiltroNumero" GridPane.columnIndex="3"
+							GridPane.rowIndex="2" />
 					</children>
 				</GridPane>
 				<HBox spacing="10">
@@ -103,31 +134,42 @@
 				<TableView fx:id="tablaIncidencias" VBox.vgrow="ALWAYS">
 					<columns>
 						<TableColumn fx:id="colId" prefWidth="60" text="ID" />
-						<TableColumn fx:id="colFecha" prefWidth="180" text="Fecha" />
-						<TableColumn fx:id="colTipo" prefWidth="130" text="Tipo" />
-						<TableColumn fx:id="colDescripcion" prefWidth="350" text="Descripción" />
-						<TableColumn fx:id="colResuelta" prefWidth="90" text="Resuelta" />
-						<TableColumn fx:id="colPersona" prefWidth="90" text="Reporta" />
-						<TableColumn fx:id="colEspectaculo" prefWidth="100" text="Espectáculo" />
-						<TableColumn fx:id="colNumero" prefWidth="100" text="Número" />
+						<TableColumn fx:id="colFecha" prefWidth="180"
+							text="Fecha" />
+						<TableColumn fx:id="colTipo" prefWidth="130"
+							text="Tipo" />
+						<TableColumn fx:id="colDescripcion" prefWidth="350"
+							text="Descripción" />
+						<TableColumn fx:id="colResuelta" prefWidth="90"
+							text="Resuelta" />
+						<TableColumn fx:id="colPersona" prefWidth="90"
+							text="Reporta" />
+						<TableColumn fx:id="colEspectaculo" prefWidth="100"
+							text="Espectáculo" />
+						<TableColumn fx:id="colNumero" prefWidth="100"
+							text="Número" />
 					</columns>
 				</TableView>
 			</children>
 		</VBox>
 		<VBox fx:id="formResolve" spacing="10" styleClass="formulario">
 			<children>
-				<Label styleClass="subtitulo" text="Resolver incidencia seleccionada" />
-				<TextArea fx:id="txtResolucion" prefRowCount="4" promptText="Acciones realizadas para resolver la incidencia..." wrapText="true" />
+				<Label styleClass="subtitulo"
+					text="Resolver incidencia seleccionada" />
+				<TextArea fx:id="txtResolucion" prefRowCount="4"
+					promptText="Acciones realizadas para resolver la incidencia..."
+					wrapText="true" />
 				<HBox spacing="10">
 					<children>
-						<Button onAction="#resolverIncidencia" text="Marcar como resuelta" />
+						<Button onAction="#resolverIncidencia"
+							text="Marcar como resuelta" />
 						<Label fx:id="lblResolucion" styleClass="success-label" />
 					</children>
 				</HBox>
 			</children>
 		</VBox>
 	</children>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
+	<padding>
+		<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+	</padding>
 </VBox>

@@ -110,6 +110,7 @@
                                        </children>
                                     </VBox>
                                     <Separator prefWidth="200.0" />
+                                    <Label styleClass="subtitulo" text="Números Participados:" />
                                     <VBox fx:id="numerosContainer" prefHeight="200.0" prefWidth="100.0" spacing="10.0" />
                                  </children>
                               </VBox>
