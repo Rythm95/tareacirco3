@@ -31,7 +31,7 @@ public class IncidenciaService {
 	public void resolver(Incidencia incidencia, String accionesRealizadas) {
 		Long idPersona = session.getUserId();
 		ResolucionIncidencia resolucion = new ResolucionIncidencia(LocalDateTime.now(), accionesRealizadas, idPersona,
-				incidencia.getId());
+				incidencia);
 		repo.solve(incidencia, resolucion);
 	}
 

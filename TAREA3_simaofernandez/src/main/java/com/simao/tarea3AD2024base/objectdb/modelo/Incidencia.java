@@ -2,12 +2,14 @@ package com.simao.tarea3AD2024base.objectdb.modelo;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Incidencia {
@@ -31,6 +33,9 @@ public class Incidencia {
 	private Long idEspectaculo;
 
 	private Long idNumero;
+
+	@OneToOne(mappedBy = "incidencia", cascade = CascadeType.ALL)
+	private ResolucionIncidencia resolucion;
 
 	public Incidencia() {
 	}
@@ -109,6 +114,14 @@ public class Incidencia {
 
 	public void setIdNumero(Long idNumero) {
 		this.idNumero = idNumero;
+	}
+
+	public ResolucionIncidencia getResolucion() {
+		return resolucion;
+	}
+
+	public void setResolucion(ResolucionIncidencia resolucion) {
+		this.resolucion = resolucion;
 	}
 
 }

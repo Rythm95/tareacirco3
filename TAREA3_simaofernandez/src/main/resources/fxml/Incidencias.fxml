@@ -52,13 +52,13 @@
 							GridPane.rowIndex="0" />
 						<ComboBox fx:id="cbTipo" prefWidth="250"
 							GridPane.columnIndex="1" GridPane.rowIndex="0" />
-						<Label text="Id espectáculo:" GridPane.columnIndex="0"
+						<Label text="Espectáculo:" GridPane.columnIndex="0"
 							GridPane.rowIndex="1" />
-						<ComboBox fx:id="cbIdEspectaculo" prefWidth="150.0"
+						<ComboBox fx:id="cbEspectaculo" prefWidth="150.0"
 							GridPane.columnIndex="1" GridPane.rowIndex="1" />
-						<Label text="Id número:" GridPane.columnIndex="0"
+						<Label text="Número:" GridPane.columnIndex="0"
 							GridPane.rowIndex="2" />
-						<ComboBox fx:id="cbIdNumero" prefWidth="150"
+						<ComboBox fx:id="cbNumero" prefWidth="150"
 							GridPane.columnIndex="1" GridPane.rowIndex="2" />
 						<Label text="Descripción:" GridPane.columnIndex="0"
 							GridPane.rowIndex="3" />
@@ -111,11 +111,11 @@
 							GridPane.rowIndex="1" />
 						<DatePicker fx:id="dpFechaFin" GridPane.columnIndex="3"
 							GridPane.rowIndex="1" />
-						<Label text="Id espectáculo:" GridPane.columnIndex="0"
+						<Label text="Espectáculo:" GridPane.columnIndex="0"
 							GridPane.rowIndex="2" />
 						<ComboBox fx:id="cbFiltroEspectaculo"
 							GridPane.columnIndex="1" GridPane.rowIndex="2" />
-						<Label text="Id número:" GridPane.columnIndex="2"
+						<Label text="Número:" GridPane.columnIndex="2"
 							GridPane.rowIndex="2" />
 						<ComboBox fx:id="cbFiltroNumero" GridPane.columnIndex="3"
 							GridPane.rowIndex="2" />
@@ -140,14 +140,20 @@
 							text="Tipo" />
 						<TableColumn fx:id="colDescripcion" prefWidth="350"
 							text="Descripción" />
-						<TableColumn fx:id="colResuelta" prefWidth="90"
-							text="Resuelta" />
 						<TableColumn fx:id="colPersona" prefWidth="90"
 							text="Reporta" />
 						<TableColumn fx:id="colEspectaculo" prefWidth="100"
 							text="Espectáculo" />
 						<TableColumn fx:id="colNumero" prefWidth="100"
 							text="Número" />
+						<TableColumn fx:id="colResuelta" prefWidth="90"
+							text="Resuelta" />
+						<TableColumn fx:id="colFechaResuelta" prefWidth="100"
+							text="Fecha de Resolución" />
+						<TableColumn fx:id="colResolucion" prefWidth="350"
+							text="Resolución" />
+						<TableColumn fx:id="colPersonaResuelve"
+							prefWidth="100" text="Resuelta por" />
 					</columns>
 				</TableView>
 			</children>

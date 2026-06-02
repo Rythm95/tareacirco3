@@ -6,6 +6,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class ResolucionIncidencia {
@@ -20,19 +22,21 @@ public class ResolucionIncidencia {
 	private String accionesRealizadas;
 
 	private Long idPersonaResuelve;
-
-	private Long idIncidencia;
+	
+	@OneToOne
+    @JoinColumn(name = "incidencia_id", unique = true)
+    private Incidencia incidencia;
 
 	public ResolucionIncidencia() {
 	}
 
 	public ResolucionIncidencia(LocalDateTime fechaHoraResolucion, String accionesRealizadas, Long idPersonaResuelve,
-			Long idIncidencia) {
+			Incidencia incidencia) {
 		super();
 		this.fechaHoraResolucion = fechaHoraResolucion;
 		this.accionesRealizadas = accionesRealizadas;
 		this.idPersonaResuelve = idPersonaResuelve;
-		this.idIncidencia = idIncidencia;
+		this.incidencia = incidencia;
 	}
 
 	public Long getId() {
@@ -67,12 +71,12 @@ public class ResolucionIncidencia {
 		this.idPersonaResuelve = idPersonaResuelve;
 	}
 
-	public Long getIncidencia() {
-		return idIncidencia;
+	public Incidencia getIncidencia() {
+		return incidencia;
 	}
 
-	public void setIncidencia(Long idIncidencia) {
-		this.idIncidencia = idIncidencia;
+	public void setIncidencia(Incidencia incidencia) {
+		this.incidencia = incidencia;
 	}
 
 }

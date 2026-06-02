@@ -278,6 +278,7 @@ public class ArtistaController implements Initializable {
 
 		daService.actualizarDossierArtista(session.getPersonaId(), comentario, nivel, observacion);
 
+		reiniciarForm();
 		alert("Se ha actualizado el dossier del artista.");
 	}
 
