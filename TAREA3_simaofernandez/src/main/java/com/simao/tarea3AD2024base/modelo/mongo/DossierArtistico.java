@@ -16,6 +16,8 @@ public class DossierArtistico {
 
 	private String nombre;
 
+	private String apodo;
+
 	private String nacionalidad;
 
 	private String email;
@@ -53,6 +55,14 @@ public class DossierArtistico {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public String getApodo() {
+		return apodo;
+	}
+
+	public void setApodo(String apodo) {
+		this.apodo = apodo;
 	}
 
 	public String getNacionalidad() {

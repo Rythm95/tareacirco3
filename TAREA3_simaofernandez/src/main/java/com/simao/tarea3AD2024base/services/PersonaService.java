@@ -35,7 +35,7 @@ public class PersonaService {
 		loService.newOperacion("Admin", TipoOperacion.NUEVO, "Se ha registrado una nueva persona de id "+saved.getId());
 		
 		if (saved instanceof Artista) {
-			daService.actualizarTrayectoria(saved.getId());
+			daService.guardarDossierArtista(saved.getId());
 		}
 		
 		return saved;
@@ -90,8 +90,7 @@ public class PersonaService {
 		
 		loService.newOperacion("Admin",TipoOperacion.ACTUALIZACION, "Se ha actualiazado la información del artista de id "+updated.getId());
 		
-		daService.actualizarTrayectoria(updated.getId());
-		
+		daService.actualizarDossierDatosPersonales(updated.getId());	
 		return updated;
 	}
 

@@ -266,7 +266,6 @@ public class ArtistaController implements Initializable {
 		art.setCredenciales(cr);
 
 		peService.updateArtista(session.getPersonaId(), art, cr);
-		daService.actualizarTrayectoria(session.getPersonaId());
 
 		alert("Se ha actualizado el artista.");
 	}

@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.simao.tarea3AD2024base.modelo.Artista;
 import com.simao.tarea3AD2024base.modelo.Espectaculo;
 import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Persona;
@@ -30,9 +29,6 @@ public class EspectaculoService {
 
 	@Autowired
 	private LogOperacionService loService;
-	
-	@Autowired
-	private DossierArtisticoService daService;
 
 	@Autowired
 	private Session session;
@@ -49,6 +45,10 @@ public class EspectaculoService {
 			n.setOrden(i + 1);
 
 			numeros.add(n);
+		}
+
+		for (Numero n : entity.getNumeros()) {
+			n.setEspectaculo(null);
 		}
 
 		entity.setNumeros(numeros);
@@ -79,10 +79,6 @@ public class EspectaculoService {
 
 		for (Numero n : ogEntity.getNumeros()) {
 			n.setEspectaculo(null);
-			
-			for (Artista a : n.getArtistas()) {
-				daService.actualizarTrayectoria(a.getId());
-			}
 		}
 
 		ogEntity.getNumeros().clear();

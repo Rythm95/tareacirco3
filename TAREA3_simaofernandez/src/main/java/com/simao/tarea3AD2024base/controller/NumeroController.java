@@ -17,6 +17,7 @@ import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
 import com.simao.tarea3AD2024base.modelo.Session;
+import com.simao.tarea3AD2024base.services.DossierArtisticoService;
 import com.simao.tarea3AD2024base.services.NumeroService;
 import com.simao.tarea3AD2024base.services.PersonaService;
 import com.simao.tarea3AD2024base.view.FxmlView;
@@ -50,6 +51,9 @@ public class NumeroController implements Initializable {
 
 	@Autowired
 	private NumeroService nuService;
+	
+	@Autowired
+	private DossierArtisticoService daService;
 
 	@FXML
 	private TextField txtNombre;
@@ -182,6 +186,9 @@ public class NumeroController implements Initializable {
 		nu.setArtistas(getArtistas());
 
 		nuService.update(session.getNumeroId(), nu);
+		for (Artista a : nu.getArtistas()) {
+			daService.actualizarTrayectoria(a.getId());
+		}
 
 		goBack();
 

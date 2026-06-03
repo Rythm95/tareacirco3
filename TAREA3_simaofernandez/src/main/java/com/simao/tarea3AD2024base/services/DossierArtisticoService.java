@@ -8,6 +8,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.simao.tarea3AD2024base.modelo.Artista;
@@ -35,17 +39,54 @@ public class DossierArtisticoService {
 	private PersonaService peService;
 
 	@Autowired
+	private MongoTemplate mongoTemplate;
+
+	@Autowired
 	private Session session;
+
+	@Transactional
+	public void guardarDossierArtista(Long idArtista) {
+
+		Artista artista = peService.findArtistaCompleto(idArtista);
+
+		DossierArtistico dossier = findByArtista(idArtista).orElseGet(() -> {
+			DossierArtistico d = new DossierArtistico();
+			d.setIdArtista(idArtista);
+			d.setTrayectoria(new ArrayList<>());
+			return d;
+		});
+
+		dossier.setIdArtista(artista.getId());
+		dossier.setNombre(artista.getNombre());
+		dossier.setApodo(artista.getApodo());
+		dossier.setEmail(artista.getEmail());
+		dossier.setNacionalidad(artista.getNacionalidad());
+		dossier.setEspecialidades(artista.getEspecialidades().stream().map(Enum::name).toList());
+
+		repo.save(dossier);
+	}
+
+	@Transactional
+	public void actualizarDossierDatosPersonales(Long idArtista) {
+
+		Artista artista = peService.findArtistaCompleto(idArtista);
+
+		Query query = Query.query(Criteria.where("idArtista").is(idArtista));
+
+		Update update = new Update().set("nombre", artista.getNombre()).set("apodo", artista.getApodo())
+				.set("email", artista.getEmail()).set("nacionalidad", artista.getNacionalidad())
+				.set("especialidades", artista.getEspecialidades().stream().map(Enum::name).toList());
+
+		mongoTemplate.upsert(query, update, DossierArtistico.class);
+	}
 
 	@Transactional
 	public void actualizarDossierArtista(Long idArtista, String comentarioEvaluacion, String nivel,
 			String observacionTexto) {
 
-		DossierArtistico dossier = findByArtista(idArtista).orElseGet(() -> {
-			DossierArtistico d = new DossierArtistico();
-			d.setIdArtista(idArtista);
-			return d;
-		});
+		Query query = Query.query(Criteria.where("idArtista").is(idArtista));
+		Update update = new Update();
+		boolean cambios = false;
 
 		if (comentarioEvaluacion != null && !comentarioEvaluacion.isBlank()) {
 
@@ -65,7 +106,8 @@ public class DossierArtisticoService {
 			ev.setComentario(comentarioEvaluacion);
 			ev.setNivel(nivel);
 
-			dossier.getEvaluaciones().add(ev);
+			update.push("evaluaciones", ev);
+			cambios = true;
 		}
 
 		if (observacionTexto != null && !observacionTexto.isBlank()) {
@@ -79,49 +121,47 @@ public class DossierArtisticoService {
 			else
 				obs.setAutor("Admin");
 
-			dossier.getObservaciones().add(obs);
+			update.push("observaciones", obs);
+			cambios = true;
 		}
 
-		repo.save(dossier);
+		if (cambios)
+			mongoTemplate.upsert(query, update, DossierArtistico.class);
 	}
 
 	@Transactional
 	public void actualizarTrayectoria(Long idArtista) {
-
 		Artista artista = peService.findArtistaCompleto(idArtista);
 
-		DossierArtistico dossier = findByArtista(idArtista).orElseGet(() -> {
-			DossierArtistico d = new DossierArtistico();
-			d.setIdArtista(idArtista);
-			return d;
-		});
+		List<Trayectoria> trayectoria = getTrayectoria(artista);
 
-		sincDatosDossier(dossier, artista);
+		Query query = Query.query(Criteria.where("idArtista").is(idArtista));
+		Update update = new Update().set("trayectoria", trayectoria);
 
+		mongoTemplate.upsert(query, update, DossierArtistico.class);
+	}
+
+	private List<Trayectoria> getTrayectoria(Artista artista) {
 		List<Trayectoria> trayectorias = new ArrayList<>();
-
 		Map<Long, Trayectoria> mapa = new HashMap<>();
 
 		for (Numero numero : artista.getNumeros()) {
-
 			Espectaculo es = numero.getEspectaculo();
 
-			if (es == null)
+			if (es == null) {
 				continue;
+			}
 
 			Trayectoria tray = mapa.get(es.getId());
 
 			if (tray == null) {
 
 				tray = new Trayectoria();
-
 				tray.setIdEspectaculo(es.getId());
 				tray.setNombreEspectaculo(es.getNombre());
-
 				tray.setNumeros(new ArrayList<>());
 
 				mapa.put(es.getId(), tray);
-
 				trayectorias.add(tray);
 			}
 
@@ -133,17 +173,7 @@ public class DossierArtisticoService {
 			tray.getNumeros().add(nt);
 		}
 
-		dossier.setTrayectoria(trayectorias);
-
-		repo.save(dossier);
-	}
-
-	private void sincDatosDossier(DossierArtistico dossier, Artista a) {
-		dossier.setIdArtista(a.getId());
-		dossier.setNombre(a.getNombre());
-		dossier.setEmail(a.getEmail());
-		dossier.setNacionalidad(a.getNacionalidad());
-		dossier.setEspecialidades(a.getEspecialidades().stream().map(Enum::name).toList());
+		return trayectorias;
 	}
 
 	public Optional<DossierArtistico> findByArtista(Long artistaId) {

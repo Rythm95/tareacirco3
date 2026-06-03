@@ -17,30 +17,27 @@ public class NumeroService {
 
 	@Autowired
 	private NumeroRepository repo;
-	
+
 	@Autowired
 	private LogOperacionService loService;
-	
+
 	@Autowired
 	private PersonaService peService;
-	
-	@Autowired
-	private DossierArtisticoService daService;
-	
+
 	@Autowired
 	private Session session;
 
 	public Numero save(Numero entity) {
 		Numero saved = repo.save(entity);
-		
+
 		String user = "Admin";
 		if (session.getUserId() != null) {
 			Persona p = peService.find(session.getUserId());
 			user = p.getCredenciales().getUsername();
 		}
-		
-		loService.newOperacion(user, TipoOperacion.NUEVO, "Se ha registrado un nuevo número de id "+saved.getId());
-		
+
+		loService.newOperacion(user, TipoOperacion.NUEVO, "Se ha registrado un nuevo número de id " + saved.getId());
+
 		return saved;
 	}
 
@@ -54,7 +51,6 @@ public class NumeroService {
 		ogEntity.getArtistas().clear();
 
 		for (Artista a : newEntity.getArtistas()) {
-			daService.actualizarTrayectoria(a.getId());
 			ogEntity.getArtistas().add(a);
 		}
 
@@ -63,9 +59,10 @@ public class NumeroService {
 			Persona p = peService.find(session.getUserId());
 			user = p.getCredenciales().getUsername();
 		}
-		
-		loService.newOperacion(user, TipoOperacion.ACTUALIZACION, "Se ha actualizado la información del número de id "+oldId);
-		
+
+		loService.newOperacion(user, TipoOperacion.ACTUALIZACION,
+				"Se ha actualizado la información del número de id " + oldId);
+
 		return repo.save(ogEntity);
 	}
 
@@ -84,16 +81,16 @@ public class NumeroService {
 	public Numero getNumeroWithArtistas(Long id) {
 		return repo.findWithArtistas(id);
 	}
-	
-	public List<Numero> getListArtistas(List<Numero> list){
+
+	public List<Numero> getListArtistas(List<Numero> list) {
 		return repo.findListArtistas(list);
 	}
 
 	public Numero findByNombre(String nombre) {
 		return repo.findByNombre(nombre);
 	}
-	
-	public List<Numero> getNumerosWithEspectaculos(List<Numero> list){
+
+	public List<Numero> getNumerosWithEspectaculos(List<Numero> list) {
 		return repo.findNumerosWithEspectaculo(list);
 	}
 

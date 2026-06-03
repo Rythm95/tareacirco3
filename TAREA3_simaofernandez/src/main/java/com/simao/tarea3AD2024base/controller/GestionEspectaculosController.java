@@ -22,6 +22,7 @@ import com.simao.tarea3AD2024base.modelo.Numero;
 import com.simao.tarea3AD2024base.modelo.Perfil;
 import com.simao.tarea3AD2024base.modelo.Persona;
 import com.simao.tarea3AD2024base.modelo.Session;
+import com.simao.tarea3AD2024base.services.DossierArtisticoService;
 import com.simao.tarea3AD2024base.services.EspectaculoService;
 import com.simao.tarea3AD2024base.services.NumeroService;
 import com.simao.tarea3AD2024base.services.PersonaService;
@@ -62,6 +63,9 @@ public class GestionEspectaculosController implements Initializable {
 
 	@Autowired
 	private PersonaService peService;
+	
+	@Autowired
+	private DossierArtisticoService daService;
 
 	@Autowired
 	private Session session;
@@ -423,6 +427,12 @@ public class GestionEspectaculosController implements Initializable {
 		}
 
 		esService.save(es, numeroIds);
+		
+		for (Numero n : numSelected) {
+			for (Artista a : n.getArtistas()) {
+				daService.actualizarTrayectoria(a.getId());
+			}
+		}
 		limpiarForm();
 		cargarEspectaculos();
 	}
