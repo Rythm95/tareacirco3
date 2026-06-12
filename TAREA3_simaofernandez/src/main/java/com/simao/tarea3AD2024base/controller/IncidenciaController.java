@@ -160,7 +160,7 @@ public class IncidenciaController implements Initializable {
 	private Long getIdNumero() {
 		if (cbNumero.getValue() == null)
 			return null;
-		
+
 		Long id = nuService.findByNombre(cbNumero.getValue()).getId();
 
 		if (id == null || id == 0)
@@ -290,7 +290,7 @@ public class IncidenciaController implements Initializable {
 
 			if (ri == null)
 				return new SimpleStringProperty("-");
-			
+
 			Long id = ri.getIdPersonaResuelve();
 
 			if (id == null)

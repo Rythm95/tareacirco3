@@ -102,11 +102,10 @@ public class IncidenciaRepository {
 				predicates.add(cb.equal(root.get("idNumero"), idNumero));
 
 			if (fechaIni != null)
-				predicates
-						.add(cb.greaterThanOrEqualTo(cb.substring(root.get("fechaHora"), 1, 10), fechaIni.toString()));
+				predicates.add(cb.greaterThanOrEqualTo(root.get("fechaHora"), fechaIni.atStartOfDay()));
 
 			if (fechaFin != null)
-				predicates.add(cb.lessThanOrEqualTo(cb.substring(root.get("fechaHora"), 1, 10), fechaFin.toString()));
+				predicates.add(cb.lessThanOrEqualTo(root.get("fechaHora"), fechaFin.atTime(23, 59, 59)));
 
 			if (!predicates.isEmpty()) {
 				cq.select(root).where(predicates.toArray(new Predicate[0]));
